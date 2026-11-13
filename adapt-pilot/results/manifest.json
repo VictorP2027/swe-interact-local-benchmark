@@ -1,0 +1,637 @@
+{
+  "arms": {
+    "adapt": "codex",
+    "stock": "codex-shipped"
+  },
+  "configuration": {
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "first_task": "deepswe_fastapi-deprecation-response-headers",
+    "image_overrides": {
+      "deepswe_fastapi-deprecation-response-headers": "sha256:9b51fac6b334a94a4057d941ac9b9d4a47dc68abccaabd5270f8223764287047"
+    },
+    "lane": "subscription",
+    "max_continuations": 8,
+    "model": "gpt-6-luna",
+    "model_seed": null,
+    "platform": "linux/amd64",
+    "protocol": "singleturn-with-conditional-continue",
+    "reasoning_effort": "medium",
+    "rubric_model": "anthropic/claude-opus-4-5-20251101",
+    "task_order_seed": 224,
+    "temperature": null,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "verifier_pytest_addopts": {
+      "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+    }
+  },
+  "model_catalog_sha256": "a5e25107506f0934cb62144c093c72bf8c7fa5de1436f4aa02fe54769d789618",
+  "runner_sha256": "96fb6d40ce455c428280639ca82e426f3f6a34454acd55bc30f360e516464373",
+  "task_order": [
+    "deepswe_fastapi-deprecation-response-headers",
+    "deepswe_kombu-single-active-consumer-priority",
+    "deepswe_awilix-async-container-initialization",
+    "rf_task-69b7c2a04b6f8ff9ed98813b",
+    "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+    "rf_task-69d196f015a150488265afb7",
+    "deepswe_wazero-multi-module-snapshots",
+    "deepswe_cattrs-partial-structuring-recovery",
+    "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+    "rf_task-69b7c2a04b6f8ff9ed988137",
+    "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26",
+    "rf_task-69b7c2a04b6f8ff9ed98812f",
+    "rf_task-696719205599a51110d4b436",
+    "rf_task-694b4b99829f00e24fd11891",
+    "deepswe_tomlkit-toml-table-converters",
+    "rf_task-696719205599a51110d4b458",
+    "deepswe_sqlite-utils-safe-import-checkpoints",
+    "deepswe_etree-xml-diff-patch",
+    "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan",
+    "deepswe_arcane-drift-detection-baselines",
+    "deepswe_testem-bail-on-test-failure",
+    "rf_task-696719205599a51110d4b428",
+    "deepswe_httpx-streaming-json-iteration",
+    "rf_task-694b4b99829f00e24fd11889",
+    "rf_task-696719205599a51110d4b40c",
+    "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c",
+    "rf_task-696719205599a51110d4b451",
+    "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+    "deepswe_mobly-grouped-test-barriers",
+    "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86",
+    "rf_task-696719205599a51110d4b447",
+    "deepswe_bandit-structured-nosec-directives",
+    "deepswe_pwntools-tube-multiplexing",
+    "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+    "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "rf_task-696719205599a51110d4b441",
+    "rf_task-696719205599a51110d4b446",
+    "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+    "deepswe_clack-async-autocomplete-options",
+    "rf_task-69d196f015a150488265afb9",
+    "rf_task-696719205599a51110d4b434",
+    "rf_task-696719205599a51110d4b455",
+    "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86",
+    "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+    "swebenchpro_instance_future-architect__vuls-7eb77f5b5127c847481bcf600b4dca2b7a85cf3e",
+    "deepswe_httpx-deterministic-cookie-store",
+    "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "rf_task-69b7c2a04b6f8ff9ed98813d",
+    "deepswe_returns-validated-error-accumulation",
+    "rf_task-69391d8d1ce51c407be1e533",
+    "swebenchpro_instance_qutebrowser__qutebrowser-deeb15d6f009b3ca0c3bd503a7cef07462bd16b4-v363c8a7e5ccdf6968fc7ab84a2053ac78036691d",
+    "swebenchpro_instance_internetarchive__openlibrary-5de7de19211e71b29b2f2ba3b1dff2fe065d660f-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+    "rf_task-69d196f015a150488265afc1",
+    "swebenchpro_instance_flipt-io__flipt-c1728053367c753688f114ec26e703c8fdeda125",
+    "swebenchpro_instance_nodebb__nodebb-f083cd559d69c16481376868c8da65172729c0ca-vnan",
+    "deepswe_vitest-duration-sharding",
+    "rf_task-694b4b99829f00e24fd11885",
+    "swebenchpro_instance_ansible__ansible-4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6-v1055803c3a812189a1133297f7f5468579283f86",
+    "swebenchpro_instance_element-hq__element-web-d06cf09bf0b3d4a0fbe6bd32e4115caea2083168-vnan",
+    "swebenchpro_instance_qutebrowser__qutebrowser-fea33d607fde83cf505b228238cf365936437a63-v9f8e9d96c85c85a605e382f1510bd08563afc566",
+    "deepswe_drizzle-orm-window-function-builders",
+    "deepswe_ofetch-per-origin-circuit-breaker",
+    "rf_task-696719205599a51110d4b440",
+    "swebenchpro_instance_navidrome__navidrome-3972616585e82305eaf26aa25697b3f5f3082288",
+    "rf_task-696719205599a51110d4b476",
+    "deepswe_boa-hierarchical-evaluation-cancellation",
+    "deepswe_participle-grammar-conflict-analysis",
+    "swebenchpro_instance_flipt-io__flipt-96820c3ad10b0b2305e8877b6b303f7fafdf815f",
+    "deepswe_kcp-go-multiplexed-kcp-streams",
+    "rf_task-694b4b99829f00e24fd118a1",
+    "swebenchpro_instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4",
+    "deepswe_helm-array-merge-strategies",
+    "swebenchpro_instance_gravitational__teleport-f432a71a13e698b6e1c4672a2e9e9c1f32d35c12",
+    "rf_task-69391d8d1ce51c407be1e531",
+    "deepswe_fastapi-implicit-head-options"
+  ],
+  "tasks": {
+    "deepswe_arcane-drift-detection-baselines": {
+      "definition_sha256": {
+        "multiturn": "e98a4380f4decbd07a68005aaa49cfb2533a28d4e4f6305c229ad8ec45b6bb47",
+        "singleturn": "0dd4d16d85d68926aec874005f1f2108486a3010ea10a8cca3e2858d52760b30"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_awilix-async-container-initialization": {
+      "definition_sha256": {
+        "multiturn": "a8ab7fb385b490e4be5b681987b7b5d72f7e4dc8f06363288e6cc1b305be1d62",
+        "singleturn": "28db387fe7e67ac634126ed9d453647315e50cbd0b5f109a25e7da63a4a8aec2"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_bandit-structured-nosec-directives": {
+      "definition_sha256": {
+        "multiturn": "07559c20cdfe90e4e86620f7897e1c49e1baceba4472eb65af056cb93575d71d",
+        "singleturn": "b8d25d646139c9881f6dc326852df5c8ba3cf1f390f487c4132347b0b9dd4ee3"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_boa-hierarchical-evaluation-cancellation": {
+      "definition_sha256": {
+        "multiturn": "3c63e77f3fdf712ee3b547f9f30b10d7ab7dc56cc53932c19bcf6329dd6ecff9",
+        "singleturn": "f67447f82a04fd9ad1e3e6c330f68ec89b9deb98084f4650cfbe89cff7533068"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_cattrs-partial-structuring-recovery": {
+      "definition_sha256": {
+        "multiturn": "e7982202cf7ae92fef1efef3cc48bce6c7bbcd79f86a699327b63779aa54b4cf",
+        "singleturn": "399472bc4f4ae276c5c415227bccf22bdfd11b85225bb6be4cabb1b6dfc75410"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_clack-async-autocomplete-options": {
+      "definition_sha256": {
+        "multiturn": "92ae989e0832d4c942c105fa33c8e3a4d19fcec2b84501f7b23de0db35b1ef0a",
+        "singleturn": "3027742d60971bbc24caea4bfc424763b71cfccdf18614a019668c9d7a2524bc"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_drizzle-orm-window-function-builders": {
+      "definition_sha256": {
+        "multiturn": "7423e124245a1707bff0f8b0a0d02c14a184656b52f4e9c2e22dc024f0c4b154",
+        "singleturn": "4387441bb3a9635f85bc2921ebac8ad910d0a8bc36c5ef61f2c9b5ba7c467d6c"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_etree-xml-diff-patch": {
+      "definition_sha256": {
+        "multiturn": "f156812a76bc081cedd94aa5fbe2408d02e0c7fee3b4a7f899d94c3dd7dc5c2d",
+        "singleturn": "51f1c00e93cb1926e7b7d5863bd76a5bade6b65eff87da8988abfe968d1a9690"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_fastapi-deprecation-response-headers": {
+      "definition_sha256": {
+        "multiturn": "9b39b52d85448808a447b0dc742707e40aa5ebdb56910294d9243656ce7dd292",
+        "singleturn": "9b1be50e6fc5c9c80d68556c4a65f781c143b456cdb70e13ff9c068f3d61c652"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_fastapi-implicit-head-options": {
+      "definition_sha256": {
+        "multiturn": "0016ca26b455fc38fbb49d928c3bd10a69bf7b97e9ce9416aa344f00a0e5a64c",
+        "singleturn": "34a65c36fb919724ab9f0e7d6e91fa9a64588f1db215015673923da7828a8167"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_helm-array-merge-strategies": {
+      "definition_sha256": {
+        "multiturn": "6bab0e45b366d3ec60fb9ae3214b3db069983bfa3f7a050e0659649ae8480d38",
+        "singleturn": "63ccf5d6d3818bea88c088b286ea55edc89c9178e6958b6216baca3dca791356"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_httpx-deterministic-cookie-store": {
+      "definition_sha256": {
+        "multiturn": "6ec038c72fe718aec699a04c89a938085dcb1d3217dba0d3a05c630529c1e7ae",
+        "singleturn": "58d610b3ffefea9e7d8d90764ed8284e0ee2c34ceb7545c7ff1f45aca8be9c5a"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_httpx-streaming-json-iteration": {
+      "definition_sha256": {
+        "multiturn": "8992bfbfc1cda4c03bebe3d9086f993dcab7681d03a1ddd1bc02249aed4d8594",
+        "singleturn": "142be505eb4bdf811fca2c642f2ca85a1fbcafeeb55b8ff08cafee5207fe51f3"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "definition_sha256": {
+        "multiturn": "2c94fa7120b35f9f80644cb52cdeca3c794e7fec191d0ca7061a81149972f68c",
+        "singleturn": "51d7c77f3ec12e1a6acf484b56014dc0c2931c2a65f7b995f8f678a337daffb7"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "definition_sha256": {
+        "multiturn": "c69587c7b134861f8c9ffe450f5a680d0073d6e5633f628ef62de73c1c5ad2de",
+        "singleturn": "9adb5dba1f5781be2a376d0282d96b40a098fa07134e93d34261d266fcf446e5"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_mobly-grouped-test-barriers": {
+      "definition_sha256": {
+        "multiturn": "feaa44254f26e5a25a6cce2d6051a680947f56cd8c2b339565f467e3e8128247",
+        "singleturn": "f543dab0c5c77ac45b0135d4d430c76f34c2482747af8bbdc4b774b8f4d5d111"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_ofetch-per-origin-circuit-breaker": {
+      "definition_sha256": {
+        "multiturn": "949d73413dd9a9b32850dffc946b9449b18c876c4badf1a96512ba6dce00c173",
+        "singleturn": "01cf71ecfc57dbbf91b489d336701fb7ce65b365cdcbd457c963adc77ee50ddd"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_participle-grammar-conflict-analysis": {
+      "definition_sha256": {
+        "multiturn": "a4d700f59eadab1d22d85f9a5f2df8eee89f4669c5b450cf7931ed6608f82c4a",
+        "singleturn": "d59e4277344a8794923806c2f6656d1f167204b40608496d59bbee8ad8c049e9"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_pwntools-tube-multiplexing": {
+      "definition_sha256": {
+        "multiturn": "bdb3c018b6577e6faa3aae0cbe155f354f684054e47c1bb61fcd9ed0b3c1082a",
+        "singleturn": "7da1943dd50ff31b2498d3b76546cfb0909051b0fdf4db22d8a7c833ff4aa79b"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_returns-validated-error-accumulation": {
+      "definition_sha256": {
+        "multiturn": "fae26435c7573a5a124b9c5e3c3cd0e0f9088918437bdf9302ff8307d27076c2",
+        "singleturn": "f419e38330363c79ef93a6ac96712de151b61e59f8563d91b4964545347bc318"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_sqlite-utils-safe-import-checkpoints": {
+      "definition_sha256": {
+        "multiturn": "f33b9540ace6a9c58943efed5b724ffec4f88360664acfa070abaa19748df083",
+        "singleturn": "29f81b5cd9477ce5597738fffef36bdce3c686a06686ac899824b6c9c89d3104"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_testem-bail-on-test-failure": {
+      "definition_sha256": {
+        "multiturn": "edfabf0859035d40c7abc4062ddc455e47a7399ef4032a5cb41f86a672a060bb",
+        "singleturn": "011e5dc7ad975c6b756af4f899297a5fe655d9511509494ea5ae355974db3605"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_tomlkit-toml-table-converters": {
+      "definition_sha256": {
+        "multiturn": "4af1a89e1a2f0bc3f15ee5772e1a0ff98dd7ebd575cfb8008750eb62b079b07f",
+        "singleturn": "6d100e2bd44741340e2107d29a90b834bc6788083f369697ce89dfc6b4be86af"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_vitest-duration-sharding": {
+      "definition_sha256": {
+        "multiturn": "5a763a854fc4de57334d1c4f6bec67c5251f4b9d99b677e5885ce6bc4d9f69ac",
+        "singleturn": "540b6b7c1bfeb1ab62772740a5a79abf37105c2a6146cd40a39d1c31f8920fb2"
+      },
+      "family": "DeepSWE"
+    },
+    "deepswe_wazero-multi-module-snapshots": {
+      "definition_sha256": {
+        "multiturn": "ed9b13500af126a369d18a634b44180c00c5f36663b1810351acb10d783b7893",
+        "singleturn": "b0c66b4dffb612ed3d79c20c391684807b6dd74446698721a368f347a44de155"
+      },
+      "family": "DeepSWE"
+    },
+    "rf_task-69391d8d1ce51c407be1e531": {
+      "definition_sha256": {
+        "multiturn": "f977d33266976cfaa7322b5f3045cc0afe89a804a57536677ee88c482ffe3ef5",
+        "singleturn": "cb780e1f086fabd30de7bec6d0f84ccc84f88b2710ebc449259fa776f5f22825"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69391d8d1ce51c407be1e533": {
+      "definition_sha256": {
+        "multiturn": "9150daedd87e825ec00ab49e3c160700e162e200a158ae4f5a9990b5d756fa50",
+        "singleturn": "34a3f62a91ed354374439c4650754e27fad9a474b2f0932645cf67d66082f61e"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-694b4b99829f00e24fd11885": {
+      "definition_sha256": {
+        "multiturn": "713a9019147dc8bf43a532b31f022fd755ee210fc831482860ac6f7b506f1aeb",
+        "singleturn": "847def97d9034cce23562c64aca2dee9f17659955be69381b697c70c7c0848dc"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-694b4b99829f00e24fd11889": {
+      "definition_sha256": {
+        "multiturn": "370d0b9e069dc27e78df7f985f274bd7bd86fca7fa513cd5078c17de2b0b05a9",
+        "singleturn": "c25f1462c109f813a5d125ea95b46f11bfe87eec4a975e630187b7309ba9482a"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-694b4b99829f00e24fd11891": {
+      "definition_sha256": {
+        "multiturn": "28c8b24cdd0907a42d0cb8b24a4f32b70d9574301904b11df9ca44fc7bbb680b",
+        "singleturn": "18c8633391e47a46e9f329226981dd31be491b4a59e2557abe0ff7c0a8caf8b1"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-694b4b99829f00e24fd118a1": {
+      "definition_sha256": {
+        "multiturn": "a6c300d10ebe9fe02d786833ec9fc83b3796347024ff18b708cea7935a48a479",
+        "singleturn": "6dfabf6b1606c2e277643a192e51435d465ad1b95cd209c4e1e2fa29a360dd74"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b40c": {
+      "definition_sha256": {
+        "multiturn": "13c9c4e64cfb499ca396283c42a326790eb945ada366867493f383165d05d76b",
+        "singleturn": "32db68230cb9fe379daa2125bc1ff39b580a224ef2b3be664c96a863f9a5608c"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b428": {
+      "definition_sha256": {
+        "multiturn": "9477cd432fa524e145e8238544059450efc421787660d0b3a1e502a26b6a92b0",
+        "singleturn": "66dd0ccc3c4f63225612e03055e8a5b58dd5b85a762435130494eb52d776e4e4"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b434": {
+      "definition_sha256": {
+        "multiturn": "626c9145869413d36114d48e814a79146d6846e904e16c77a949e8f36be18190",
+        "singleturn": "e41cb6fcc03614dddc1f6c7c5d7a090cdf2958a02276f104c0dd80641b07e3dd"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b436": {
+      "definition_sha256": {
+        "multiturn": "10fc8eb923d1d398e9f08dd3192de6bd9b553fe19eea419e72a2b09cbff782d2",
+        "singleturn": "98f71d6bfa71fcd0b221f663b76a225d0f7d7168aaac372f30a0018d74befd17"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b440": {
+      "definition_sha256": {
+        "multiturn": "9faa8634f39664357a8bdef97ea6a3bef95f6ee936fdcd0413c1364eb42862b8",
+        "singleturn": "d1f184a8ec4d60fc0412fbba6c107ac27f0ddc6a1acf055bac8f0293b3fd4213"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b441": {
+      "definition_sha256": {
+        "multiturn": "601acf3ab12e265eba973aaf4b02076b52677e1684875942c7e1363545fbe9e6",
+        "singleturn": "5b3143da6ada52e44f18d704eb2ea27028fe2d92f0db533040299eaff4027c79"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b446": {
+      "definition_sha256": {
+        "multiturn": "09f29da1976a791cbef0fe7c2e8600cdbcdcf9a3554ede0630e0479bbb031b0d",
+        "singleturn": "458463c4b93b8f95fe1d890daec1e4f0422383391187e966d68d22e9ba525d18"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b447": {
+      "definition_sha256": {
+        "multiturn": "d817f20627fa0033a56db5f838fb8a2c129dc6bbb270e050395aa0e2034c266e",
+        "singleturn": "6c1af11acb07a147fa82d2de06489e068a945cf27b5328185145007defb7a533"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b451": {
+      "definition_sha256": {
+        "multiturn": "50eee5c5a7de328e1ff0ed34c9fcb943a7675b20abea838aca317f07266ac603",
+        "singleturn": "ae5e50307e81f9329fb01bd9f652a6cc4b6e8c0cdea580c3a1d1252cac796613"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b455": {
+      "definition_sha256": {
+        "multiturn": "5fc2d7fa81e8b4538d4bbc14dbec4ff9c7f8f10aafac5923ed34206966047c25",
+        "singleturn": "a7f43901affee4cb7b53d507d35f385d5eebf5fb6bde6667ffa732d3dee5b56f"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b458": {
+      "definition_sha256": {
+        "multiturn": "b13790800d7d854d3327cb48ec1cc447020d52fb9984677642629406c4422610",
+        "singleturn": "4ec9be2a77e9ea9bd4b13b5d7bf3638cf57a4da45596acef2aac45e5193df1b3"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-696719205599a51110d4b476": {
+      "definition_sha256": {
+        "multiturn": "1b267945741d7501a939f7881f68373f19d740090a1371104230deb75e12e221",
+        "singleturn": "f3d9eadd355ec1d059cacde1c839c830a03bef4a13a00e975e16bdb4c85e7d67"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98812f": {
+      "definition_sha256": {
+        "multiturn": "34ea8c9879852d09e01d5f87b9e90101657c5df79f25cff817bb7a33c0196e0f",
+        "singleturn": "3e5e01cfab550c2d15c5f868f338f5aae3986af680fa96d2b33b63b958932287"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69b7c2a04b6f8ff9ed988137": {
+      "definition_sha256": {
+        "multiturn": "51679b1b035103f803d1031e70a4583db46d9ac46df3e8fcb07621c71194841a",
+        "singleturn": "65f1d0a32ef9d9685bf73a1581fcfbc07c6232bfec911e384e22912f5ba1e69c"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98813b": {
+      "definition_sha256": {
+        "multiturn": "08df2026ab68e5cfdf710c3abd4ce60722a98356f06433d52cb8e3d353997e86",
+        "singleturn": "3210d2b568dd858493ccb1cf8fa7622fc910fcb9bba35af540d88c3e60cf66c7"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98813d": {
+      "definition_sha256": {
+        "multiturn": "02c613eac2cff202da19a606cedcb188d1b014be8f6ccb586e630833076cd5b5",
+        "singleturn": "9287ddacdd70ee05dd11b0949a8673c6b3640070f84b1aa408c457329540bad7"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69d196f015a150488265afb7": {
+      "definition_sha256": {
+        "multiturn": "d0fdd057584afa6e3272601f4091fb9333c3bf3f81f07c0ddb608b3ac097c063",
+        "singleturn": "97892c66d1fbddce6cd5e016c3f6477fabe1ceb4de9a420b626e6709fc165f8c"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69d196f015a150488265afb9": {
+      "definition_sha256": {
+        "multiturn": "76bc4aeb9a2cfb6f7a1e97a6a46084fbac0065a21ffb90fa3b999b38f1d60442",
+        "singleturn": "52067daf8a458ba11f4db6038c4434019ef97a8f2930966718539f1d9071a06f"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "rf_task-69d196f015a150488265afc1": {
+      "definition_sha256": {
+        "multiturn": "8f4a66333360bc1455b3cd0fbd1f2a0dcb5d6caa551c05939b972ee1dc314bad",
+        "singleturn": "5caa65d11f6158c4741cdadc0c210908bf24deceb758fbb110e907dbecde33e9"
+      },
+      "family": "SWE Atlas Refactoring"
+    },
+    "swebenchpro_instance_ansible__ansible-4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6-v1055803c3a812189a1133297f7f5468579283f86": {
+      "definition_sha256": {
+        "multiturn": "f15d3c13c16ef21af14499d030966c56beaaa31dc87600511ee4f75ec8263d6f",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86": {
+      "definition_sha256": {
+        "multiturn": "b1c08613862e3161774791dd557be7ce72ddc9b7f769989d96bb5efb70d0423c",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86": {
+      "definition_sha256": {
+        "multiturn": "e1a90767d49eb5b1f3c26564d00d0453796afbde2c2449ed0579b866cb03fb46",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_element-hq__element-web-d06cf09bf0b3d4a0fbe6bd32e4115caea2083168-vnan": {
+      "definition_sha256": {
+        "multiturn": "4d7819a1fcb802c0460221f86a79f06f32e0e0c84b12ba6d8c1e596fe5cdcc60",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan": {
+      "definition_sha256": {
+        "multiturn": "0edcd9fa1092249e60eb9dd6e05183b031bbf90dcc8d48c052b2b2322fd75c85",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_flipt-io__flipt-96820c3ad10b0b2305e8877b6b303f7fafdf815f": {
+      "definition_sha256": {
+        "multiturn": "c1e430450d5f9c6d6d1fe8a0a86074327f742f4ece9afceae60564b3183a4107",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_flipt-io__flipt-c1728053367c753688f114ec26e703c8fdeda125": {
+      "definition_sha256": {
+        "multiturn": "c93e5ac1b00cf5faf90912e4348093888a5159b669901bab2a6c041f086f5a99",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26": {
+      "definition_sha256": {
+        "multiturn": "8c5a7d3e0fc005736468a853779130a5e6f0abc998e32ecd46fe726af111bf84",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_future-architect__vuls-7eb77f5b5127c847481bcf600b4dca2b7a85cf3e": {
+      "definition_sha256": {
+        "multiturn": "408b57b283efccd29c561e4224efb9f3f221d15f73f5ce9c1d9a52f706f146f1",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d": {
+      "definition_sha256": {
+        "multiturn": "66216a566db830f9619e66c1ff8c8fec5c1ea50701f093f09699306ec43c534e",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_gravitational__teleport-f432a71a13e698b6e1c4672a2e9e9c1f32d35c12": {
+      "definition_sha256": {
+        "multiturn": "80da11658b27be58a7642c35168dbf4f358fa2ff97a209c621a929f9de2e0c76",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c": {
+      "definition_sha256": {
+        "multiturn": "f8096a4fac83e9af7f4b5a43adba3c91a323a010ffb2eae1fdb5b11208c25561",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "definition_sha256": {
+        "multiturn": "548c8a0f30387b74e4da594b4cf507572362fe117aa4c14ab4cff6d7e9c03709",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-5de7de19211e71b29b2f2ba3b1dff2fe065d660f-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "definition_sha256": {
+        "multiturn": "363b9a5bfef65c9bc2e430da3e46f189d9158ac0176347573d035e206da11fbf",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818": {
+      "definition_sha256": {
+        "multiturn": "a38e573e2390f79c622416633116174905404c50249d98d31820db54c9e1f295",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "definition_sha256": {
+        "multiturn": "4477446d1e1d6294f0a6c3128136635e6befadab74daeb1ad7772b35a4b72b55",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_navidrome__navidrome-3972616585e82305eaf26aa25697b3f5f3082288": {
+      "definition_sha256": {
+        "multiturn": "346bd4c67ae9206932b304356e010a47647f01928879509fc84f1935c01cdb0c",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "definition_sha256": {
+        "multiturn": "90c6087e871d66a7c67484a8520dd7a288ea728ae86a1f98fae6e7dcb3f961ca",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_nodebb__nodebb-f083cd559d69c16481376868c8da65172729c0ca-vnan": {
+      "definition_sha256": {
+        "multiturn": "7ec7ba6394c09daf292dd7888f3ec35c22c1500efbe2e6d589e9a4d2a19d07f4",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4": {
+      "definition_sha256": {
+        "multiturn": "a3abb6ebfe113f7756950ab37f6122fbd5d7f12195bf938dc5a52b8edd39f056",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "definition_sha256": {
+        "multiturn": "cf9eaa496400f3fcac9de93a1de66870ac6ae5ea260c1aed4bcedbc3452baa73",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "definition_sha256": {
+        "multiturn": "b601e4fec849a218510c0ca16b95a3e8312c691c23ff147fb7ba464e9a778d50",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "definition_sha256": {
+        "multiturn": "73fac0daccfbd6915d7b9ea9276ba4516ee90ab38d9668defc6a790b1ccdc0e2",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-deeb15d6f009b3ca0c3bd503a7cef07462bd16b4-v363c8a7e5ccdf6968fc7ab84a2053ac78036691d": {
+      "definition_sha256": {
+        "multiturn": "cb10bf531b17363142009544fd25f7215eff4c31ae9be615575755f1782fe38d",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-fea33d607fde83cf505b228238cf365936437a63-v9f8e9d96c85c85a605e382f1510bd08563afc566": {
+      "definition_sha256": {
+        "multiturn": "9086258c4b20da32fe7d84c8b9f86f7e02847bd63e6c4c28db5b6c7eb87b3027",
+        "singleturn": "b0d8f883580ad808751e86fce8ae1ab380fb69a2a70c9023cc5737cf3ac73910"
+      },
+      "family": "SWE-bench Pro"
+    }
+  }
+}

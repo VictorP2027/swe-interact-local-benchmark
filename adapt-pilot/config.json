@@ -1,0 +1,23 @@
+{
+  "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+  "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+  "codex_version": "0.159.0",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "medium",
+  "context_window": 48000,
+  "tool_output_limit": 10000,
+  "lane": "subscription",
+  "task_order_seed": 224,
+  "model_seed": null,
+  "temperature": null,
+  "trial_wall_clock_s": 3600,
+  "protocol": "singleturn-with-conditional-continue",
+  "max_continuations": 8,
+  "rubric_model": "anthropic/claude-opus-4-5-20251101",
+  "platform": "linux/amd64",
+  "first_task": "deepswe_fastapi-deprecation-response-headers",
+  "image_overrides": {},
+  "verifier_pytest_addopts": {
+    "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+  }
+}

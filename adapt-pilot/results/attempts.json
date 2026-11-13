@@ -1,0 +1,2286 @@
+[
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 1997824,
+      "completed_turns": 1,
+      "input_tokens": 2157418,
+      "output_tokens": 23018,
+      "reasoning_output_tokens": 2400,
+      "total_tokens": 2180436
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:1eaaf15b2b1b92adff7b7a1de9aeec31103452f2835eee9be0e51863ad3ed3de",
+    "patch_sha256": "73e6e01bac5141b9793b3f328da5e85feb456fb534a1f86a69e327ae82818c74",
+    "prompt_sha256": "0f1d4b1f3a6340cd091479adcf4a771853bc9c3165e9e5496188a8f2dba5079e",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:34:32+00:00",
+    "status": "scored",
+    "task": "deepswe_arcane-drift-detection-baselines",
+    "trace": {
+      "calls": 134,
+      "steps": 69,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:45:58+00:00",
+    "upstream_base": "d34a5e2a6c5eb0f0955039775f5b9538424b58ff",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 813824,
+      "completed_turns": 1,
+      "input_tokens": 892923,
+      "output_tokens": 15334,
+      "reasoning_output_tokens": 1446,
+      "total_tokens": 908257
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:1eaaf15b2b1b92adff7b7a1de9aeec31103452f2835eee9be0e51863ad3ed3de",
+    "patch_sha256": "f45ee47696d40b40a7e7c8e910bcaeb67319812557719a25bcdd75885882ae33",
+    "prompt_sha256": "0f1d4b1f3a6340cd091479adcf4a771853bc9c3165e9e5496188a8f2dba5079e",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:22:26+00:00",
+    "status": "scored",
+    "task": "deepswe_arcane-drift-detection-baselines",
+    "trace": {
+      "calls": 66,
+      "steps": 32,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:34:32+00:00",
+    "upstream_base": "d34a5e2a6c5eb0f0955039775f5b9538424b58ff",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 171136,
+      "completed_turns": 1,
+      "input_tokens": 217602,
+      "output_tokens": 3179,
+      "reasoning_output_tokens": 459,
+      "total_tokens": 220781
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:ed637ca8eeeb232bca69083508531f6be915ef1808c5c9ec0ec9d846a2e161e2",
+    "patch_sha256": "1f807b28f27870d7ff7d7ccaffe20828f1de88735654e7db57deda3586ee04ff",
+    "prompt_sha256": "ba90df199ecdd07f71ca0459feca102b3e29d1bb87783fabcdf99c4f13ec7d82",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "62b629f6bfe5707441df9fe394c48cd48b3ee96b24e0ec3ace3c36fe3364c4e3"
+    },
+    "started": "2026-11-13T10:33:37+00:00",
+    "status": "scored",
+    "task": "deepswe_awilix-async-container-initialization",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:34:58+00:00",
+    "upstream_base": "82ac179c1de4c216c4e333093044fac643303f0c",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_usage": {
+      "cached_input_tokens": 139904,
+      "completed_turns": 1,
+      "input_tokens": 183072,
+      "output_tokens": 2519,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 185591
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:ed637ca8eeeb232bca69083508531f6be915ef1808c5c9ec0ec9d846a2e161e2",
+    "patch_sha256": "7d7191e4a2e7eac540a12a8b553492625027118d687ea85a007037f204291b05",
+    "prompt_sha256": "ba90df199ecdd07f71ca0459feca102b3e29d1bb87783fabcdf99c4f13ec7d82",
+    "reused": true,
+    "reward": 0.0,
+    "started": "2026-11-13T10:01:30+00:00",
+    "status": "scored",
+    "task": "deepswe_awilix-async-container-initialization",
+    "trace": {
+      "calls": 21,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:02:58+00:00",
+    "upstream_base": "82ac179c1de4c216c4e333093044fac643303f0c",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 193408,
+      "completed_turns": 1,
+      "input_tokens": 219900,
+      "output_tokens": 3393,
+      "reasoning_output_tokens": 401,
+      "total_tokens": 223293
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:b108da51096c9042bfafb52f545bea744fb086819436a000fae30b0c8e9efdf1",
+    "patch_sha256": "5023e9c771380e4aead2969dd3e4f000c576f2ca7d26dffb777c4f5391cf842e",
+    "prompt_sha256": "e152e2b2c2c6ba4429694437fe5a645427c1777ebc9fc1fcd96fe0cc3fd59fcc",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "24c8f5fec8f0b190c0b82b3ce866e6906c3a6397d9811fe305d663430d11df38"
+    },
+    "started": "2026-11-13T10:37:23+00:00",
+    "status": "scored",
+    "task": "deepswe_cattrs-partial-structuring-recovery",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:38:48+00:00",
+    "upstream_base": "6bc4708fb9b2ac52d9a18997e923da6a58916102",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_usage": {
+      "cached_input_tokens": 120320,
+      "completed_turns": 1,
+      "input_tokens": 152411,
+      "output_tokens": 2595,
+      "reasoning_output_tokens": 243,
+      "total_tokens": 155006
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:b108da51096c9042bfafb52f545bea744fb086819436a000fae30b0c8e9efdf1",
+    "patch_sha256": "08ad628af6bfd1f11dcd07560609fd6ec4b1b8cb4c9d9a0e036c9889772b0b74",
+    "prompt_sha256": "e152e2b2c2c6ba4429694437fe5a645427c1777ebc9fc1fcd96fe0cc3fd59fcc",
+    "reused": true,
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "live.py": "a2693d3284a60302eb2bbd215a7e14d911a7866472b144ad55d8200bc7fcb72f",
+      "mcp_proxy.py": "fff2dc288fde3a085b9238bdf6c8da3c4faea4b79fcee4ba3c57913c1e7f3b59",
+      "run.py": "82024e2d90f9490f3f9cc1c6d5fd55e3cea9789bacdeccb6630c304340d73221"
+    },
+    "started": "2026-11-13T10:05:23+00:00",
+    "status": "scored",
+    "task": "deepswe_cattrs-partial-structuring-recovery",
+    "trace": {
+      "calls": 23,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:06:40+00:00",
+    "upstream_base": "6bc4708fb9b2ac52d9a18997e923da6a58916102",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 109056,
+      "completed_turns": 1,
+      "input_tokens": 136849,
+      "output_tokens": 2736,
+      "reasoning_output_tokens": 214,
+      "total_tokens": 139585
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:670bfc175910420ae93460e2881430d4775b976c60a2060d85a52638bcdf38ec",
+    "patch_sha256": "823663521528b926b4240e113d9a9bdccc89d4a97d0af0268be8ae5a70d4d14f",
+    "prompt_sha256": "7a279779b52998ed5d5b7fe7122e5951c5b923c5f389c56728e8ba6958baf3fc",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T19:09:00+00:00",
+    "status": "scored",
+    "task": "deepswe_clack-async-autocomplete-options",
+    "trace": {
+      "calls": 16,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:11:32+00:00",
+    "upstream_base": "8a96e2dcd7f821d1250b58cf71c327679f94de25",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 106368,
+      "completed_turns": 1,
+      "input_tokens": 135664,
+      "output_tokens": 4224,
+      "reasoning_output_tokens": 191,
+      "total_tokens": 139888
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:670bfc175910420ae93460e2881430d4775b976c60a2060d85a52638bcdf38ec",
+    "patch_sha256": "9269878688e14e706eafcab8a43ef04d810803958b2d5a3476eba103715201eb",
+    "prompt_sha256": "7a279779b52998ed5d5b7fe7122e5951c5b923c5f389c56728e8ba6958baf3fc",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T19:04:51+00:00",
+    "status": "scored",
+    "task": "deepswe_clack-async-autocomplete-options",
+    "trace": {
+      "calls": 14,
+      "steps": 9,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:09:00+00:00",
+    "upstream_base": "8a96e2dcd7f821d1250b58cf71c327679f94de25",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 179712,
+      "completed_turns": 1,
+      "input_tokens": 204710,
+      "output_tokens": 5360,
+      "reasoning_output_tokens": 511,
+      "total_tokens": 210070
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:45c6f12cf16a45493de01a9c46ae9eeef5782c38d20a75d0db0e761c5b3a8909",
+    "patch_sha256": "cb438cc94bf8d90621ae629f64914d2063924e83e676f5d089e1b8deadb8aec2",
+    "prompt_sha256": "0307e92b5c299f6e3a8b8b7b6c2ca1e260b1070a6617c3f42026fe8b22fd6e5c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:10:55+00:00",
+    "status": "scored",
+    "task": "deepswe_etree-xml-diff-patch",
+    "trace": {
+      "calls": 21,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:13:11+00:00",
+    "upstream_base": "4032e04c8f2e2f35e43ce5d772fcef14a5df4d74",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 41600,
+      "completed_turns": 1,
+      "input_tokens": 64712,
+      "output_tokens": 2421,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 67133
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:45c6f12cf16a45493de01a9c46ae9eeef5782c38d20a75d0db0e761c5b3a8909",
+    "patch_sha256": "6756d67f32f6815388ce7239cfda721dab5d7af54c7b53ca79a07ab4d0a398b4",
+    "prompt_sha256": "0307e92b5c299f6e3a8b8b7b6c2ca1e260b1070a6617c3f42026fe8b22fd6e5c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:08:46+00:00",
+    "status": "scored",
+    "task": "deepswe_etree-xml-diff-patch",
+    "trace": {
+      "calls": 10,
+      "steps": 6,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:10:55+00:00",
+    "upstream_base": "4032e04c8f2e2f35e43ce5d772fcef14a5df4d74",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 154624,
+      "completed_turns": 1,
+      "input_tokens": 178094,
+      "output_tokens": 2174,
+      "reasoning_output_tokens": 138,
+      "total_tokens": 180268
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:9b51fac6b334a94a4057d941ac9b9d4a47dc68abccaabd5270f8223764287047",
+    "patch_sha256": "a98ea133dd87eb5112f92de17097131afa3dfa8ffed8d9f1817db95a86dfd59c",
+    "prompt_sha256": "18d4265c30bc5d28c43bbd44a128b21ad20aed6acbf4b59e9e69adb67c02ee8f",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "03e90a8fb329b435e3465715d7755e26cf390ee9d0a5045905218dbac3b48d5b",
+      "run.py": "43c582b58ef3bb749fd2680fff7b62acdb23fc6c63d0fd1eaf4d3a68d87b0ac6"
+    },
+    "started": "2026-11-13T10:28:38+00:00",
+    "status": "scored",
+    "task": "deepswe_fastapi-deprecation-response-headers",
+    "trace": {
+      "calls": 18,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:29:49+00:00",
+    "upstream_base": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_usage": {
+      "cached_input_tokens": 201728,
+      "completed_turns": 1,
+      "input_tokens": 235138,
+      "output_tokens": 3488,
+      "reasoning_output_tokens": 329,
+      "total_tokens": 238626
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:9b51fac6b334a94a4057d941ac9b9d4a47dc68abccaabd5270f8223764287047",
+    "patch_sha256": "c5d9e1a724497f3341331603a13c4e7ba2cc579a291fe2408db4bda5464d7021",
+    "prompt_sha256": "18d4265c30bc5d28c43bbd44a128b21ad20aed6acbf4b59e9e69adb67c02ee8f",
+    "reused": true,
+    "reward": 0.0,
+    "started": "2026-11-13T09:54:37+00:00",
+    "status": "scored",
+    "task": "deepswe_fastapi-deprecation-response-headers",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T09:57:00+00:00",
+    "upstream_base": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 131968,
+      "completed_turns": 1,
+      "input_tokens": 151741,
+      "output_tokens": 4195,
+      "reasoning_output_tokens": 471,
+      "total_tokens": 155936
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:0c452de623abee44aa219845421243178129957945b9ae820486870b4caebb96",
+    "patch_sha256": "fe3e15868d564a2870a10c1bbb8cc78fa50d900e96a93be1a31edc01f284d1e8",
+    "prompt_sha256": "9d58684576a7022a6d4d3c2de20b3d1eb72dd759ebe306ab394b699f9f69848f",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "9ccf7a9453de47a958e279cb3e2813466042b572332ae528ace3d5a1743e95ae"
+    },
+    "started": "2026-11-13T19:27:15+00:00",
+    "status": "scored",
+    "task": "deepswe_httpx-deterministic-cookie-store",
+    "trace": {
+      "calls": 20,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:29:03+00:00",
+    "upstream_base": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 102784,
+      "completed_turns": 1,
+      "input_tokens": 121395,
+      "output_tokens": 4845,
+      "reasoning_output_tokens": 63,
+      "total_tokens": 126240
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:0c452de623abee44aa219845421243178129957945b9ae820486870b4caebb96",
+    "patch_sha256": "c014cf723ca7f4a68081b9df358d2b109243ec17ecefa6aa821c5302b8881940",
+    "prompt_sha256": "9d58684576a7022a6d4d3c2de20b3d1eb72dd759ebe306ab394b699f9f69848f",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "9ccf7a9453de47a958e279cb3e2813466042b572332ae528ace3d5a1743e95ae"
+    },
+    "started": "2026-11-13T19:23:07+00:00",
+    "status": "scored",
+    "task": "deepswe_httpx-deterministic-cookie-store",
+    "trace": {
+      "calls": 16,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:27:15+00:00",
+    "upstream_base": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 309376,
+      "completed_turns": 1,
+      "input_tokens": 332933,
+      "output_tokens": 5548,
+      "reasoning_output_tokens": 1519,
+      "total_tokens": 338481
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:b35596a5d34696d88988d22e302bad659dfc1aef64e5dc04ff2d601bed12c75a",
+    "patch_sha256": "d3d152c9f809ef6a57c6614b5bf426c90a252e886bebc15562af038711b20e35",
+    "prompt_sha256": "55d75790bcb55cef77bef12bad4cc686cbfd852d035d9170431b3de3c577db6c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:52:43+00:00",
+    "status": "scored",
+    "task": "deepswe_httpx-streaming-json-iteration",
+    "trace": {
+      "calls": 33,
+      "steps": 18,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:55:04+00:00",
+    "upstream_base": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 158464,
+      "completed_turns": 1,
+      "input_tokens": 179122,
+      "output_tokens": 2768,
+      "reasoning_output_tokens": 497,
+      "total_tokens": 181890
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:b35596a5d34696d88988d22e302bad659dfc1aef64e5dc04ff2d601bed12c75a",
+    "patch_sha256": "da97fa24c158256b8d694b6876f90a0ce741d4be9f02ad60cd15fb1d958e21ba",
+    "prompt_sha256": "55d75790bcb55cef77bef12bad4cc686cbfd852d035d9170431b3de3c577db6c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:49:58+00:00",
+    "status": "scored",
+    "task": "deepswe_httpx-streaming-json-iteration",
+    "trace": {
+      "calls": 24,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:52:43+00:00",
+    "upstream_base": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 592640,
+      "completed_turns": 1,
+      "input_tokens": 631453,
+      "output_tokens": 7449,
+      "reasoning_output_tokens": 1634,
+      "total_tokens": 638902
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:f905647315ee4d42dbd5385772c4982776d4acc3547e141bf2f93896395847b1",
+    "patch_sha256": "89fb8b6628c7bbf8494f76804e1bf15d6f99835e7ccd4755b6f6b4a373028abf",
+    "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "03e90a8fb329b435e3465715d7755e26cf390ee9d0a5045905218dbac3b48d5b",
+      "run.py": "b8b447636efb3901a918b5438bfe4c3a32a0baefc057d188f1e41455715de756"
+    },
+    "started": "2026-11-13T10:30:03+00:00",
+    "status": "scored",
+    "task": "deepswe_kombu-single-active-consumer-priority",
+    "trace": {
+      "calls": 45,
+      "steps": 24,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:33:37+00:00",
+    "upstream_base": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_usage": {
+      "cached_input_tokens": 137344,
+      "completed_turns": 1,
+      "input_tokens": 180347,
+      "output_tokens": 3039,
+      "reasoning_output_tokens": 128,
+      "total_tokens": 183386
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:f905647315ee4d42dbd5385772c4982776d4acc3547e141bf2f93896395847b1",
+    "patch_sha256": "d1a034c474bf8d74d51120b27ed908627fd02065a4e882e7d21b95fe90c0794f",
+    "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+    "reused": true,
+    "reward": 0.0,
+    "started": "2026-11-13T09:59:05+00:00",
+    "status": "scored",
+    "task": "deepswe_kombu-single-active-consumer-priority",
+    "trace": {
+      "calls": 18,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:01:30+00:00",
+    "upstream_base": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 181504,
+      "completed_turns": 1,
+      "input_tokens": 205876,
+      "output_tokens": 2689,
+      "reasoning_output_tokens": 217,
+      "total_tokens": 208565
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:214c8dbea6397a1d209c95a51886bc3221be63f5af3f1b7081d7ad8cfe2cf9b4",
+    "patch_sha256": "6e5b4e0517d2562600903e9c2901c3a093cfb546c141516f55ce2dde0b829075",
+    "prompt_sha256": "df66be2eb22fad62613f9979ed2162c51c20caf399473dae55a31908547cc570",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:40:10+00:00",
+    "status": "scored",
+    "task": "deepswe_mobly-grouped-test-barriers",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:41:26+00:00",
+    "upstream_base": "ec052921917ef201e73cc8e275dc91c5706b345f",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "error",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {},
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:214c8dbea6397a1d209c95a51886bc3221be63f5af3f1b7081d7ad8cfe2cf9b4",
+    "prompt_sha256": "df66be2eb22fad62613f9979ed2162c51c20caf399473dae55a31908547cc570",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:20:00+00:00",
+    "status": "agent_error",
+    "task": "deepswe_mobly-grouped-test-barriers",
+    "trace": {
+      "calls": 0,
+      "steps": 0,
+      "user_messages": 0
+    },
+    "updated": "2026-11-13T18:23:17+00:00",
+    "upstream_base": "ec052921917ef201e73cc8e275dc91c5706b345f"
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 170368,
+      "completed_turns": 1,
+      "input_tokens": 197576,
+      "output_tokens": 1897,
+      "reasoning_output_tokens": 192,
+      "total_tokens": 199473
+    },
+    "arm": "stock",
+    "attempt": "0002",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:214c8dbea6397a1d209c95a51886bc3221be63f5af3f1b7081d7ad8cfe2cf9b4",
+    "patch_sha256": "e0b7f9dca735a8ea07652434112af0d00479376ef92b8020d7520aec55992ab9",
+    "prompt_sha256": "df66be2eb22fad62613f9979ed2162c51c20caf399473dae55a31908547cc570",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:39:14+00:00",
+    "status": "scored",
+    "task": "deepswe_mobly-grouped-test-barriers",
+    "trace": {
+      "calls": 22,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:40:10+00:00",
+    "upstream_base": "ec052921917ef201e73cc8e275dc91c5706b345f",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 972544,
+      "completed_turns": 1,
+      "input_tokens": 1044018,
+      "output_tokens": 11253,
+      "reasoning_output_tokens": 3033,
+      "total_tokens": 1055271
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:b914dad9a5746b311545dae9bbbd2425e87e5aed1d8244b717fd99d74c3892c0",
+    "patch_sha256": "fdb34a79a096b39107cb21bd2908854a956adc85b913a5efc288ee8fecb4d7ef",
+    "prompt_sha256": "c8e09ee12643d8326cba222844dc2da418e47800cba6bc3f3e9252c2bbe269f1",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "24c8f5fec8f0b190c0b82b3ce866e6906c3a6397d9811fe305d663430d11df38"
+    },
+    "started": "2026-11-13T10:41:00+00:00",
+    "status": "scored",
+    "task": "deepswe_sqlite-utils-safe-import-checkpoints",
+    "trace": {
+      "calls": 71,
+      "steps": 37,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:45:32+00:00",
+    "upstream_base": "8d74ffc93292c604d5827e2b44fffedca0c28c19",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 146688,
+      "completed_turns": 1,
+      "input_tokens": 181449,
+      "output_tokens": 2981,
+      "reasoning_output_tokens": 293,
+      "total_tokens": 184430
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:b914dad9a5746b311545dae9bbbd2425e87e5aed1d8244b717fd99d74c3892c0",
+    "patch_sha256": "25701cd30bea68d5c7885d22840d1e238fa250b27ca9fbf2211b9792eec63fb1",
+    "prompt_sha256": "c8e09ee12643d8326cba222844dc2da418e47800cba6bc3f3e9252c2bbe269f1",
+    "reused": true,
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "live.py": "caee7996b73cfa44e4710cda83f8cc0ff57e14f1946d74175ecf2cf267c1e0cc",
+      "mcp_proxy.py": "87e52752add2fef2eb1cba367d56998f48ee5214af068dd3e714c4b100e04cfa",
+      "run.py": "6636f8013b1d5affbace549c8fcec22a45bbde98f40ffb351c9cf30626abb1d0"
+    },
+    "started": "2026-11-13T10:11:59+00:00",
+    "status": "scored",
+    "task": "deepswe_sqlite-utils-safe-import-checkpoints",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:13:37+00:00",
+    "upstream_base": "8d74ffc93292c604d5827e2b44fffedca0c28c19",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 84608,
+      "completed_turns": 1,
+      "input_tokens": 104489,
+      "output_tokens": 1165,
+      "reasoning_output_tokens": 45,
+      "total_tokens": 105654
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:f0e51ef86c4eac8e392a00a6e0f384768002371b90d715a745ffb40dfd4365fc",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompt_sha256": "195f44c76a86098fe76204fb7d23c8309d961a07200df5997f51c8575aee4758",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:49:00+00:00",
+    "status": "scored",
+    "task": "deepswe_testem-bail-on-test-failure",
+    "trace": {
+      "calls": 14,
+      "steps": 8,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:49:58+00:00",
+    "upstream_base": "06a1adb7a70e85e7322d8cfae3181508785de95d",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 287872,
+      "completed_turns": 1,
+      "input_tokens": 315529,
+      "output_tokens": 3218,
+      "reasoning_output_tokens": 308,
+      "total_tokens": 318747
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "DeepSWE",
+    "image_id": "sha256:f0e51ef86c4eac8e392a00a6e0f384768002371b90d715a745ffb40dfd4365fc",
+    "patch_sha256": "5dde3daafbf7c9bea50c3448d9508d5b5da5ddab6ce1fa033878b84b412ad84a",
+    "prompt_sha256": "195f44c76a86098fe76204fb7d23c8309d961a07200df5997f51c8575aee4758",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:46:01+00:00",
+    "status": "scored",
+    "task": "deepswe_testem-bail-on-test-failure",
+    "trace": {
+      "calls": 26,
+      "steps": 14,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:49:00+00:00",
+    "upstream_base": "06a1adb7a70e85e7322d8cfae3181508785de95d",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 342912,
+      "completed_turns": 1,
+      "input_tokens": 372058,
+      "output_tokens": 5683,
+      "reasoning_output_tokens": 843,
+      "total_tokens": 377741
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:bdd126f3900964a040d88fdad1a1ff4d35a16a2f57ff981debe903c8a19f7b6e",
+    "patch_sha256": "c0f74052102ba6911f89f1523171d4c429dd3a2671267c3c5a7bcf3651d9e94b",
+    "prompt_sha256": "594cc9073b0250535d8f07e3e801e5db8160e92b8a462a39d3e4b2e76a916a49",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "24c8f5fec8f0b190c0b82b3ce866e6906c3a6397d9811fe305d663430d11df38"
+    },
+    "started": "2026-11-13T10:38:48+00:00",
+    "status": "scored",
+    "task": "deepswe_tomlkit-toml-table-converters",
+    "trace": {
+      "calls": 35,
+      "steps": 16,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:41:00+00:00",
+    "upstream_base": "dd05eebc8ed9e30fc6c223088a5a450cb54c1cab",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 224384,
+      "completed_turns": 1,
+      "input_tokens": 261528,
+      "output_tokens": 3109,
+      "reasoning_output_tokens": 280,
+      "total_tokens": 264637
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:bdd126f3900964a040d88fdad1a1ff4d35a16a2f57ff981debe903c8a19f7b6e",
+    "patch_sha256": "e7215fd0d0ae7d171e085ff280e318d3aed9060eb1ecfd4b9cc17de0a16ade67",
+    "prompt_sha256": "594cc9073b0250535d8f07e3e801e5db8160e92b8a462a39d3e4b2e76a916a49",
+    "reused": true,
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "live.py": "c5b7965fa57df4b493ef94c1a1cce3b7c6dff805c047e930b28e6eeb8fbd0034",
+      "mcp_proxy.py": "87e52752add2fef2eb1cba367d56998f48ee5214af068dd3e714c4b100e04cfa",
+      "run.py": "0a364313171577afec39554cc5bee5f287b49761f2107bc922e06605b4ae57c8"
+    },
+    "started": "2026-11-13T10:10:24+00:00",
+    "status": "scored",
+    "task": "deepswe_tomlkit-toml-table-converters",
+    "trace": {
+      "calls": 25,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:11:59+00:00",
+    "upstream_base": "dd05eebc8ed9e30fc6c223088a5a450cb54c1cab",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 118912,
+      "completed_turns": 1,
+      "input_tokens": 161479,
+      "output_tokens": 3541,
+      "reasoning_output_tokens": 516,
+      "total_tokens": 165020
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:03c4ec26ed56d79fd32c185374f2ffd66cdeab41dd00f8b33a3b5f4049c62ca7",
+    "patch_sha256": "564f34e5f9683585be920843907154a386fa23f1465b3ba20ebb851a51f38a4f",
+    "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "24c8f5fec8f0b190c0b82b3ce866e6906c3a6397d9811fe305d663430d11df38"
+    },
+    "started": "2026-11-13T10:34:58+00:00",
+    "status": "scored",
+    "task": "deepswe_wazero-multi-module-snapshots",
+    "trace": {
+      "calls": 21,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:37:23+00:00",
+    "upstream_base": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 126464,
+      "completed_turns": 1,
+      "input_tokens": 148737,
+      "output_tokens": 3507,
+      "reasoning_output_tokens": 459,
+      "total_tokens": 152244
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuations": 0,
+    "family": "DeepSWE",
+    "image_id": "sha256:03c4ec26ed56d79fd32c185374f2ffd66cdeab41dd00f8b33a3b5f4049c62ca7",
+    "patch_sha256": "a12a30644bc1728aad2ce92b2d16c5ce4b6ab443a28a2d964a45b391b8652080",
+    "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+    "reused": true,
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "live.py": "1e680edfe3b1f70c22520b0d21529280328ab13f08f7c10fe40e50a364deaed7",
+      "mcp_proxy.py": "87e52752add2fef2eb1cba367d56998f48ee5214af068dd3e714c4b100e04cfa",
+      "run.py": "56e886c031aab87b6c608bc589385df0eefacf7c832581c843f86bc1c303c4b1"
+    },
+    "started": "2026-11-13T10:07:47+00:00",
+    "status": "scored",
+    "task": "deepswe_wazero-multi-module-snapshots",
+    "trace": {
+      "calls": 23,
+      "steps": 13,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T10:10:24+00:00",
+    "upstream_base": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 149632,
+      "completed_turns": 1,
+      "input_tokens": 174723,
+      "output_tokens": 2644,
+      "reasoning_output_tokens": 247,
+      "total_tokens": 177367
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:5f7b51148f0eebe30a4006ef56777a42a8997949788f64c9edfd07abb0875d6b",
+    "patch_sha256": "04a4e0ccadee3f30bdbd4ea82bba41bc5fae60454185317e0252314ae9fede5b",
+    "prompt_sha256": "8839b6ac5b9c3ac28e1740504bff24d24ea9073461e1db00d906998e9da03c31",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:43:57+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86",
+    "trace": {
+      "calls": 20,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:45:41+00:00",
+    "upstream_base": "b479adddce8fe46a2df5469f130cf7b6ad70fdc4",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 110592,
+      "completed_turns": 1,
+      "input_tokens": 155256,
+      "output_tokens": 1532,
+      "reasoning_output_tokens": 191,
+      "total_tokens": 156788
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:5f7b51148f0eebe30a4006ef56777a42a8997949788f64c9edfd07abb0875d6b",
+    "patch_sha256": "9dfd7eddf41a377b6fd23d33c30e1c3c5a9b4ad0781a5051e6234dcb839e9717",
+    "prompt_sha256": "8839b6ac5b9c3ac28e1740504bff24d24ea9073461e1db00d906998e9da03c31",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:41:26+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86",
+    "trace": {
+      "calls": 14,
+      "steps": 8,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:43:57+00:00",
+    "upstream_base": "b479adddce8fe46a2df5469f130cf7b6ad70fdc4",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 166912,
+      "completed_turns": 1,
+      "input_tokens": 210488,
+      "output_tokens": 1457,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 211945
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:f0c95da63c9c498d8fb72173eb2886cfceefbfd8b5d1a0f7f0e12ae1e3b56d19",
+    "patch_sha256": "680ecf39b31f8513a6198f562fdde04a54323d00435d43bfe7af9316c6a5e183",
+    "prompt_sha256": "1fd60930e7fbdf13d230b9c346e167b150ed9f130385b5f135eb22a2c1b8751d",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T19:14:19+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86",
+    "trace": {
+      "calls": 18,
+      "steps": 10,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:15:47+00:00",
+    "upstream_base": "225ae65b0fcf0931c9ce58d68a28d1883d5bf451",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 113920,
+      "completed_turns": 1,
+      "input_tokens": 147098,
+      "output_tokens": 2012,
+      "reasoning_output_tokens": 87,
+      "total_tokens": 149110
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:f0c95da63c9c498d8fb72173eb2886cfceefbfd8b5d1a0f7f0e12ae1e3b56d19",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompt_sha256": "1fd60930e7fbdf13d230b9c346e167b150ed9f130385b5f135eb22a2c1b8751d",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T19:11:32+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86",
+    "trace": {
+      "calls": 16,
+      "steps": 9,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:14:19+00:00",
+    "upstream_base": "225ae65b0fcf0931c9ce58d68a28d1883d5bf451",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 203776,
+      "completed_turns": 1,
+      "input_tokens": 245871,
+      "output_tokens": 7413,
+      "reasoning_output_tokens": 1089,
+      "total_tokens": 253284
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:0b34d78ef6a04b969c72ee4406d1acd084ad07942a2b2be074c78813ea17c36d",
+    "patch_sha256": "0e13e274bca9eceb06faeb3e75afbae869d473320545bc0b2b34c8e5d88c1515",
+    "prompt_sha256": "d7afa5505eacfdbdb49cdac659b0ed80245a9b736eb4810cf688060487ada152",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:18:29+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan",
+    "trace": {
+      "calls": 24,
+      "steps": 13,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:22:25+00:00",
+    "upstream_base": "ad9cbe93994888e8f8ba88ce3614dc041a698930",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 135424,
+      "completed_turns": 1,
+      "input_tokens": 175393,
+      "output_tokens": 5631,
+      "reasoning_output_tokens": 454,
+      "total_tokens": 181024
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:0b34d78ef6a04b969c72ee4406d1acd084ad07942a2b2be074c78813ea17c36d",
+    "patch_sha256": "d98b871186f93f2f3f885cb2e7348821bcb40d5fbb4ea64e6e40942d98bec6c8",
+    "prompt_sha256": "d7afa5505eacfdbdb49cdac659b0ed80245a9b736eb4810cf688060487ada152",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:13:11+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan",
+    "trace": {
+      "calls": 19,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:18:29+00:00",
+    "upstream_base": "ad9cbe93994888e8f8ba88ce3614dc041a698930",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 60288,
+      "completed_turns": 1,
+      "input_tokens": 79841,
+      "output_tokens": 1106,
+      "reasoning_output_tokens": 98,
+      "total_tokens": 80947
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:8aac844ea28a38542aeb6900840eb209ba08673664b76e3f7ea38f85987f5981",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompt_sha256": "9d16edd4f5c913f735e175c2f874dfdbb34ce7dcababbbb009bfe29293ddc526",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:05:36+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26",
+    "trace": {
+      "calls": 10,
+      "steps": 6,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:08:44+00:00",
+    "upstream_base": "6fd0f9e2587f14ac1fdd1c229f0bcae0468c8daa",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 390912,
+      "completed_turns": 1,
+      "input_tokens": 457615,
+      "output_tokens": 8491,
+      "reasoning_output_tokens": 1425,
+      "total_tokens": 466106
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:8aac844ea28a38542aeb6900840eb209ba08673664b76e3f7ea38f85987f5981",
+    "patch_sha256": "9e6628a23eeca3a3fb8e17a72b508545c1629a5325f6a68c0306d8af558de0a8",
+    "prompt_sha256": "9d16edd4f5c913f735e175c2f874dfdbb34ce7dcababbbb009bfe29293ddc526",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "fc99bd5f4c5f7356a87bc697ea46767f30a631d7cf4cb2e13303fa8f08d37f70"
+    },
+    "started": "2026-11-13T11:57:31+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26",
+    "trace": {
+      "calls": 36,
+      "steps": 20,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T12:05:36+00:00",
+    "upstream_base": "6fd0f9e2587f14ac1fdd1c229f0bcae0468c8daa",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 211456,
+      "completed_turns": 1,
+      "input_tokens": 264539,
+      "output_tokens": 5030,
+      "reasoning_output_tokens": 497,
+      "total_tokens": 269569
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:53f10f038ee3c8cb2889a6d4f37fce6e2a3817ff612bc03054abd626a4b30f9f",
+    "patch_sha256": "bfc23e1905cb7dc5c637be6c697db185fb842442ac186644fb123f0630b65867",
+    "prompt_sha256": "3efde84029148ae2f4e79d64d21593e6c4947d8e4441f0f8b9d53834b5bfc947",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e2e80aa56aca79494248171af61b99585567d326f5dac58b01d7859a67b1c8d0"
+    },
+    "started": "2026-11-13T11:43:43+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+    "trace": {
+      "calls": 25,
+      "steps": 14,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T11:52:57+00:00",
+    "upstream_base": "69a9dbf3a27c6a6da4eaafb89d69849c34beed1b",
+    "verifier_exit_code": 1
+  },
+  {
+    "arm": "stock",
+    "attempt": "0001",
+    "detail": "Docker build stopped at the disk-space floor.",
+    "family": "SWE-bench Pro",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "24c8f5fec8f0b190c0b82b3ce866e6906c3a6397d9811fe305d663430d11df38"
+    },
+    "started": "2026-11-13T10:45:46+00:00",
+    "status": "blocked",
+    "task": "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+    "updated": "2026-11-13T10:46:20+00:00"
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 482176,
+      "completed_turns": 1,
+      "input_tokens": 519060,
+      "output_tokens": 8532,
+      "reasoning_output_tokens": 907,
+      "total_tokens": 527592
+    },
+    "arm": "stock",
+    "attempt": "0002",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:53f10f038ee3c8cb2889a6d4f37fce6e2a3817ff612bc03054abd626a4b30f9f",
+    "patch_sha256": "9bb951b2f886b3335160b734e0cf6de84b1d975576b289b3411ec42ea55422fe",
+    "prompt_sha256": "3efde84029148ae2f4e79d64d21593e6c4947d8e4441f0f8b9d53834b5bfc947",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e2e80aa56aca79494248171af61b99585567d326f5dac58b01d7859a67b1c8d0"
+    },
+    "started": "2026-11-13T11:32:16+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+    "trace": {
+      "calls": 36,
+      "steps": 20,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T11:43:43+00:00",
+    "upstream_base": "69a9dbf3a27c6a6da4eaafb89d69849c34beed1b",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 221184,
+      "completed_turns": 1,
+      "input_tokens": 271488,
+      "output_tokens": 5220,
+      "reasoning_output_tokens": 445,
+      "total_tokens": 276708
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:e9e277316207da6103bf2466605a84b92da884b048badab791bd3b683ab75169",
+    "patch_sha256": "80380114c94261bbc5bf03ee53f4732fc7d2ad23a40e97ec98506bf23ddc8b3c",
+    "prompt_sha256": "e855dad66716975e7cafb45bfa56f5279cf0e54097b20a8a01b7a31b2975c028",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:10:39+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c",
+    "trace": {
+      "calls": 26,
+      "steps": 14,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:12:46+00:00",
+    "upstream_base": "5c6c22f3d2edf2f1b10f5dc335e32cb6a5f40341",
+    "verifier_exit_code": 1
+  },
+  {
+    "arm": "stock",
+    "attempt": "0001",
+    "cycle_images": true,
+    "detail": "The agent workspace could not be prepared.",
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:e9e277316207da6103bf2466605a84b92da884b048badab791bd3b683ab75169",
+    "prompt_sha256": "e855dad66716975e7cafb45bfa56f5279cf0e54097b20a8a01b7a31b2975c028",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e1b64bf803b2016c4aa36ae047c0227e5f8131a4f18bb79d149ce07c176898ea"
+    },
+    "started": "2026-11-13T12:55:04+00:00",
+    "status": "blocked",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c",
+    "updated": "2026-11-13T12:57:00+00:00",
+    "upstream_base": "5c6c22f3d2edf2f1b10f5dc335e32cb6a5f40341"
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 117376,
+      "completed_turns": 1,
+      "input_tokens": 148275,
+      "output_tokens": 2972,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 151247
+    },
+    "arm": "stock",
+    "attempt": "0002",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:e9e277316207da6103bf2466605a84b92da884b048badab791bd3b683ab75169",
+    "patch_sha256": "07242875b5c7da26f2fb1c3baec7d36a1e76148d1fe9bbe305904eb07b203bfe",
+    "prompt_sha256": "e855dad66716975e7cafb45bfa56f5279cf0e54097b20a8a01b7a31b2975c028",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:09:19+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c",
+    "trace": {
+      "calls": 22,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:10:39+00:00",
+    "upstream_base": "5c6c22f3d2edf2f1b10f5dc335e32cb6a5f40341",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 476672,
+      "completed_turns": 1,
+      "input_tokens": 514726,
+      "output_tokens": 9207,
+      "reasoning_output_tokens": 2931,
+      "total_tokens": 523933
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:b26903f263074fbed281a2d8a05fb40dc163a58413dd4542e216a2e64f081b07",
+    "patch_sha256": "179c15656f67dd050946ea65e2ec1c3fbfe4fc94c65500aa9b0885a11beef525",
+    "prompt_sha256": "31f2f257dfa9ff5a8748420d0dba70bd0dbf3928acc7e55cc1eb8e0624d0e8cd",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "9ccf7a9453de47a958e279cb3e2813466042b572332ae528ace3d5a1743e95ae"
+    },
+    "started": "2026-11-13T19:19:31+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+    "trace": {
+      "calls": 44,
+      "steps": 23,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:23:06+00:00",
+    "upstream_base": "86d9b8a203cab5bc446614f3cbffd77b4751084a",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 129792,
+      "completed_turns": 1,
+      "input_tokens": 156635,
+      "output_tokens": 2572,
+      "reasoning_output_tokens": 144,
+      "total_tokens": 159207
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:b26903f263074fbed281a2d8a05fb40dc163a58413dd4542e216a2e64f081b07",
+    "patch_sha256": "b682a6161de6f4e306e3d9b9f350a77802862aa5204a249afe158a3398906cb3",
+    "prompt_sha256": "31f2f257dfa9ff5a8748420d0dba70bd0dbf3928acc7e55cc1eb8e0624d0e8cd",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "993ea6dc42ea8c0c2dde0cb3e22d3ac779f734dc2c113bc734b8a4155c3a00e8"
+    },
+    "started": "2026-11-13T19:15:47+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+    "trace": {
+      "calls": 20,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:19:31+00:00",
+    "upstream_base": "86d9b8a203cab5bc446614f3cbffd77b4751084a",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 217600,
+      "completed_turns": 1,
+      "input_tokens": 249605,
+      "output_tokens": 3456,
+      "reasoning_output_tokens": 181,
+      "total_tokens": 253061
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:858e0f4ceeeea7c7af08341ca0ec164a0c01bcf698bc6a865327e553d0228b44",
+    "patch_sha256": "e551aab485aea491777b8d31bf1de5ab19bf7880d38d65cb9aa57c649b349b3a",
+    "prompt_sha256": "9375be86b1ce0a1a83b4aedf5faee2faf862e536719549e0735f4e5d3b84b06e",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:49:17+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:50:47+00:00",
+    "upstream_base": "d8518f64d954113c9363335eb25201befa2de6f2",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 321536,
+      "completed_turns": 1,
+      "input_tokens": 362690,
+      "output_tokens": 4096,
+      "reasoning_output_tokens": 619,
+      "total_tokens": 366786
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:858e0f4ceeeea7c7af08341ca0ec164a0c01bcf698bc6a865327e553d0228b44",
+    "patch_sha256": "73e39e9d18304040b8b25b1e559c1d42262751a7d43580e949a616c24438468d",
+    "prompt_sha256": "9375be86b1ce0a1a83b4aedf5faee2faf862e536719549e0735f4e5d3b84b06e",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:45:42+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+    "trace": {
+      "calls": 22,
+      "steps": 12,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:49:17+00:00",
+    "upstream_base": "d8518f64d954113c9363335eb25201befa2de6f2",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 767360,
+      "completed_turns": 1,
+      "input_tokens": 812682,
+      "output_tokens": 7567,
+      "reasoning_output_tokens": 1626,
+      "total_tokens": 820249
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:ec607ae7121e739c5d02f5a9dcb991f81109d90436b648706dc0346d4cc4a3e3",
+    "patch_sha256": "ed1be00980deea01c881e7a0ace8b4924deb2b6fcc53d55b6fdd4335a2d0f432",
+    "prompt_sha256": "9434d26998915b1883ffcc94476517a5df8ae7921c2b85c0f741054e5837db2c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T19:01:34+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+    "trace": {
+      "calls": 48,
+      "steps": 25,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:04:50+00:00",
+    "upstream_base": "cbfef314d45fe04e8bf7ebb239f1699606378634",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 178304,
+      "completed_turns": 1,
+      "input_tokens": 229662,
+      "output_tokens": 5534,
+      "reasoning_output_tokens": 0,
+      "total_tokens": 235196
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:ec607ae7121e739c5d02f5a9dcb991f81109d90436b648706dc0346d4cc4a3e3",
+    "patch_sha256": "be212436b616d22d90b377fa6ec435f3fe3a4d91517d91435fa7b240cf32937f",
+    "prompt_sha256": "9434d26998915b1883ffcc94476517a5df8ae7921c2b85c0f741054e5837db2c",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:57:19+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+    "trace": {
+      "calls": 23,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:01:34+00:00",
+    "upstream_base": "cbfef314d45fe04e8bf7ebb239f1699606378634",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 229248,
+      "completed_turns": 1,
+      "input_tokens": 257706,
+      "output_tokens": 5274,
+      "reasoning_output_tokens": 905,
+      "total_tokens": 262980
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:2686e53452454a5c1adca545bf049234dbe0d029778a533644b3869048eed296",
+    "patch_sha256": "c75016846386bcc8efe07a034a4b95d88ca70af8cf834434448722197c658b52",
+    "prompt_sha256": "ba9fc92d64b464085f37fe8f82bcf801e16c331f9aeefa0e7cfceb8591a18a86",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:16:32+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+    "trace": {
+      "calls": 23,
+      "steps": 13,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:19:59+00:00",
+    "upstream_base": "ab5e2a416324ec56cea44b79067ba798f8394de1",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 115328,
+      "completed_turns": 1,
+      "input_tokens": 135505,
+      "output_tokens": 3321,
+      "reasoning_output_tokens": 259,
+      "total_tokens": 138826
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:2686e53452454a5c1adca545bf049234dbe0d029778a533644b3869048eed296",
+    "patch_sha256": "f1423fa61d096794c599a86084fe93388b563b4a7e608072228305a79b8b0fae",
+    "prompt_sha256": "ba9fc92d64b464085f37fe8f82bcf801e16c331f9aeefa0e7cfceb8591a18a86",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:12:50+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+    "trace": {
+      "calls": 19,
+      "steps": 9,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:16:32+00:00",
+    "upstream_base": "ab5e2a416324ec56cea44b79067ba798f8394de1",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 246400,
+      "completed_turns": 1,
+      "input_tokens": 298124,
+      "output_tokens": 8989,
+      "reasoning_output_tokens": 1791,
+      "total_tokens": 307113
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:de973e2bd9c1703f9cff9e574f16ceb7dfd42344c7c32ac1994c4d20279aa981",
+    "patch_sha256": "3e1693b32acc2ea6f3fa2b7e70c1e1c5295fb25e41c205c31807200ace500383",
+    "prompt_sha256": "8d2b0b55bdb90ac9c4fb0773be27581f516195f4420ee2d2ac768a258eddec77",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:53:40+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "trace": {
+      "calls": 30,
+      "steps": 17,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:57:19+00:00",
+    "upstream_base": "bf65a1db0f3f49977de77d7d61eeaaecd022185c",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 117248,
+      "completed_turns": 1,
+      "input_tokens": 136762,
+      "output_tokens": 2768,
+      "reasoning_output_tokens": 341,
+      "total_tokens": 139530
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:de973e2bd9c1703f9cff9e574f16ceb7dfd42344c7c32ac1994c4d20279aa981",
+    "patch_sha256": "6cbbef1d6cdf3b2935264ea6ed8bdf31f816f9c83740e34c6e905f38653f27e0",
+    "prompt_sha256": "8d2b0b55bdb90ac9c4fb0773be27581f516195f4420ee2d2ac768a258eddec77",
+    "reward": 0.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "191ed6a161a70e6754618037ac2177e21b99d5f841701af6bbe80633c6933397"
+    },
+    "started": "2026-11-13T18:50:47+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "trace": {
+      "calls": 16,
+      "steps": 9,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T18:53:40+00:00",
+    "upstream_base": "bf65a1db0f3f49977de77d7d61eeaaecd022185c",
+    "verifier_exit_code": 1
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 184832,
+      "completed_turns": 1,
+      "input_tokens": 222684,
+      "output_tokens": 4051,
+      "reasoning_output_tokens": 563,
+      "total_tokens": 226735
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:a46a629d04d6ef3a2372a980010dcc48219e9dfd0e56869e62aa693d7ce4d475",
+    "patch_sha256": "ad4f2f89d4cc9b1331f9f438094ea6811bfec85640806f7ea94b28e8b12687bf",
+    "prompt_sha256": "36b3938ce981669c0440febe7d56f645d26985de06d5578b98ec5a8a790d9077",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "76ccc1edd3347d937a7f08b38c95029d508c751c6cc548efbc4ee723680b1cef"
+    },
+    "started": "2026-11-13T11:55:31+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+    "trace": {
+      "calls": 28,
+      "steps": 15,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T11:57:31+00:00",
+    "upstream_base": "2e65f731b1b615b5cd60417c00b6993c2295e9f8",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 75136,
+      "completed_turns": 1,
+      "input_tokens": 101036,
+      "output_tokens": 2115,
+      "reasoning_output_tokens": 184,
+      "total_tokens": 103151
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:a46a629d04d6ef3a2372a980010dcc48219e9dfd0e56869e62aa693d7ce4d475",
+    "patch_sha256": "eb1d747a625ecc93742c2eab7444a7e45ab35d728fe02c54757c912e5eaf3b83",
+    "prompt_sha256": "36b3938ce981669c0440febe7d56f645d26985de06d5578b98ec5a8a790d9077",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "e2e80aa56aca79494248171af61b99585567d326f5dac58b01d7859a67b1c8d0"
+    },
+    "started": "2026-11-13T11:52:59+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+    "trace": {
+      "calls": 16,
+      "steps": 9,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T11:55:31+00:00",
+    "upstream_base": "2e65f731b1b615b5cd60417c00b6993c2295e9f8",
+    "verifier_exit_code": 0
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 148352,
+      "completed_turns": 1,
+      "input_tokens": 164107,
+      "output_tokens": 4770,
+      "reasoning_output_tokens": 551,
+      "total_tokens": 168877
+    },
+    "arm": "adapt",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:5833eeb1a20d86c9b7f497274af374a64cd3cdc6cdd30a7d443f58f7b0ea0711",
+    "patch_sha256": "14e29bd11c2d45ad7fc161af05540024f5674e63d77b0262ea60e7924a7c9793",
+    "prompt_sha256": "2560da05e52d2774469aa218a1651f04a46070edcb829f65d32af712cff2f099",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "9ccf7a9453de47a958e279cb3e2813466042b572332ae528ace3d5a1743e95ae"
+    },
+    "started": "2026-11-13T19:38:00+00:00",
+    "status": "grading",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "trace": {
+      "calls": 20,
+      "steps": 11,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:39:49+00:00",
+    "upstream_base": "0e624e64695e8f566c7391f65f737311aeb6b2eb"
+  },
+  {
+    "agent_exit": "completed",
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 97280,
+      "completed_turns": 1,
+      "input_tokens": 117271,
+      "output_tokens": 3286,
+      "reasoning_output_tokens": 394,
+      "total_tokens": 120557
+    },
+    "arm": "stock",
+    "attempt": "0001",
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "family": "SWE-bench Pro",
+    "image_id": "sha256:5833eeb1a20d86c9b7f497274af374a64cd3cdc6cdd30a7d443f58f7b0ea0711",
+    "patch_sha256": "77753ac389e44e36d6fb6ebb9f39ffe879d800db94016c5f5d3e05c64988da05",
+    "prompt_sha256": "2560da05e52d2774469aa218a1651f04a46070edcb829f65d32af712cff2f099",
+    "reward": 1.0,
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "9ccf7a9453de47a958e279cb3e2813466042b572332ae528ace3d5a1743e95ae"
+    },
+    "started": "2026-11-13T19:29:04+00:00",
+    "status": "scored",
+    "task": "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+    "trace": {
+      "calls": 14,
+      "steps": 8,
+      "user_messages": 1
+    },
+    "updated": "2026-11-13T19:38:00+00:00",
+    "upstream_base": "0e624e64695e8f566c7391f65f737311aeb6b2eb",
+    "verifier_exit_code": 0
+  }
+]
