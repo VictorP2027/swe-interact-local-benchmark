@@ -1,0 +1,76 @@
+{
+  "task": "rf_task-696719205599a51110d4b455",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "f2be894d1142f80f53e25d42c41abcf174911d17",
+  "base_commit": "27be63df5cd9d1ae17ed4de76661ca01bcf91465",
+  "task_verifier_reward": 1.0,
+  "raw_task_verifier_reward": 0.0,
+  "evaluation_valid": true,
+  "evaluation_invalid_reasons": [],
+  "verifier_exit_code": 0,
+  "verifier": "original supplied RF test.sh, master validator, test patch and rubric evaluator",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_grafana_696719205599a51110d4b455_1.0@sha256:3fe50147daa3cbe3e56dd7879fa1b7625c129d6f89bca4ab9d07c5040d6ef9c4",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "workspace": "/grafana",
+  "uses_hidden_test_feedback": false,
+  "infrastructure_retry_of": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b455/result.json",
+  "verifier_timed_out": false,
+  "application_path": "/tmp/direct-native-go/bin:/opt/venv/bin:/usr/local/go/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin",
+  "go_flags": "-p=1",
+  "gomaxprocs": 2,
+  "run_script_runner": "go",
+  "cargo_low_memory": false,
+  "test_runs": {
+    "baseline": {
+      "passed_test_count": 2077,
+      "failed_test_count": 0,
+      "skipped_test_count": 2,
+      "exit_code": 0
+    },
+    "mutation": {
+      "passed_test_count": 2087,
+      "failed_test_count": 0,
+      "skipped_test_count": 2,
+      "exit_code": 0
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "local OpenAI-compatible bridge to supported Codex CLI exec",
+    "authentication": "existing Codex CLI ChatGPT sign-in; no API key extracted",
+    "original_default_model": "anthropic/claude-opus-4-5-20251101",
+    "tool_use": false,
+    "calls": 216,
+    "max_tokens": "2048 instructed; CLI has no output-token-limit flag"
+  },
+  "verifier_scripts_sha256": {
+    "test_patch.diff": "6da1d7a8c9fd9a2f084d3b8a650cb7d7e6bde76ee5b958a7533a0f77a441f38b",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "4d5460004b8ad79f9f35b302f9d959df4a35d88b9f183ad86517df5a8d17f384",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "5c4c76c1a3ac71210d87c02c81bf479113ba74cb4db60d48889c8d74951c9d5e",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "f9a021587d8d7808891c83489f62b6ba44963bd8ac1f28c8f824e82d1dc905e8",
+    "test_files.json": "e9a92fca21545ad40aaa264eeb512637feed5e1a3b5e1e53445c55e66e6a7286",
+    "relevant_file_names.json": "8496e521938f68d44d155786214fb909a8e76cdc5d69f7843e14c174f3034c46",
+    "run_script.sh": "7421e1553cfc954614cf9c9fd40d33232974bd032fe4c2552dcb71fbb2cb901f",
+    "rubrics.json": "6d8d936fe92ee5f9493731c2e5a1bc0f2ded67b114ac53d09dc54c9597c33bb0",
+    "test.sh": "b768b4c0d9868e65b6b6beb3961b102a11f580888bd5a6884717ae507c5dc5c0",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-12T22:46:35.703565+00:00",
+  "canonical_evaluation_valid": false,
+  "verification_mode": "reconciled identical-input artifacts",
+  "required_coverage": {
+    "required": 11,
+    "passed": 11,
+    "missing_or_skipped": []
+  },
+  "rubric_recovery": "Reused original complete ratings: binary patch, all supplied script/input hashes and all grader message payloads match exactly. No new rating was requested.",
+  "baseline_artifact": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b455/infrastructure-retry-go-runner/agent_baseline_results.json",
+  "mutation_artifact": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b455/infrastructure-retry-go-runner/agent_mutation_results.json",
+  "rubric_artifact": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b455/rubrics_results.json",
+  "reconciliation_limit": "This is an explicitly combined evidence record, not a new single canonical invocation."
+}

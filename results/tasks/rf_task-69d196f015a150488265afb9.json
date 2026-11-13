@@ -1,0 +1,173 @@
+{
+  "task": "rf_task-69d196f015a150488265afb9",
+  "implementation_commit": "d88d8782badb957b832a73fed85fe05605a034f1",
+  "base_commit": "9c6c154d0e9aa5b8e869219bf04b930f19d42e51",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "verification_mode": "native complete affected-file verification",
+  "verifier": "Unmodified supplied Jest tests and test patch; complete affected files without the name filter; original rubric evaluator",
+  "task_verifier_reward": 0.0,
+  "evaluation_valid": false,
+  "canonical_evaluation_valid": false,
+  "canonical_limitation": "The supplied name filter skips all 37 existing baseline tests. This supplemental evaluation executes complete affected files.",
+  "uses_hidden_test_feedback": false,
+  "test_runs": {
+    "baseline": {
+      "passed_tests": [
+        {
+          "name": "DatasourceAPIVersions > get",
+          "failure_messages": []
+        }
+      ],
+      "failed_tests": [],
+      "skipped_tests": [],
+      "exit_code": 0,
+      "test_files": [
+        "public/app/features/apiserver/client.test.ts"
+      ],
+      "infrastructure_errors": [],
+      "passed_test_count": 1,
+      "failed_test_count": 0,
+      "skipped_test_count": 0
+    },
+    "mutation": {
+      "passed_tests": [
+        {
+          "name": "provisioning API HTTP surface > listJobs includes encoded label and field selectors in request params when provided",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > listJobs with no args does not attach label or field selector params",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > listRepository carries encoded label selectors on the request",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > getJob targets the job resource by name in the URL path",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > getRepository targets the repository resource in the URL path",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > listRepositoryHistory forwards ref as a query parameter",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > getRepositoryHistory includes the file path segment and ref",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > deleteRepositoryFiles sends ref and message as query parameters on DELETE",
+          "failure_messages": []
+        },
+        {
+          "name": "provisioning API HTTP surface > getRepositoryWebhook targets the webhook URL (read)",
+          "failure_messages": []
+        },
+        {
+          "name": "DatasourceAPIVersions > get",
+          "failure_messages": []
+        },
+        {
+          "name": "parseListOptionsSelector > returns undefined for undefined input",
+          "failure_messages": []
+        },
+        {
+          "name": "parseListOptionsSelector > returns raw string selector unchanged",
+          "failure_messages": []
+        },
+        {
+          "name": "parseListOptionsSelector > encodes equality and inequality labels in a Kubernetes-compatible way (order-independent check)",
+          "failure_messages": []
+        },
+        {
+          "name": "parseListOptionsSelector > encodes in / notin label sets without requiring a single canonical join beyond containing both clauses",
+          "failure_messages": []
+        },
+        {
+          "name": "parseListOptionsSelector > supports existence-style operators",
+          "failure_messages": []
+        },
+        {
+          "name": "ScopedResourceClient > passes list options through the shared selector serializer for GET list",
+          "failure_messages": []
+        }
+      ],
+      "failed_tests": [
+        {
+          "name": "provisioning API HTTP surface > postRepositoryWebhook issues a POST to the webhook route",
+          "failure_messages": [
+            "TypeError: Cannot read properties of undefined (reading 'initiate')\n    at Object.<anonymous> (/grafana/public/app/features/provisioning/api/endpoints.test.ts:141:66)\n    at Promise.then.completed (/grafana/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/grafana/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/grafana/node_modules/jest-circus/build/run.js:316:40)\n    at _runTest (/grafana/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/grafana/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/grafana/node_modules/jest-circus/build/run.js:121:9)\n    at run (/grafana/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/grafana/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/grafana/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/grafana/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/grafana/node_modules/jest-runner/build/runTest.js:444:34)"
+          ]
+        }
+      ],
+      "skipped_tests": [],
+      "exit_code": 1,
+      "test_files": [
+        "public/app/features/apiserver/client.test.ts",
+        "public/app/features/provisioning/api/endpoints.test.ts"
+      ],
+      "infrastructure_errors": [],
+      "passed_test_count": 16,
+      "failed_test_count": 1,
+      "skipped_test_count": 0
+    }
+  },
+  "comparison": {
+    "required_test_count": 16,
+    "required_passed": 15,
+    "required_failed": [
+      "provisioning API HTTP surface > postRepositoryWebhook issues a POST to the webhook route"
+    ],
+    "required_missing_or_skipped": [],
+    "retained_pass_to_fail": [],
+    "new_tests_passed": [
+      "ScopedResourceClient > passes list options through the shared selector serializer for GET list",
+      "parseListOptionsSelector > encodes equality and inequality labels in a Kubernetes-compatible way (order-independent check)",
+      "parseListOptionsSelector > encodes in / notin label sets without requiring a single canonical join beyond containing both clauses",
+      "parseListOptionsSelector > returns raw string selector unchanged",
+      "parseListOptionsSelector > returns undefined for undefined input",
+      "parseListOptionsSelector > supports existence-style operators",
+      "provisioning API HTTP surface > deleteRepositoryFiles sends ref and message as query parameters on DELETE",
+      "provisioning API HTTP surface > getJob targets the job resource by name in the URL path",
+      "provisioning API HTTP surface > getRepository targets the repository resource in the URL path",
+      "provisioning API HTTP surface > getRepositoryHistory includes the file path segment and ref",
+      "provisioning API HTTP surface > getRepositoryWebhook targets the webhook URL (read)",
+      "provisioning API HTTP surface > listJobs includes encoded label and field selectors in request params when provided",
+      "provisioning API HTTP surface > listJobs with no args does not attach label or field selector params",
+      "provisioning API HTTP surface > listRepository carries encoded label selectors on the request",
+      "provisioning API HTTP surface > listRepositoryHistory forwards ref as a query parameter"
+    ],
+    "baseline_tests_absent_from_supplied_patch": []
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "supported Codex CLI via the local rubric bridge",
+    "calls": 119
+  },
+  "source_sha256": "c8e46a6ac87e6820cb60c3938605667ce863f8b88e0b697adf4052f006de9b55",
+  "test_inputs_sha256": {
+    "test_patch.diff": "db14a425c2adf6ca44ce74f5d96d787539817159f5dd7b7aa9894e589b488c91",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "05b58c9405993fa5ef00606a3deaa4b015eac69db2e75355b57daba638af74b9",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "773b937673a17d51e191050222a6702feee2c7a597b5426f8aaa7b349caf4567",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "81544b8c0c9294d261954616a37028539db859ebc3660012856a851afdbb4a19",
+    "test_files.json": "69a863e36331e3ae4d81be47dde6551ba8b193907c3038d6f5e049b9b5be74cd",
+    "relevant_file_names.json": "69a863e36331e3ae4d81be47dde6551ba8b193907c3038d6f5e049b9b5be74cd",
+    "run_script.sh": "7421e1553cfc954614cf9c9fd40d33232974bd032fe4c2552dcb71fbb2cb901f",
+    "rubrics.json": "6a65e935aab4e9ab1bf0f8bdd8f2414564385d53663f38acee9fae2c0eec982f",
+    "test.sh": "b768b4c0d9868e65b6b6beb3961b102a11f580888bd5a6884717ae507c5dc5c0",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-12T22:46:35.703565+00:00",
+  "failure_assessment_valid": true,
+  "assessment_note": "The unchanged supplied POST-webhook assertion failed on the frozen first implementation. Full affected-file baseline ran one assertion; mutation passed 16 and failed one. Rubric grading was blocked by the CLI usage limit.",
+  "original_result": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-69d196f015a150488265afb9/native-full-file-verifier/first-attempt/result.json"
+}

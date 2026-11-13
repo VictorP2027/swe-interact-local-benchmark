@@ -1,0 +1,69 @@
+{
+  "task": "rf_task-69d196f015a150488265afc1",
+  "implementation_commit": "1235a08a32a2f19b70f7ae5a4e72b041310ab0c1",
+  "base_commit": "7325bcdfb9440eac9a0b3b2c84ee02c7290f03a0",
+  "uses_hidden_test_feedback": false,
+  "task_verifier_reward": 0.0,
+  "evaluation_valid": true,
+  "canonical_evaluation_valid": false,
+  "verification_mode": "resumed complete required MTR cases and original rubric evaluator",
+  "required_coverage": {
+    "required": 4,
+    "reported": 4,
+    "missing": []
+  },
+  "test_runs": {
+    "baseline": {
+      "passed_test_count": 3,
+      "failed_test_count": 0,
+      "skipped_test_count": 0,
+      "passed_tests": [
+        {
+          "name": "gcol.innodb_virtual_stats"
+        },
+        {
+          "name": "innodb.innodb_stats_auto_recalc_on_nonexistent"
+        },
+        {
+          "name": "innodb.innodb_stats_fetch"
+        }
+      ],
+      "failed_tests": [],
+      "exit_code": 0
+    },
+    "mutation": {
+      "passed_tests": [
+        {
+          "name": "innodb.innodb_stats_fetch"
+        },
+        {
+          "name": "innodb.innodb_stats_auto_recalc_on_nonexistent"
+        },
+        {
+          "name": "innodb.innodb_stats_flush_no_reload"
+        }
+      ],
+      "failed_tests": [
+        {
+          "name": "gcol.innodb_virtual_stats"
+        }
+      ],
+      "skipped_tests": [],
+      "exit_code": 1,
+      "passed_test_count": 3,
+      "failed_test_count": 1,
+      "skipped_test_count": 0
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "rubric_count": 18,
+    "evaluable_count": 18,
+    "must_have_pass": false
+  },
+  "source_failure": "gcol.innodb_virtual_stats regresses: persistent statistics for newly added indexes are missing after ALTER TABLE. Other three required cases pass.",
+  "grading_note": "The sole rejected rubric is self-contradictory: its justification acknowledges that the header returns the requested enum. The original NO rating is retained without rerolling. The runtime regression independently establishes failure.",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_MariaDB_server_69d196f015a150488265afc1_1.0@sha256:2d91b0ab5cefe39ef357005ee8d7cf526d2d4440dd7c658816ce7f6c3745e3c6",
+  "updated_at_utc": "2026-11-13T01:29:48.576653+00:00"
+}

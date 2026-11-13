@@ -1,0 +1,383 @@
+diff --git a/public/app/features/apiserver/client.ts b/public/app/features/apiserver/client.ts
+index 1792db9..0be455a 100644
+--- a/public/app/features/apiserver/client.ts
++++ b/public/app/features/apiserver/client.ts
+@@ -38,11 +38,13 @@ export class ScopedResourceClient<T = object, S = object, K = string> implements
+   }
+ 
+   public async list(opts?: ListOptions | undefined): Promise<ResourceList<T, S, K>> {
+-    const finalOpts = opts || {};
+-    finalOpts.labelSelector = this.parseListOptionsSelector(finalOpts?.labelSelector);
+-    finalOpts.fieldSelector = this.parseListOptionsSelector(finalOpts?.fieldSelector);
++    const finalOpts = {
++      ...opts,
++      labelSelector: parseListOptionsSelector(opts?.labelSelector),
++      fieldSelector: parseListOptionsSelector(opts?.fieldSelector),
++    };
+ 
+-    return getBackendSrv().get<ResourceList<T, S, K>>(this.url, opts);
++    return getBackendSrv().get<ResourceList<T, S, K>>(this.url, finalOpts);
+   }
+ 
+   public async create(obj: ResourceForCreate<T, K>): Promise<Resource<T, S, K>> {
+@@ -64,39 +66,39 @@ export class ScopedResourceClient<T = object, S = object, K = string> implements
+   public async delete(name: string): Promise<MetaStatus> {
+     return getBackendSrv().delete<MetaStatus>(`${this.url}/${name}`);
+   }
++}
+ 
+-  private parseListOptionsSelector(
+-    selector: ListOptionsLabelSelector | ListOptionsFieldSelector | undefined
+-  ): string | undefined {
+-    if (!Array.isArray(selector)) {
+-      return selector;
+-    }
++export function parseListOptionsSelector(
++  selector: ListOptionsLabelSelector | ListOptionsFieldSelector | undefined
++): string | undefined {
++  if (!Array.isArray(selector)) {
++    return selector;
++  }
+ 
+-    return selector
+-      .map((label) => {
+-        const key = String(label.key);
+-        const operator = label.operator;
++  return selector
++    .map((label) => {
++      const key = String(label.key);
++      const operator = label.operator;
+ 
+-        switch (operator) {
+-          case '=':
+-          case '!=':
+-            return `${key}${operator}${label.value}`;
++      switch (operator) {
++        case '=':
++        case '!=':
++          return `${key}${operator}${label.value}`;
+ 
+-          case 'in':
+-          case 'notin':
+-            return `${key} ${operator} (${label.value.join(',')})`;
++        case 'in':
++        case 'notin':
++          return `${key} ${operator} (${label.value.join(',')})`;
+ 
+-          case '':
+-          case '!':
+-            return `${operator}${key}`;
++        case '':
++        case '!':
++          return `${operator}${key}`;
+ 
+-          default:
+-            return null;
+-        }
+-      })
+-      .filter(Boolean)
+-      .join(',');
+-  }
++        default:
++          return null;
++      }
++    })
++    .filter(Boolean)
++    .join(',');
+ }
+ 
+ // add the origin annotations so we know what was set from the UI
+diff --git a/public/app/features/provisioning/RepositoryStatusPage.tsx b/public/app/features/provisioning/RepositoryStatusPage.tsx
+index ca0e3f3..6433155 100644
+--- a/public/app/features/provisioning/RepositoryStatusPage.tsx
++++ b/public/app/features/provisioning/RepositoryStatusPage.tsx
+@@ -1,7 +1,6 @@
+ import { useMemo, useState } from 'react';
+ import { useLocation } from 'react-router';
+ import { useParams } from 'react-router-dom-v5-compat';
+-import { useAsync } from 'react-use';
+ 
+ import { SelectableValue, urlUtil } from '@grafana/data';
+ import {
+@@ -25,10 +24,13 @@ import {
+ import { Page } from 'app/core/components/Page/Page';
+ import { useQueryParams } from 'app/core/hooks/useQueryParams';
+ 
+-import { ScopedResourceClient } from '../apiserver/client';
+-
+-import { useGetRepositoryStatusQuery, useListRepositoryFilesQuery, useTestRepositoryQuery } from './api';
+-import { JobSpec, JobStatus, RepositoryResource, FileDetails, TestResponse } from './api/types';
++import {
++  useGetRepositoryStatusQuery,
++  useListJobsQuery,
++  useListRepositoryFilesQuery,
++  useTestRepositoryQuery,
++} from './api';
++import { RepositoryResource, FileDetails, TestResponse } from './api/types';
+ import { PROVISIONING_URL } from './constants';
+ 
+ enum TabSelection {
+@@ -202,37 +204,29 @@ function FilesView({ repo }: RepoProps) {
+   );
+ }
+ 
+-const jobsClient = new ScopedResourceClient<JobSpec, JobStatus, 'Job'>({
+-  group: 'provisioning.grafana.app',
+-  version: 'v0alpha1',
+-  resource: 'jobs',
+-});
+-
+ function JobsView({ repo }: RepoProps) {
+   const name = repo.metadata.name;
+-  const jobs = useAsync(async () => {
+-    return jobsClient.list({
+-      labelSelector: [
+-        {
+-          key: 'repository',
+-          operator: '=',
+-          value: name,
+-        },
+-      ],
+-    });
+-  }, [name]);
++  const jobs = useListJobsQuery({
++    labelSelector: [
++      {
++        key: 'repository',
++        operator: '=',
++        value: name,
++      },
++    ],
++  });
+ 
+-  if (jobs.loading) {
++  if (jobs.isLoading) {
+     return <Spinner />;
+   }
+-  if (jobs.error) {
++  if (jobs.isError) {
+     return (
+       <Alert title="error loading jobs">
+         <pre>{JSON.stringify(jobs.error)}</pre>
+       </Alert>
+     );
+   }
+-  if (!jobs.value?.items?.length) {
++  if (!jobs.data?.items?.length) {
+     return (
+       <div>
+         No recent events...
+@@ -244,7 +238,7 @@ function JobsView({ repo }: RepoProps) {
+ 
+   return (
+     <div>
+-      {jobs.value.items.map((item) => {
++      {jobs.data.items.map((item) => {
+         return (
+           <Card key={item.metadata.resourceVersion}>
+             <Card.Heading>
+diff --git a/public/app/features/provisioning/api/endpoints.ts b/public/app/features/provisioning/api/endpoints.ts
+index 44bd453..75244f1 100644
+--- a/public/app/features/provisioning/api/endpoints.ts
++++ b/public/app/features/provisioning/api/endpoints.ts
+@@ -1,5 +1,7 @@
+ import { Resource } from 'app/features/apiserver/types';
+ 
++import { parseListOptionsSelector } from '../../apiserver/client';
++
+ import { baseAPI as api } from './baseAPI';
+ import {
+   RepositoryList,
+@@ -15,20 +17,35 @@ import {
+   TestResponse,
+   RepositorySpec,
+   JobList,
++  JobResource,
++  ListApiArg,
++  GetRequestArg,
++  WebhookResponse,
+ } from './types';
+ 
+ const BASE_PATH = '/repositories';
+ 
++function listParams(options: ListApiArg | void) {
++  return {
++    ...options,
++    labelSelector: parseListOptionsSelector(options?.labelSelector),
++    fieldSelector: parseListOptionsSelector(options?.fieldSelector),
++  };
++}
++
+ const injectedRtkApi = api.injectEndpoints({
+   endpoints: (build) => ({
+-    listRepository: build.query<RepositoryList, void>({
+-      query: () => ({ url: BASE_PATH }),
++    listRepository: build.query<RepositoryList, ListApiArg | void>({
++      query: (options) => ({ url: BASE_PATH, params: listParams(options) }),
+       providesTags: ['RepositoryList'],
+     }),
+-    listJobs: build.query<JobList, void>({
+-      query: () => ({ url: '/jobs' }),
++    listJobs: build.query<JobList, ListApiArg | void>({
++      query: (options) => ({ url: '/jobs', params: listParams(options) }),
+       providesTags: ['JobList'],
+     }),
++    getJob: build.query<JobResource, RequestArg>({
++      query: ({ name }) => ({ url: `/jobs/${name}` }),
++    }),
+     createRepository: build.mutation<void, RepositoryForCreate>({
+       query: (body) => ({
+         url: BASE_PATH,
+@@ -81,7 +98,19 @@ const injectedRtkApi = api.injectEndpoints({
+         params: { ref },
+       }),
+     }),
+-    listRepositoryFileHistory: build.query<HistoryListResponse, { name: string; path: string; ref?: string }>({
++    listRepositoryHistory: build.query<HistoryListResponse, RequestArg>({
++      query: ({ name, ref }) => ({
++        url: `${BASE_PATH}/${name}/history`,
++        params: { ref },
++      }),
++    }),
++    getRepositoryHistory: build.query<HistoryListResponse, GetRequestArg>({
++      query: ({ name, ref, path }) => ({
++        url: `${BASE_PATH}/${name}/history/${path}`,
++        params: { ref },
++      }),
++    }),
++    listRepositoryFileHistory: build.query<HistoryListResponse, GetRequestArg>({
+       query: ({ name, ref, path }) => ({
+         url: `${BASE_PATH}/${name}/history/${path}`,
+         params: { ref },
+@@ -110,6 +139,7 @@ const injectedRtkApi = api.injectEndpoints({
+       query: ({ name, path, ref, message }) => ({
+         url: `${BASE_PATH}/${name}/files/${path}`,
+         method: 'DELETE',
++        params: { ref, message },
+       }),
+     }),
+     createRepositoryImport: build.mutation<ResourceWrapper, { name: string; ref?: string }>({
+@@ -119,6 +149,16 @@ const injectedRtkApi = api.injectEndpoints({
+         params: { ref },
+       }),
+     }),
++    getRepositoryWebhook: build.query<WebhookResponse | JobResource, RequestArg>({
++      query: ({ name }) => ({ url: `${BASE_PATH}/${name}/webhook` }),
++    }),
++    createRepositoryWebhook: build.mutation<WebhookResponse | JobResource, RequestArg & { body?: object }>({
++      query: ({ name, body }) => ({
++        url: `${BASE_PATH}/${name}/webhook`,
++        method: 'POST',
++        body,
++      }),
++    }),
+     getRepositoryStatus: build.query<RepositoryResource, RequestArg>({
+       query: ({ name }) => ({
+         url: `${BASE_PATH}/${name}/status`,
+@@ -160,6 +200,7 @@ export { injectedRtkApi as generatedAPI };
+ export const {
+   useListRepositoryQuery,
+   useListJobsQuery,
++  useGetJobQuery,
+   useCreateRepositoryMutation,
+   useGetRepositoryQuery,
+   useUpdateRepositoryMutation,
+@@ -169,6 +210,10 @@ export const {
+   useGetRepositoryFilesQuery,
+   useListRepositoryFilesQuery,
+   useListRepositoryFileHistoryQuery,
++  useListRepositoryHistoryQuery,
++  useGetRepositoryHistoryQuery,
++  useGetRepositoryWebhookQuery,
++  useCreateRepositoryWebhookMutation,
+   useUpdateRepositoryFilesMutation,
+   useCreateRepositoryFilesMutation,
+   useDeleteRepositoryFilesMutation,
+diff --git a/public/app/features/provisioning/api/types.ts b/public/app/features/provisioning/api/types.ts
+index eacf320..71ad07f 100644
+--- a/public/app/features/provisioning/api/types.ts
++++ b/public/app/features/provisioning/api/types.ts
+@@ -1,6 +1,6 @@
+ import { AlertVariant } from '@grafana/ui';
+ 
+-import { Resource, ResourceForCreate, ResourceList } from '../../apiserver/types';
++import { ListOptions, Resource, ResourceForCreate, ResourceList } from '../../apiserver/types';
+ 
+ export type GitHubRepositoryConfig = {
+   branchWorkflow?: boolean;
+@@ -56,6 +56,21 @@ export type TestResponse = {
+ export interface RequestArg {
+   /** Repository UID */
+   name: string;
++  ref?: string;
++}
++
++export interface GetRequestArg extends RequestArg {
++  path: string;
++}
++
++export interface ListApiArg extends ListOptions {
++  watch?: boolean;
++  allowWatchBookmarks?: boolean;
++  resourceVersion?: string;
++  resourceVersionMatch?: 'Exact' | 'NotOlderThan';
++  timeoutSeconds?: number;
++  sendInitialEvents?: boolean;
++  pretty?: boolean;
+ }
+ 
+ export type RepositoryForCreate = ResourceForCreate<RepositorySpec>;
+@@ -68,15 +83,39 @@ export type RepositoryResource = Resource<RepositorySpec, RepositoryStatus, 'Rep
+ export type RepositoryList = ResourceList<RepositorySpec, RepositoryStatus, 'Repository'>;
+ 
+ export type JobSpec = {
+-  action: string;
++  action: 'pr' | 'merge' | 'export';
+   ref?: string;
+   pr?: number;
+   hash?: string;
+   url?: string;
++  commits?: CommitInfo[];
++};
++
++export type FileRef = {
++  ref: string;
++  path: string;
++};
++
++export type CommitInfo = {
++  sha1?: string;
++  added?: FileRef[];
++  modified?: FileRef[];
++  removed?: FileRef[];
++};
++
++export type WebhookResponse = {
++  apiVersion?: string;
++  kind?: string;
++  code?: number;
++  message?: string;
++  added?: string;
++  job?: JobSpec;
+ };
+ 
+ export type JobStatus = {
+   updated?: string; // actually a date...
++  started?: number;
++  finished?: number;
+   state: 'pending' | 'working' | 'success' | 'error';
+   message?: string;
+   errors?: string[];
+@@ -124,11 +163,7 @@ export type FileOperationArg = {
+   ref?: string;
+ };
+ 
+-export type GetFileArg = {
+-  name: string;
+-  path: string;
+-  ref?: string;
+-};
++export type GetFileArg = GetRequestArg;
+ 
+ export type FileDetails = {
+   path: string;

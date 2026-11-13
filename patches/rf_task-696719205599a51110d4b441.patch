@@ -1,0 +1,443 @@
+diff --git a/api/v1/group_routes.go b/api/v1/group_routes.go
+index d4c9f17..ee25b4b 100644
+--- a/api/v1/group_routes.go
++++ b/api/v1/group_routes.go
+@@ -6,7 +6,7 @@ import (
+ )
+ 
+ func handleGetGroups(cs *ControlSurface, rw http.ResponseWriter, _ *http.Request) {
+-	root := NewGroup(cs.RunState.Runner.GetDefaultGroup(), nil)
++	root := NewGroup(cs.RunState.GroupSummary.Group(), nil)
+ 	groups := FlattenGroup(root)
+ 
+ 	data, err := json.Marshal(newGroupsJSONAPI(groups))
+@@ -18,7 +18,7 @@ func handleGetGroups(cs *ControlSurface, rw http.ResponseWriter, _ *http.Request
+ }
+ 
+ func handleGetGroup(cs *ControlSurface, rw http.ResponseWriter, _ *http.Request, id string) {
+-	root := NewGroup(cs.RunState.Runner.GetDefaultGroup(), nil)
++	root := NewGroup(cs.RunState.GroupSummary.Group(), nil)
+ 	groups := FlattenGroup(root)
+ 
+ 	var group *Group
+diff --git a/cmd/run.go b/cmd/run.go
+index ee64c6f..28654f7 100644
+--- a/cmd/run.go
++++ b/cmd/run.go
+@@ -165,6 +165,8 @@ func (c *cmdRun) run(cmd *cobra.Command, args []string) (err error) {
+ 		return err
+ 	}
+ 
++	outputs = append(outputs, testRunState.GroupSummary)
++
+ 	metricsEngine, err := engine.NewMetricsEngine(testRunState.Registry, logger)
+ 	if err != nil {
+ 		return err
+@@ -192,7 +194,7 @@ func (c *cmdRun) run(cmd *cobra.Command, args []string) (err error) {
+ 			logger.Debug("Generating the end-of-test summary...")
+ 			summaryResult, hsErr := test.initRunner.HandleSummary(globalCtx, &lib.Summary{
+ 				Metrics:         metricsEngine.ObservedMetrics,
+-				RootGroup:       testRunState.Runner.GetDefaultGroup(),
++				RootGroup:       testRunState.GroupSummary.Group(),
+ 				TestRunDuration: executionState.GetCurrentTestRunDuration(),
+ 				NoColor:         c.gs.Flags.NoColor,
+ 				UIState: lib.UIState{
+diff --git a/cmd/test_load.go b/cmd/test_load.go
+index b7017c0..a6a8da3 100644
+--- a/cmd/test_load.go
++++ b/cmd/test_load.go
+@@ -275,6 +275,7 @@ func (lct *loadedAndConfiguredTest) buildTestRunState(
+ 	return &lib.TestRunState{
+ 		TestPreInitState: lct.preInitState,
+ 		Runner:           lct.initRunner,
++		GroupSummary:     lib.NewGroupSummary(lct.preInitState.Logger),
+ 		Options:          lct.derivedConfig.Options, // we will always run with the derived options
+ 		RunTags:          lct.preInitState.Registry.RootTagSet().WithTagsFromMap(configToReinject.RunTags),
+ 	}, nil
+diff --git a/js/modules/k6/k6.go b/js/modules/k6/k6.go
+index f5bb139..2813a4e 100644
+--- a/js/modules/k6/k6.go
++++ b/js/modules/k6/k6.go
+@@ -5,13 +5,14 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"math/rand"
+-	"sync/atomic"
++	"strings"
+ 	"time"
+ 
+ 	"github.com/dop251/goja"
+ 
+ 	"go.k6.io/k6/js/common"
+ 	"go.k6.io/k6/js/modules"
++	"go.k6.io/k6/lib"
+ 	"go.k6.io/k6/metrics"
+ )
+ 
+@@ -105,25 +106,22 @@ func (mi *K6) Group(name string, val goja.Value) (goja.Value, error) {
+ 	if common.IsAsyncFunction(mi.vu.Runtime(), val) {
+ 		return goja.Undefined(), fmt.Errorf(asyncFunctionNotSupportedMsg, "group")
+ 	}
+-	g, err := state.Group.Group(name)
++	old, _ := state.Tags.GetCurrentValues().Tags.Get("group")
++	groupPath, err := lib.NewGroupPath(old, name)
+ 	if err != nil {
+ 		return goja.Undefined(), err
+ 	}
+ 
+-	old := state.Group
+-	state.Group = g
+-
+ 	shouldUpdateTag := state.Options.SystemTags.Has(metrics.TagGroup)
+ 	if shouldUpdateTag {
+ 		state.Tags.Modify(func(tagsAndMeta *metrics.TagsAndMeta) {
+-			tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, g.Path)
++			tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, groupPath)
+ 		})
+ 	}
+ 	defer func() {
+-		state.Group = old
+ 		if shouldUpdateTag {
+ 			state.Tags.Modify(func(tagsAndMeta *metrics.TagsAndMeta) {
+-				tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, old.Path)
++				tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, old)
+ 			})
+ 		}
+ 	}()
+@@ -176,15 +174,13 @@ func (mi *K6) Check(arg0, checks goja.Value, extras ...goja.Value) (bool, error)
+ 	for _, name := range obj.Keys() {
+ 		val := obj.Get(name)
+ 
+-		// Resolve the check record.
+-		check, err := state.Group.Check(name)
+-		if err != nil {
+-			return false, err
++		if strings.Contains(name, lib.GroupSeparator) {
++			return false, lib.ErrNameContainsGroupSeparator
+ 		}
+ 
+ 		tags := commonTagsAndMeta.Tags
+ 		if state.Options.SystemTags.Has(metrics.TagCheck) {
+-			tags = tags.With("check", check.Name)
++			tags = tags.With("check", name)
+ 		}
+ 
+ 		if common.IsAsyncFunction(rt, val) {
+@@ -221,10 +217,7 @@ func (mi *K6) Check(arg0, checks goja.Value, extras ...goja.Value) (bool, error)
+ 				Value:    0,
+ 			}
+ 			if booleanVal {
+-				atomic.AddInt64(&check.Passes, 1)
+ 				sample.Value = 1
+-			} else {
+-				atomic.AddInt64(&check.Fails, 1)
+ 			}
+ 
+ 			metrics.PushIfNotDone(ctx, state.Samples, sample)
+diff --git a/js/runner.go b/js/runner.go
+index aae07f7..70316e4 100644
+--- a/js/runner.go
++++ b/js/runner.go
+@@ -48,7 +48,6 @@ var nameToCertWarning sync.Once
+ type Runner struct {
+ 	Bundle       *Bundle
+ 	preInitState *lib.TestPreInitState
+-	defaultGroup *lib.Group
+ 
+ 	BaseDialer net.Dialer
+ 	Resolver   netext.Resolver
+@@ -84,16 +83,10 @@ func NewFromArchive(piState *lib.TestPreInitState, arc *lib.Archive) (*Runner, e
+ 
+ // NewFromBundle returns a new Runner from the provided Bundle
+ func NewFromBundle(piState *lib.TestPreInitState, b *Bundle) (*Runner, error) {
+-	defaultGroup, err := lib.NewGroup("", nil)
+-	if err != nil {
+-		return nil, err
+-	}
+-
+ 	defDNS := types.DefaultDNSConfig()
+ 	r := &Runner{
+ 		Bundle:       b,
+ 		preInitState: piState,
+-		defaultGroup: defaultGroup,
+ 		BaseDialer: net.Dialer{
+ 			Timeout:   30 * time.Second,
+ 			KeepAlive: 30 * time.Second,
+@@ -105,7 +98,7 @@ func NewFromBundle(piState *lib.TestPreInitState, b *Bundle) (*Runner, error) {
+ 		BufferPool:     lib.NewBufferPool(),
+ 	}
+ 
+-	err = r.SetOptions(r.Bundle.Options)
++	err := r.SetOptions(r.Bundle.Options)
+ 
+ 	return r, err
+ }
+@@ -248,7 +241,6 @@ func (r *Runner) newVU(
+ 		VUIDGlobal:     vu.IDGlobal,
+ 		Samples:        vu.Samples,
+ 		Tags:           lib.NewVUStateTags(vu.Runner.RunTags),
+-		Group:          r.defaultGroup,
+ 		BuiltinMetrics: r.preInitState.BuiltinMetrics,
+ 		TracerProvider: r.preInitState.TracerProvider,
+ 	}
+@@ -344,11 +336,6 @@ func (r *Runner) Teardown(ctx context.Context, out chan<- metrics.SampleContaine
+ 	return err
+ }
+ 
+-// GetDefaultGroup returns the default (root) Group.
+-func (r *Runner) GetDefaultGroup() *lib.Group {
+-	return r.defaultGroup
+-}
+-
+ // GetOptions returns the currently calculated [lib.Options] for the given Runner.
+ func (r *Runner) GetOptions() lib.Options {
+ 	return r.Bundle.Options
+@@ -559,17 +546,16 @@ func (r *Runner) runPart(
+ 	}()
+ 	vu.moduleVUImpl.ctx = ctx
+ 
+-	group, err := r.GetDefaultGroup().Group(name)
++	groupPath, err := lib.NewGroupPath(lib.RootGroupPath, name)
+ 	if err != nil {
+ 		return goja.Undefined(), err
+ 	}
+ 
+ 	if r.Bundle.Options.SystemTags.Has(metrics.TagGroup) {
+ 		vu.state.Tags.Modify(func(tagsAndMeta *metrics.TagsAndMeta) {
+-			tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, group.Path)
++			tagsAndMeta.SetSystemTagOrMeta(metrics.TagGroup, groupPath)
+ 		})
+ 	}
+-	vu.state.Group = group
+ 	v, _, _, err := vu.runFn(ctx, false, fn, nil, vu.Runtime.ToValue(arg))
+ 
+ 	if deadlineError := r.checkDeadline(ctx, name, v, err); deadlineError != nil {
+@@ -692,7 +678,7 @@ func (u *VU) Activate(params *lib.VUActivationParams) lib.ActiveVU {
+ 		if opts.SystemTags.Has(metrics.TagIter) {
+ 			tagsAndMeta.SetSystemTagOrMeta(metrics.TagIter, strconv.FormatInt(u.iteration, 10))
+ 		}
+-		tagsAndMeta.SetSystemTagOrMetaIfEnabled(opts.SystemTags, metrics.TagGroup, u.state.Group.Path)
++		tagsAndMeta.SetSystemTagOrMetaIfEnabled(opts.SystemTags, metrics.TagGroup, lib.RootGroupPath)
+ 		tagsAndMeta.SetSystemTagOrMetaIfEnabled(opts.SystemTags, metrics.TagScenario, params.Scenario)
+ 	})
+ 
+diff --git a/lib/models.go b/lib/models.go
+index aff29a7..a4db58d 100644
+--- a/lib/models.go
++++ b/lib/models.go
+@@ -18,6 +18,20 @@ import (
+ // GroupSeparator for group IDs.
+ const GroupSeparator = "::"
+ 
++// RootGroupPath identifies the root of a test's group hierarchy.
++const RootGroupPath = ""
++
++// NewGroupPath appends a name to a group path.
++func NewGroupPath(old, path string) (string, error) {
++	if strings.Contains(path, GroupSeparator) {
++		return "", ErrNameContainsGroupSeparator
++	}
++	if old == RootGroupPath && path == RootGroupPath {
++		return RootGroupPath, nil
++	}
++	return old + GroupSeparator + path, nil
++}
++
+ // ErrNameContainsGroupSeparator is emitted if you attempt to instantiate a Group or Check that contains the separator.
+ var ErrNameContainsGroupSeparator = errors.New("group and check names may not contain '::'")
+ 
+@@ -113,7 +127,7 @@ func NewGroup(name string, parent *Group) (*Group, error) {
+ 
+ 	path := name
+ 	if parent != nil {
+-		path = parent.Path + GroupSeparator + path
++		path, _ = NewGroupPath(parent.Path, name)
+ 	}
+ 
+ 	hash := md5.Sum([]byte(path)) //nolint:gosec
+diff --git a/lib/runner.go b/lib/runner.go
+index 92bad4a..ef580e6 100644
+--- a/lib/runner.go
++++ b/lib/runner.go
+@@ -73,9 +73,6 @@ type Runner interface {
+ 	// Runs post-test teardown, if applicable.
+ 	Teardown(ctx context.Context, out chan<- metrics.SampleContainer) error
+ 
+-	// Returns the default (root) Group.
+-	GetDefaultGroup() *Group
+-
+ 	// Get and set options. The initial value will be whatever the script specifies (for JS,
+ 	// `export let options = {}`); cmd/run.go will mix this in with CLI-, config- and env-provided
+ 	// values and write it back to the runner.
+diff --git a/lib/test_state.go b/lib/test_state.go
+index dee70ea..24d33ad 100644
+--- a/lib/test_state.go
++++ b/lib/test_state.go
+@@ -2,6 +2,9 @@ package lib
+ 
+ import (
+ 	"io"
++	"strings"
++	"sync"
++	"sync/atomic"
+ 
+ 	"github.com/sirupsen/logrus"
+ 	"go.k6.io/k6/event"
+@@ -27,10 +30,140 @@ type TestPreInitState struct {
+ type TestRunState struct {
+ 	*TestPreInitState
+ 
+-	Options Options
+-	Runner  Runner // TODO: rename to something better, see type comment
+-	RunTags *metrics.TagSet
++	Options      Options
++	Runner       Runner // TODO: rename to something better, see type comment
++	RunTags      *metrics.TagSet
++	GroupSummary *GroupSummary
+ 
+ 	// TODO: add other properties that are computed or derived after init, e.g.
+ 	// thresholds?
+ }
++
++// GroupSummary aggregates the group hierarchy and check results from metric tags.
++type GroupSummary struct {
++	logger    logrus.FieldLogger
++	group     *Group
++	groups    map[string]*Group
++	mutex     sync.Mutex
++	pending   [][]metrics.SampleContainer
++	wake      chan struct{}
++	stop      chan struct{}
++	done      chan struct{}
++	startOnce sync.Once
++	stopOnce  sync.Once
++	stopped   bool
++}
++
++// NewGroupSummary creates an internal output ready to aggregate metric samples.
++func NewGroupSummary(logger logrus.FieldLogger) *GroupSummary {
++	root, _ := NewGroup(RootGroupPath, nil)
++	return &GroupSummary{logger: logger, group: root, groups: map[string]*Group{RootGroupPath: root},
++		wake: make(chan struct{}, 1), stop: make(chan struct{}), done: make(chan struct{})}
++}
++
++// Description identifies this internal output.
++func (*GroupSummary) Description() string { return "Internal Group Summary" }
++
++// Group returns the root of the aggregated group hierarchy.
++func (summary *GroupSummary) Group() *Group { return summary.group }
++
++// Start starts the single aggregation worker.
++func (summary *GroupSummary) Start() error {
++	summary.startOnce.Do(func() {
++		go func() {
++			defer close(summary.done)
++			for {
++				select {
++				case <-summary.wake:
++					summary.flush()
++				case <-summary.stop:
++					summary.flush()
++					return
++				}
++			}
++		}()
++	})
++	return nil
++}
++
++// AddMetricSamples queues a batch without waiting for aggregation.
++func (summary *GroupSummary) AddMetricSamples(samples []metrics.SampleContainer) {
++	if len(samples) == 0 {
++		return
++	}
++	summary.mutex.Lock()
++	if !summary.stopped {
++		summary.pending = append(summary.pending, samples)
++	}
++	summary.mutex.Unlock()
++	select {
++	case summary.wake <- struct{}{}:
++	default:
++	}
++}
++
++// Stop waits for all accepted samples to be aggregated.
++func (summary *GroupSummary) Stop() error {
++	_ = summary.Start()
++	summary.stopOnce.Do(func() {
++		summary.mutex.Lock()
++		summary.stopped = true
++		summary.mutex.Unlock()
++		close(summary.stop)
++	})
++	<-summary.done
++	return nil
++}
++
++func (summary *GroupSummary) flush() {
++	summary.mutex.Lock()
++	pending := summary.pending
++	summary.pending = nil
++	summary.mutex.Unlock()
++	for _, batch := range pending {
++		for _, container := range batch {
++			for _, sample := range container.GetSamples() {
++				if sample.Tags == nil || sample.Metric == nil {
++					continue
++				}
++				groupPath, ok := sample.Tags.Get("group")
++				if !ok {
++					continue
++				}
++				group, exists := summary.groups[groupPath]
++				if !exists {
++					group = summary.group
++					for _, name := range strings.Split(strings.TrimPrefix(groupPath, GroupSeparator), GroupSeparator) {
++						var err error
++						group, err = group.Group(name)
++						if err != nil {
++							summary.logger.WithError(err).Warn("Could not aggregate group")
++							break
++						}
++					}
++					if group == nil {
++						continue
++					}
++					summary.groups[groupPath] = group
++				}
++				if sample.Metric.Name != "checks" {
++					continue
++				}
++				name, ok := sample.Tags.Get("check")
++				if !ok {
++					continue
++				}
++				check, err := group.Check(name)
++				if err != nil {
++					summary.logger.WithError(err).Warn("Could not aggregate check")
++					continue
++				}
++				if sample.Value != 0 {
++					atomic.AddInt64(&check.Passes, 1)
++				} else {
++					atomic.AddInt64(&check.Fails, 1)
++				}
++			}
++		}
++	}
++}
+diff --git a/lib/vu_state.go b/lib/vu_state.go
+index 1b70c54..cb66a8a 100644
+--- a/lib/vu_state.go
++++ b/lib/vu_state.go
+@@ -42,9 +42,6 @@ type State struct {
+ 	// Logger instance for every VU.
+ 	Logger logrus.FieldLogger
+ 
+-	// Current group; all emitted metrics are tagged with this.
+-	Group *Group
+-
+ 	// Networking equipment.
+ 	Dialer DialContexter
+ 

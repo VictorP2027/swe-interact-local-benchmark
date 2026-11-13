@@ -1,0 +1,60 @@
+{
+  "task": "rf_task-69d196f015a150488265afb7",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "6246e89fdb38d280d512d98be92c263957ae8579",
+  "base_commit": "61bbef53e0b24fb7583a4e0dc13a7660eaafc604",
+  "task_verifier_reward": 0.0,
+  "raw_task_verifier_reward": 0.0,
+  "evaluation_valid": true,
+  "evaluation_invalid_reasons": [],
+  "verifier_exit_code": 0,
+  "verifier": "original supplied RF test.sh, master validator, test patch and rubric evaluator",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_secdev_scapy_69d196f015a150488265afb7_1.0@sha256:fbe2d0aef1129b37a45dc6e8ce85e715f150c1c45a0575d30d0364499d5ea6f9",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "workspace": "/app",
+  "uses_hidden_test_feedback": false,
+  "infrastructure_retry_of": null,
+  "verifier_timed_out": false,
+  "application_path": "/usr/local/bin:/opt/venv/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+  "test_runs": {
+    "agent_baseline_results.json": {
+      "passed_test_count": 1560,
+      "failed_test_count": 7,
+      "skipped_test_count": 0,
+      "exit_code": 0
+    },
+    "agent_mutation_results.json": {
+      "passed_test_count": 1599,
+      "failed_test_count": 8,
+      "skipped_test_count": 0,
+      "exit_code": 0
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "local OpenAI-compatible bridge to supported Codex CLI exec",
+    "authentication": "existing Codex CLI ChatGPT sign-in; no API key extracted",
+    "original_default_model": "anthropic/claude-opus-4-5-20251101",
+    "tool_use": false,
+    "calls": 23,
+    "max_tokens": "2048 instructed; CLI has no output-token-limit flag"
+  },
+  "verifier_scripts_sha256": {
+    "test_patch.diff": "db187793ca1ff0a10d8af9e364713c97b22f64868327c28ad85044cf58a851d8",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "67470dcb2884d8bae226f243a2661e89878162876c5365847d8b5974e87832ab",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "0a1d788e83de9ee4f4722f0e4b18fb049b752a37d6c4c100e5abe3916d6790da",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "532fd4c8894e7a0c8f5b8870ab98b0e32a6fd9d6d0cd82af0a1d0085388fc90d",
+    "test_files.json": "0fa916b1077a0f59af887f09cdb69d260cb199ef36dff8f2ff53b6a40a74dc3d",
+    "relevant_file_names.json": "0fa916b1077a0f59af887f09cdb69d260cb199ef36dff8f2ff53b6a40a74dc3d",
+    "run_script.sh": "ad023e6bde17c9259ab9a92e12cb50498dd7c83fe05d5ec1072d68f55b329cd1",
+    "rubrics.json": "b757a8f52b0b850810f5df5c208e3f07df4ead6ffd314a9b3ec52cae57e7efa5",
+    "test.sh": "c4e5f03a00d6b0df8ecfa7a778f09ea88e52e15bb2eb5845e0eec78622dfd618",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-12T04:06:09.689523+00:00"
+}

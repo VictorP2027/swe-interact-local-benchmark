@@ -1,0 +1,122 @@
+diff --git a/js/compiler/compiler.go b/js/compiler/compiler.go
+index 1fed511..c046d46 100644
+--- a/js/compiler/compiler.go
++++ b/js/compiler/compiler.go
+@@ -16,6 +16,7 @@ import (
+ 
+ 	"github.com/go-sourcemap/sourcemap"
+ 	"github.com/grafana/sobek"
++	"github.com/grafana/sobek/ast"
+ 	"github.com/grafana/sobek/parser"
+ 	"github.com/sirupsen/logrus"
+ 
+@@ -84,7 +85,7 @@ const (
+ 	sourceMapURLFromBabel             = "k6://internal-should-not-leak/file.map"
+ )
+ 
+-// A Compiler compiles JavaScript source code (ES5.1 or ES6) into a sobek.Program
++// A Compiler parses JavaScript source code, transpiling it when necessary.
+ type Compiler struct {
+ 	logger  logrus.FieldLogger
+ 	babel   *babel
+@@ -171,10 +172,9 @@ type compilationState struct {
+ 	compiler *Compiler
+ }
+ 
+-// Compile the program in the given CompatibilityMode, wrapping it between pre and post code
+-// TODO isESM will be used once Sobek support ESM modules natively
+-func (c *Compiler) Compile(src, filename string, isESM bool) (*sobek.Program, string, error) {
+-	return c.compileImpl(src, filename, !isESM, c.Options.CompatibilityMode, nil)
++// Parse returns the program's AST and final source, optionally wrapping it as a CommonJS module.
++func (c *Compiler) Parse(src, filename string, wrap bool) (*ast.Program, string, error) {
++	return c.parseImpl(src, filename, wrap, c.Options.CompatibilityMode, nil)
+ }
+ 
+ // sourceMapLoader is to be used with Sobek's WithSourceMapLoader
+@@ -204,9 +204,9 @@ func (c *compilationState) sourceMapLoader(path string) ([]byte, error) {
+ 	return c.srcMap, nil
+ }
+ 
+-func (c *Compiler) compileImpl(
++func (c *Compiler) parseImpl(
+ 	src, filename string, wrap bool, compatibilityMode lib.CompatibilityMode, srcMap []byte,
+-) (*sobek.Program, string, error) {
++) (*ast.Program, string, error) {
+ 	code := src
+ 	state := compilationState{srcMap: srcMap, compiler: c, wrapped: wrap}
+ 	if wrap {
+@@ -230,19 +230,18 @@ func (c *Compiler) compileImpl(
+ 	if c.Options.SourceMapLoader != nil {
+ 		opts = parser.WithSourceMapLoader(state.sourceMapLoader)
+ 	}
+-	ast, err := parser.ParseFile(nil, filename, code, 0, opts)
++	parsed, err := parser.ParseFile(nil, filename, code, 0, opts)
+ 
+ 	if state.couldntLoadSourceMap {
+ 		state.couldntLoadSourceMap = false // reset
+ 		// we probably don't want to abort scripts which have source maps but they can't be found,
+ 		// this also will be a breaking change, so if we couldn't we retry with it disabled
+ 		c.logger.WithError(state.srcMapError).Warnf("Couldn't load source map for %s", filename)
+-		ast, err = parser.ParseFile(nil, filename, code, 0, parser.WithDisableSourceMaps)
++		parsed, err = parser.ParseFile(nil, filename, code, 0, parser.WithDisableSourceMaps)
+ 	}
+ 
+ 	if err == nil {
+-		pgm, err := sobek.CompileAST(ast, c.Options.Strict)
+-		return pgm, code, err
++		return parsed, code, nil
+ 	}
+ 
+ 	if compatibilityMode == lib.CompatibilityModeExtended {
+@@ -251,8 +250,8 @@ func (c *Compiler) compileImpl(
+ 			return nil, code, err
+ 		}
+ 		// the compatibility mode "decreases" here as we shouldn't transform twice
+-		var prg *sobek.Program
+-		prg, code, err = c.compileImpl(code, filename, wrap, lib.CompatibilityModeBase, state.srcMap)
++		var prg *ast.Program
++		prg, code, err = c.parseImpl(code, filename, wrap, lib.CompatibilityModeBase, state.srcMap)
+ 		if err == nil && strings.Contains(src, "module.exports") {
+ 			c.logger.Warningf(
+ 				"During the compilation of %q, it has been detected that the file combines ECMAScript modules (ESM) "+
+@@ -273,7 +272,7 @@ func (c *Compiler) compileImpl(
+ 			// This hack is required for the source map to work
+ 			code += "\n//# sourceMappingURL=" + sourceMapURLFromBabel
+ 		}
+-		return c.compileImpl(code, filename, wrap, lib.CompatibilityModeBase, state.srcMap)
++		return c.parseImpl(code, filename, wrap, lib.CompatibilityModeBase, state.srcMap)
+ 	}
+ 	return nil, code, err
+ }
+@@ -326,7 +325,7 @@ func (c *compilationState) updateInlineSourceMap(code string, index int) (string
+ 			return code, err
+ 		}
+ 		encoded := base64.StdEncoding.EncodeToString(b)
+-		code = code[:index] + "//# sourcemappingurl=data:application/json;base64," + encoded + code[nextnewline:]
++		code = code[:index] + "//# sourceMappingURL=data:application/json;base64," + encoded + code[index+nextnewline:]
+ 	}
+ 	return code, nil
+ }
+diff --git a/js/modules/cjsmodule.go b/js/modules/cjsmodule.go
+index 495e0a9..7c3f417 100644
+--- a/js/modules/cjsmodule.go
++++ b/js/modules/cjsmodule.go
+@@ -60,12 +60,16 @@ func (c *cjsModuleInstance) exports() *sobek.Object {
+ }
+ 
+ // cjsModuleFromString is a helper function which returns CJSModule given the argument it has.
+-// It is mostly a wrapper around compiler.Compiler@Compile
++// It parses and compiles a CommonJS module using the configured compiler.
+ //
+ // TODO: extract this to not make this package dependant on compilers.
+ // this is potentially a moot point after ESM when the compiler will likely get mostly dropped.
+ func cjsModuleFromString(fileURL *url.URL, data []byte, c *compiler.Compiler) (*cjsModule, error) {
+-	pgm, _, err := c.Compile(string(data), fileURL.String(), false)
++	parsed, _, err := c.Parse(string(data), fileURL.String(), true)
++	if err != nil {
++		return nil, err
++	}
++	pgm, err := sobek.CompileAST(parsed, c.Options.Strict)
+ 	if err != nil {
+ 		return nil, err
+ 	}

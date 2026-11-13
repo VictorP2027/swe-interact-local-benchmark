@@ -1,0 +1,78 @@
+{
+  "task": "rf_task-69b7c2a04b6f8ff9ed98812f",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "d3125af7d9eccf1f42182d1911bc6a96f36412a3",
+  "base_commit": "e0d7eedeab8b5e566c3353cdbb4307d53d042ef2",
+  "task_verifier_reward": 1.0,
+  "raw_task_verifier_reward": 0.0,
+  "evaluation_valid": true,
+  "evaluation_invalid_reasons": [],
+  "verifier_exit_code": 0,
+  "verifier": "original supplied RF test.sh, master validator, test patch and rubric evaluator",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_OISF_suricata_69b7c2a04b6f8ff9ed98812f_1.0@sha256:c546c5879339a820bf6ddf165e22fcfa1d146e0115a7b96487961b9c8e0161a3",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "workspace": "/app",
+  "uses_hidden_test_feedback": false,
+  "infrastructure_retry_of": null,
+  "verifier_timed_out": false,
+  "application_path": null,
+  "go_flags": null,
+  "gomaxprocs": null,
+  "run_script_runner": null,
+  "cargo_low_memory": true,
+  "test_runs": {
+    "baseline": {
+      "passed_test_count": 3296,
+      "failed_test_count": 0,
+      "skipped_test_count": 0,
+      "exit_code": 0
+    },
+    "mutation": {
+      "passed_test_count": 3335,
+      "failed_test_count": 0,
+      "skipped_test_count": 0,
+      "exit_code": 0
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "local OpenAI-compatible bridge to supported Codex CLI exec",
+    "authentication": "existing Codex CLI ChatGPT sign-in; no API key extracted",
+    "original_default_model": "anthropic/claude-opus-4-5-20251101",
+    "tool_use": false,
+    "calls": 14,
+    "max_tokens": "2048 instructed; CLI has no output-token-limit flag"
+  },
+  "verifier_scripts_sha256": {
+    "test_patch.diff": "accad3ca75b99c804664ed192b3ddce7d8e3153f78aa9e632fedbe24b9f6dda2",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "013fafd962a8a2917018cce3d0667a7ae13fe497e288999847b07f3d17afbb47",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "f93ad0f34f5a133bf3d03780b55831014fbe0d5b3a7f31b1f1a58fee6c1f082e",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "89b529c487920296b85cefe234f3c5a045aeda9c36def8cf5269dde3a1973308",
+    "test_files.json": "aa3b2548a1f3056190994019d4428447778c632a53b9378dcfc4995b416ec2be",
+    "relevant_file_names.json": "aa3b2548a1f3056190994019d4428447778c632a53b9378dcfc4995b416ec2be",
+    "run_script.sh": "baa2a9938c7b4e5cf5ff97c16edfb25e3ba58a465dfdefe1f9990ac46c504083",
+    "rubrics.json": "bba8962a638af8fa5bdf57f80ae0d1783e939764b6f0d62daf71cb9c4ae670d5",
+    "test.sh": "c4e5f03a00d6b0df8ecfa7a778f09ea88e52e15bb2eb5845e0eec78622dfd618",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-13T01:20:09.422018+00:00",
+  "canonical_evaluation_valid": false,
+  "verification_mode": "resumed native complete C and Rust suites",
+  "required_coverage": {
+    "required": 12,
+    "passed": 12,
+    "missing": []
+  },
+  "runtime": {
+    "C": "same compiled first-implementation binary, suricata -u",
+    "Rust": "cargo test --release --all; CARGO_BUILD_JOBS=1; release optimization and debug info disabled"
+  },
+  "rubric_recovery": "Original complete 14 ratings reused. Frozen source patch, all 12 production files, and every supplied test/rubric input hash match exactly.",
+  "actual_c_framework_total_passed": 2585,
+  "limitation": "Combined resumed native commands; not a new single canonical invocation. Framework output interleaving leaves six old case names missing from the line parser, although the complete C framework summary reports 2585 passed and zero failed."
+}

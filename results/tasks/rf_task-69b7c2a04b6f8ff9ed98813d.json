@@ -1,0 +1,13 @@
+{
+  "task": "rf_task-69b7c2a04b6f8ff9ed98813d",
+  "implementation_commit": "a856782aa1ec63609e0570306a87b342ddd1ef89",
+  "base_commit": "de669bafca6affa2a2e21426bda8d948a928cb4f",
+  "task_verifier_reward": 0.0,
+  "evaluation_valid": false,
+  "canonical_evaluation_valid": false,
+  "failure_assessment_valid": true,
+  "uses_hidden_test_feedback": false,
+  "assessment_note": "The unchanged required standalone test fails to compile against the frozen first implementation: RRDLABEL_SRC_AUTO is undeclared and public label functions lack declarations. The original runner suppressed this compile error and skipped all 19 required cases. This establishes failure independently of unavailable rubric grading.",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_netdata_netdata_69b7c2a04b6f8ff9ed98813d_1.0@sha256:6193ba7e853950a21a0f1335e189973972cad879656d2f42f41192939583b8a9",
+  "updated_at_utc": "2026-11-13T01:14:45.627572+00:00"
+}

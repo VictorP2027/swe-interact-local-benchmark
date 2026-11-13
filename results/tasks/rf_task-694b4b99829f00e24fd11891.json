@@ -1,0 +1,71 @@
+{
+  "task": "rf_task-694b4b99829f00e24fd11891",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "9cd97abd202c9f1317e7991a9621413df7bba383",
+  "base_commit": "e714a309ade2a78e8c211dc42065e62b6075f548",
+  "task_verifier_reward": 0.0,
+  "raw_task_verifier_reward": 0.0,
+  "evaluation_valid": true,
+  "evaluation_invalid_reasons": [],
+  "verifier_exit_code": 0,
+  "verifier": "original supplied RF test.sh, master validator, test patch and rubric evaluator",
+  "docker_image": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_Automattic_wp-calypso_694b4b99829f00e24fd11891_1.0@sha256:0dd613c90d6bcfc266fb8f266d350d5e6236872425bf86d022c1847b28a5d6d3",
+  "docker_host": "unix://LOCAL_HOME/.colima/swe-interact/docker.sock",
+  "workspace": "/calypso",
+  "uses_hidden_test_feedback": false,
+  "infrastructure_retry_of": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers/result.json",
+  "verifier_timed_out": false,
+  "application_path": "/tmp/direct-jest-runtime:/opt/venv/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin",
+  "go_flags": null,
+  "gomaxprocs": null,
+  "test_runs": {
+    "agent_baseline_results.json": {
+      "passed_test_count": 16336,
+      "failed_test_count": 6,
+      "skipped_test_count": 24,
+      "exit_code": 1
+    },
+    "agent_mutation_results.json": {
+      "passed_test_count": 16361,
+      "failed_test_count": 6,
+      "skipped_test_count": 24,
+      "exit_code": 1
+    }
+  },
+  "grader": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "transport": "local OpenAI-compatible bridge to supported Codex CLI exec",
+    "authentication": "existing Codex CLI ChatGPT sign-in; no API key extracted",
+    "original_default_model": "anthropic/claude-opus-4-5-20251101",
+    "tool_use": false,
+    "calls": 16,
+    "max_tokens": "2048 instructed; CLI has no output-token-limit flag"
+  },
+  "verifier_scripts_sha256": {
+    "test_patch.diff": "fd1115e84ad12d1955506d0387516177de45d1dc6179379353ffe277ee532835",
+    "master_validator_script.sh": "561863e82f6e4c8767f6758b14c438b158de2e03be04b9776ef5ccbe9ad2cee2",
+    "rubrics_system_prompt.txt": "a7b7ed94ef5d5a872082189e332a1bcc06f2d1d42e7d175e43281a608a4f4bea",
+    "config.json": "36e4f12fd07ce79052c9bb904028b03b0b67619caffe5dd417f2de23930087b5",
+    "rubrics_user_prompt_template.txt": "deea089d5306549eab7d648508d707c4a459190db2c9b745d4add20aebd2e912",
+    "prompt.txt": "5fde4c47e33e6a6262c62cc64671d6aa059662026dd48c37e1072cabc130a2f5",
+    "compare_test_runs.py": "3ecc15f9dbe00ff862ffbc6da56c08082f17bea58465261a42c2a489c0d43d8a",
+    "relevant_test_names.json": "774a1b05f06de052ab6b0201833f8bc881305a0dd1b90005985659057bdb5cb8",
+    "test_files.json": "11c6bd89745f0af0c7b5fca4662a9c62ea592468146951970f968f7e38b96ac1",
+    "relevant_file_names.json": "28e231b4a8978a94919032883354f9c050822c4e19e1d4982684b4ce1755d5ad",
+    "run_script.sh": "bc17eca6fd657582215d460c61ee2a13ad69273e5499e26ac72f9aba376d8159",
+    "rubrics.json": "f67c738856e647511332f5d2398d53141d24ab517dcde8c5f2b33ced687b36a2",
+    "test.sh": "5e6c43cd9046df1964fb8d345214976bf5a84c754a7b39e5d58ca5dc8a157945",
+    "evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0"
+  },
+  "updated_at_utc": "2026-11-12T15:34:56.355225+00:00",
+  "retry_scope": "Only original rubric evaluator; completed tests and exact frozen patch reused unchanged",
+  "reused_test_artifacts": "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers",
+  "retry_input_sha256": {
+    "LOCAL_WORKSPACE/SWE-Interact/data/singleturn/rf_task-694b4b99829f00e24fd11891/tests/evaluate_rubrics.py": "b1bb41a97870cba56ab852f8422944c01ce6f6924d630aa2a729892e5bd5ddb0",
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers/agent.patch": "c7cd0fc2b84812ac1296c57c2bcbd150f7215bde5b71438bce61be50cf358821",
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers/comparison_results.json": "11995bda0d115f3cfedbc2056ba46153a438fba5756480a91c91547c537dd709",
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers/agent_baseline_results.json": "1668112406ac91e0cd507d25ca0dec7a3fd3659071d415db73f916031b447edb",
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/rf_task-694b4b99829f00e24fd11891/infrastructure-retry-bounded-jest-workers/agent_mutation_results.json": "78bba3d138f290a89964581e76ebd5f9b0feada10f71a550e739b220bc869116"
+  }
+}

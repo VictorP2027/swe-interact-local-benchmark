@@ -1,0 +1,1329 @@
+diff --git a/src/decode-ethernet.c b/src/decode-ethernet.c
+index 3933fc5..9c424de 100644
+--- a/src/decode-ethernet.c
++++ b/src/decode-ethernet.c
+@@ -38,52 +38,47 @@
+ #include "util-unittest.h"
+ #include "util-debug.h"
+ 
+-void DecodeEthernet(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeEthernet(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_eth, tv->sc_perf_pca);
+ 
+     if (unlikely(len < ETHERNET_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p,ETHERNET_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->ethh = (EthernetHdr *)pkt;
+     if (unlikely(p->ethh == NULL))
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     SCLogDebug("p %p pkt %p ether type %04x", p, pkt, ntohs(p->ethh->eth_type));
+ 
+     switch (ntohs(p->ethh->eth_type)) {
+         case ETHERNET_TYPE_IP:
+             //printf("DecodeEthernet ip4\n");
+-            DecodeIPV4(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
++            return DecodeIPV4(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
+                        len - ETHERNET_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_IPV6:
+             //printf("DecodeEthernet ip6\n");
+-            DecodeIPV6(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
++            return DecodeIPV6(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
+                        len - ETHERNET_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_PPPOE_SESS:
+             //printf("DecodeEthernet PPPOE Session\n");
+-            DecodePPPOESession(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
++            return DecodePPPOESession(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
+                                len - ETHERNET_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_PPPOE_DISC:
+             //printf("DecodeEthernet PPPOE Discovery\n");
+-            DecodePPPOEDiscovery(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
++            return DecodePPPOEDiscovery(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
+                                  len - ETHERNET_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_VLAN:
+-            DecodeVLAN(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
++            return DecodeVLAN(tv, dtv, p, pkt + ETHERNET_HEADER_LEN,
+                                  len - ETHERNET_HEADER_LEN, pq);
+-            break;
+         default:
+             SCLogDebug("p %p pkt %p ether type %04x not supported", p,
+                        pkt, ntohs(p->ethh->eth_type));
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-gre.c b/src/decode-gre.c
+index 323aaa9..f8eec63 100644
+--- a/src/decode-gre.c
++++ b/src/decode-gre.c
+@@ -43,7 +43,7 @@
+  * \brief Function to decode GRE packets
+  */
+ 
+-void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     uint16_t header_len = GRE_HDR_LEN;
+     GRESreHdr *gsre = NULL;
+@@ -52,12 +52,12 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+ 
+     if(len < GRE_HDR_LEN)    {
+         ENGINE_SET_EVENT(p,GRE_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->greh = (GREHdr *)pkt;
+     if(p->greh == NULL)
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     SCLogDebug("p %p pkt %p GRE protocol %04x Len: %d GRE version %x",
+         p, pkt, GRE_GET_PROTO(p->greh), len,GRE_GET_VERSION(p->greh));
+@@ -77,12 +77,12 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+ 
+             if (GRE_FLAG_ISSET_RECUR(p->greh)) {
+                 ENGINE_SET_EVENT(p,GRE_VERSION0_RECUR);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GREV1_FLAG_ISSET_FLAGS(p->greh))   {
+                 ENGINE_SET_EVENT(p,GRE_VERSION0_FLAGS);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             /* Adjust header length based on content */
+@@ -98,7 +98,7 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+ 
+             if (header_len > len)   {
+                 ENGINE_SET_EVENT(p,GRE_VERSION0_HDR_TOO_BIG);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GRE_FLAG_ISSET_ROUTE(p->greh))
+@@ -107,7 +107,7 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+                 {
+                     if ((header_len + GRE_SRE_HDR_LEN) > len) {
+                         ENGINE_SET_EVENT(p, GRE_VERSION0_MALFORMED_SRE_HDR);
+-                        return;
++                        return TM_ECODE_FAILED;
+                     }
+ 
+                     gsre = (GRESreHdr *)(pkt + header_len);
+@@ -120,7 +120,7 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+                     header_len += gsre->sre_length;
+                     if (header_len > len) {
+                         ENGINE_SET_EVENT(p, GRE_VERSION0_MALFORMED_SRE_HDR);
+-                        return;
++                        return TM_ECODE_FAILED;
+                     }
+                 }
+             }
+@@ -139,37 +139,37 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+ 
+             if (GRE_FLAG_ISSET_CHKSUM(p->greh))    {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_CHKSUM);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GRE_FLAG_ISSET_ROUTE(p->greh)) {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_ROUTE);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GRE_FLAG_ISSET_SSR(p->greh))   {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_SSR);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GRE_FLAG_ISSET_RECUR(p->greh)) {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_RECUR);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GREV1_FLAG_ISSET_FLAGS(p->greh))   {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_FLAGS);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (GRE_GET_PROTO(p->greh) != GRE_PROTO_PPP)  {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_WRONG_PROTOCOL);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (!(GRE_FLAG_ISSET_KY(p->greh))) {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_NO_KEY);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             header_len += GRE_KEY_LEN;
+@@ -184,13 +184,13 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+ 
+             if (header_len > len)   {
+                 ENGINE_SET_EVENT(p,GRE_VERSION1_HDR_TOO_BIG);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             break;
+         default:
+             ENGINE_SET_EVENT(p,GRE_WRONG_VERSION);
+-            return;
++            return TM_ECODE_FAILED;
+     }
+ 
+     switch (GRE_GET_PROTO(p->greh))
+@@ -198,12 +198,9 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case ETHERNET_TYPE_IP:
+             {
+                 if (pq != NULL) {
+-                    Packet *tp = PacketPseudoPktSetup(p, pkt + header_len,
+-                            len - header_len, IPPROTO_IP);
++                    Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt + header_len, len - header_len, IPPROTO_IP, pq);
+                     if (tp != NULL) {
+                         PKT_SET_SRC(tp, PKT_SRC_DECODER_GRE);
+-                        DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                                GET_PKT_LEN(tp), pq, IPPROTO_IP);
+                         PacketEnqueue(pq,tp);
+                     }
+                 }
+@@ -213,12 +210,9 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case GRE_PROTO_PPP:
+             {
+                 if (pq != NULL) {
+-                    Packet *tp = PacketPseudoPktSetup(p, pkt + header_len,
+-                            len - header_len, PPP_OVER_GRE);
++                    Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt + header_len, len - header_len, PPP_OVER_GRE, pq);
+                     if (tp != NULL) {
+                         PKT_SET_SRC(tp, PKT_SRC_DECODER_GRE);
+-                        DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                                GET_PKT_LEN(tp), pq, PPP_OVER_GRE);
+                         PacketEnqueue(pq,tp);
+                     }
+                 }
+@@ -228,12 +222,9 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case ETHERNET_TYPE_IPV6:
+             {
+                 if (pq != NULL) {
+-                    Packet *tp = PacketPseudoPktSetup(p, pkt + header_len,
+-                            len - header_len, IPPROTO_IPV6);
++                    Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt + header_len, len - header_len, IPPROTO_IPV6, pq);
+                     if (tp != NULL) {
+                         PKT_SET_SRC(tp, PKT_SRC_DECODER_GRE);
+-                        DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                                GET_PKT_LEN(tp), pq, IPPROTO_IPV6);
+                         PacketEnqueue(pq,tp);
+                     }
+                 }
+@@ -243,12 +234,9 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case ETHERNET_TYPE_VLAN:
+             {
+                 if (pq != NULL) {
+-                    Packet *tp = PacketPseudoPktSetup(p, pkt + header_len,
+-                            len - header_len, VLAN_OVER_GRE);
++                    Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt + header_len, len - header_len, VLAN_OVER_GRE, pq);
+                     if (tp != NULL) {
+                         PKT_SET_SRC(tp, PKT_SRC_DECODER_GRE);
+-                        DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                                GET_PKT_LEN(tp), pq, VLAN_OVER_GRE);
+                         PacketEnqueue(pq,tp);
+                     }
+                 }
+@@ -256,9 +244,10 @@ void DecodeGRE(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+             }
+ 
+         default:
+-            return;
++            return TM_ECODE_FAILED;
+     }
+ 
++    return TM_ECODE_OK;
+ }
+ 
+ 
+diff --git a/src/decode-icmpv4.c b/src/decode-icmpv4.c
+index dcdf8f6..9302969 100644
+--- a/src/decode-icmpv4.c
++++ b/src/decode-icmpv4.c
+@@ -151,13 +151,13 @@ void DecodePartialIPV4( Packet* p, uint8_t* partial_packet, uint16_t len )
+ /** DecodeICMPV4
+  *  \brief Main ICMPv4 decoding function
+  */
+-void DecodeICMPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeICMPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_icmpv4, tv->sc_perf_pca);
+ 
+     if (len < ICMPV4_HEADER_LEN) {
+         ENGINE_SET_EVENT(p,ICMPV4_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->icmpv4h = (ICMPV4Hdr *)pkt;
+@@ -301,7 +301,7 @@ void DecodeICMPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt
+ 
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-icmpv6.c b/src/decode-icmpv6.c
+index 6a5c6e4..12ecfa2 100644
+--- a/src/decode-icmpv6.c
++++ b/src/decode-icmpv6.c
+@@ -164,7 +164,7 @@ void DecodePartialIPV6(Packet *p, uint8_t *partial_packet, uint16_t len )
+  *
+  * \retval void No return value
+  */
+-void DecodeICMPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
++int DecodeICMPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
+                   uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     int full_hdr = 0;
+@@ -173,7 +173,7 @@ void DecodeICMPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
+     if (len < ICMPV6_HEADER_LEN) {
+         SCLogDebug("ICMPV6_PKT_TOO_SMALL");
+         ENGINE_SET_EVENT(p, ICMPV6_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->icmpv6h = (ICMPV6Hdr *)pkt;
+@@ -291,7 +291,7 @@ void DecodeICMPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
+     /* Flow is an integral part of us */
+     FlowHandlePacket(tv, p);
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-ipv4.c b/src/decode-ipv4.c
+index 4efb097..15c65ff 100644
+--- a/src/decode-ipv4.c
++++ b/src/decode-ipv4.c
+@@ -513,7 +513,7 @@ static int DecodeIPV4Packet(Packet *p, uint8_t *pkt, uint16_t len)
+     return 0;
+ }
+ 
+-void DecodeIPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeIPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_ipv4, tv->sc_perf_pca);
+ 
+@@ -523,20 +523,19 @@ void DecodeIPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+     if (unlikely(DecodeIPV4Packet (p, pkt, len) < 0)) {
+         SCLogDebug("decoding IPv4 packet failed");
+         p->ip4h = NULL;
+-        return;
++        return TM_ECODE_FAILED;
+     }
+     p->proto = IPV4_GET_IPPROTO(p);
+ 
+     /* If a fragment, pass off for re-assembly. */
+     if (unlikely(IPV4_GET_IPOFFSET(p) > 0 || IPV4_GET_MF(p) == 1)) {
+-        Packet *rp = Defrag(tv, dtv, p);
++        Packet *rp = Defrag(tv, dtv, p, pq);
+         if (rp != NULL) {
+-            /* Got re-assembled packet, re-run through decoder. */
+-            DecodeIPV4(tv, dtv, rp, (void *)rp->ip4h, IPV4_GET_IPLEN(rp), pq);
++            /* The reassembled packet has already been decoded. */
+             PacketEnqueue(pq, rp);
+         }
+         p->flags |= PKT_IS_FRAGMENT;
+-        return;
++        return TM_ECODE_OK;
+     }
+ 
+     /* do hdr test, process hdr rules */
+@@ -556,38 +555,27 @@ void DecodeIPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+     /* check what next decoder to invoke */
+     switch (IPV4_GET_IPPROTO(p)) {
+         case IPPROTO_TCP:
+-            DecodeTCP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
++            return DecodeTCP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
+                       IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), pq);
+-            break;
+         case IPPROTO_UDP:
+-            DecodeUDP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
++            return DecodeUDP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
+                       IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), pq);
+-            break;
+         case IPPROTO_ICMP:
+-            DecodeICMPV4(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
++            return DecodeICMPV4(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
+                          IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), pq);
+-            break;
+         case IPPROTO_GRE:
+-            DecodeGRE(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
++            return DecodeGRE(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
+                       IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), pq);
+-            break;
+         case IPPROTO_SCTP:
+-            DecodeSCTP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
++            return DecodeSCTP(tv, dtv, p, pkt + IPV4_GET_HLEN(p),
+                       IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), pq);
+-            break;
+         case IPPROTO_IPV6:
+             {
+                 if (pq != NULL) {
+                     /* spawn off tunnel packet */
+-                    Packet *tp = PacketPseudoPktSetup(p, pkt + IPV4_GET_HLEN(p),
+-                            IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p),
+-                            IPV4_GET_IPPROTO(p));
++                    Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt + IPV4_GET_HLEN(p), IPV4_GET_IPLEN(p) - IPV4_GET_HLEN(p), IPV4_GET_IPPROTO(p), pq);
+                     if (tp != NULL) {
+                         PKT_SET_SRC(tp, PKT_SRC_DECODER_IPV4);
+-                        /* send that to the Tunnel decoder */
+-                        DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                                GET_PKT_LEN(tp), pq, IPV4_GET_IPPROTO(p));
+-
+                         /* add the tp to the packet queue. */
+                         PacketEnqueue(pq,tp);
+                     }
+@@ -603,7 +591,7 @@ void DecodeIPV4(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+             break;
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ /* UNITTESTS */
+diff --git a/src/decode-ipv6.c b/src/decode-ipv6.c
+index 26f3ee4..5923331 100644
+--- a/src/decode-ipv6.c
++++ b/src/decode-ipv6.c
+@@ -51,58 +51,54 @@
+  * \brief Function to decode IPv4 in IPv6 packets
+  *
+  */
+-static void DecodeIPv4inIPv6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t plen, PacketQueue *pq)
++static int DecodeIPv4inIPv6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t plen, PacketQueue *pq)
+ {
+ 
+     if (unlikely(plen < IPV4_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p, IPV4_IN_IPV6_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+     if (IP_GET_RAW_VER(pkt) == 4) {
+         if (pq != NULL) {
+-            Packet *tp = PacketPseudoPktSetup(p, pkt, plen, IPPROTO_IP);
++            Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt, plen, IPPROTO_IP, pq);
+             if (tp != NULL) {
+                 PKT_SET_SRC(tp, PKT_SRC_DECODER_IPV6);
+-                DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                             GET_PKT_LEN(tp), pq, IPPROTO_IP);
+                 PacketEnqueue(pq,tp);
+                 SCPerfCounterIncr(dtv->counter_ipv4inipv6, tv->sc_perf_pca);
+-                return;
++                return TM_ECODE_OK;
+             }
+         }
+     } else {
+         ENGINE_SET_EVENT(p, IPV4_IN_IPV6_WRONG_IP_VER);
+     }
+-    return;
++    return TM_ECODE_FAILED;
+ }
+ 
+ /**
+  * \brief Function to decode IPv4 in IPv6 packets
+  *
+  */
+-static void DecodeIP6inIP6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t plen, PacketQueue *pq)
++static int DecodeIP6inIP6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t plen, PacketQueue *pq)
+ {
+ 
+     if (unlikely(plen < IPV6_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p, IPV6_IN_IPV6_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+     if (IP_GET_RAW_VER(pkt) == 6) {
+         if (unlikely(pq != NULL)) {
+-            Packet *tp = PacketPseudoPktSetup(p, pkt, plen, IPPROTO_IPV6);
++            Packet *tp = PacketTunnelPktSetup(tv, dtv, p, pkt, plen, IPPROTO_IPV6, pq);
+             if (unlikely(tp != NULL)) {
+                 PKT_SET_SRC(tp, PKT_SRC_DECODER_IPV6);
+-                DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp),
+-                             GET_PKT_LEN(tp), pq, IPPROTO_IPV6);
+                 PacketEnqueue(pq,tp);
+                 SCPerfCounterIncr(dtv->counter_ipv6inipv6, tv->sc_perf_pca);
+-                return;
++                return TM_ECODE_OK;
+             }
+         }
+     } else {
+         ENGINE_SET_EVENT(p, IPV6_IN_IPV6_WRONG_IP_VER);
+     }
+-    return;
++    return TM_ECODE_FAILED;
+ }
+ 
+ static void
+@@ -528,7 +524,7 @@ static int DecodeIPV6Packet (ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, u
+     return 0;
+ }
+ 
+-void DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     int ret;
+ 
+@@ -538,7 +534,7 @@ void DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+     ret = DecodeIPV6Packet (tv, dtv, p, pkt, len);
+     if (unlikely(ret < 0)) {
+         p->ip6h = NULL;
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+ #ifdef DEBUG
+@@ -557,28 +553,21 @@ void DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+     switch(IPV6_GET_NH(p)) {
+         case IPPROTO_TCP:
+             IPV6_SET_L4PROTO (p, IPPROTO_TCP);
+-            DecodeTCP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
++            return DecodeTCP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_UDP:
+             IPV6_SET_L4PROTO (p, IPPROTO_UDP);
+-            DecodeUDP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
+-            break;
++            return DecodeUDP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_ICMPV6:
+             IPV6_SET_L4PROTO (p, IPPROTO_ICMPV6);
+-            DecodeICMPV6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
++            return DecodeICMPV6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_SCTP:
+             IPV6_SET_L4PROTO (p, IPPROTO_SCTP);
+-            DecodeSCTP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
++            return DecodeSCTP(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_IPIP:
+             IPV6_SET_L4PROTO(p, IPPROTO_IPIP);
+-            DecodeIPv4inIPv6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
++            return DecodeIPv4inIPv6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_IPV6:
+-            DecodeIP6inIP6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+-            return;
++            return DecodeIP6inIP6(tv, dtv, p, pkt + IPV6_HEADER_LEN, IPV6_GET_PLEN(p), pq);
+         case IPPROTO_FRAGMENT:
+         case IPPROTO_HOPOPTS:
+         case IPPROTO_ROUTING:
+@@ -599,14 +588,11 @@ void DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+ 
+     /* Pass to defragger if a fragment. */
+     if (IPV6_EXTHDR_ISSET_FH(p)) {
+-        Packet *rp = Defrag(tv, dtv, p);
++        Packet *rp = Defrag(tv, dtv, p, pq);
+         if (rp != NULL) {
+-            DecodeIPV6(tv, dtv, rp, (uint8_t *)rp->ip6h, IPV6_GET_PLEN(rp) + IPV6_HEADER_LEN, pq);
++
+             PacketEnqueue(pq, rp);
+ 
+-            /* Not really a tunnel packet, but we're piggybacking that
+-             * functionality for now. */
+-            SET_TUNNEL_PKT(p);
+         }
+     }
+ 
+@@ -634,7 +620,7 @@ void DecodeIPV6(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+             IPV6_EXTHDR_GET_DH2_HDRLEN(p), IPV6_EXTHDR_GET_DH2_NH(p));
+     }
+ #endif
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-ppp.c b/src/decode-ppp.c
+index 1dbd4e3..e863ad1 100644
+--- a/src/decode-ppp.c
++++ b/src/decode-ppp.c
+@@ -40,18 +40,18 @@
+ #include "util-unittest.h"
+ #include "util-debug.h"
+ 
+-void DecodePPP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodePPP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_ppp, tv->sc_perf_pca);
+ 
+     if (unlikely(len < PPP_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p,PPP_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->ppph = (PPPHdr *)pkt;
+     if (unlikely(p->ppph == NULL))
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     SCLogDebug("p %p pkt %p PPP protocol %04x Len: %" PRId32 "",
+         p, pkt, ntohs(p->ppph->protocol), len);
+@@ -61,7 +61,7 @@ void DecodePPP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case PPP_VJ_UCOMP:
+             if (unlikely(len < (PPP_HEADER_LEN + IPV4_HEADER_LEN))) {
+                 ENGINE_SET_EVENT(p,PPPVJU_PKT_TOO_SMALL);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+             if (likely(IPV4_GET_RAW_VER((IPV4Hdr *)(pkt + PPP_HEADER_LEN)) == 4)) {
+@@ -72,21 +72,19 @@ void DecodePPP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         case PPP_IP:
+             if (unlikely(len < (PPP_HEADER_LEN + IPV4_HEADER_LEN))) {
+                 ENGINE_SET_EVENT(p,PPPIPV4_PKT_TOO_SMALL);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+-            DecodeIPV4(tv, dtv, p, pkt + PPP_HEADER_LEN, len - PPP_HEADER_LEN, pq);
+-            break;
++            return DecodeIPV4(tv, dtv, p, pkt + PPP_HEADER_LEN, len - PPP_HEADER_LEN, pq);
+ 
+             /* PPP IPv6 was not tested */
+         case PPP_IPV6:
+             if (unlikely(len < (PPP_HEADER_LEN + IPV6_HEADER_LEN))) {
+                 ENGINE_SET_EVENT(p,PPPIPV6_PKT_TOO_SMALL);
+-                return;
++                return TM_ECODE_FAILED;
+             }
+ 
+-            DecodeIPV6(tv, dtv, p, pkt + PPP_HEADER_LEN, len - PPP_HEADER_LEN, pq);
+-            break;
++            return DecodeIPV6(tv, dtv, p, pkt + PPP_HEADER_LEN, len - PPP_HEADER_LEN, pq);
+ 
+         case PPP_VJ_COMP:
+         case PPP_IPX:
+@@ -122,10 +120,10 @@ void DecodePPP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         default:
+             SCLogDebug("unknown PPP protocol: %" PRIx32 "",ntohs(p->ppph->protocol));
+             ENGINE_SET_EVENT(p,PPP_WRONG_TYPE);
+-            return;
++            return TM_ECODE_FAILED;
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ /* TESTS BELOW */
+diff --git a/src/decode-pppoe.c b/src/decode-pppoe.c
+index 83e2b09..edfd643 100644
+--- a/src/decode-pppoe.c
++++ b/src/decode-pppoe.c
+@@ -47,18 +47,18 @@
+ /**
+  * \brief Main decoding function for PPPOE Discovery packets
+  */
+-void DecodePPPOEDiscovery(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodePPPOEDiscovery(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_pppoe, tv->sc_perf_pca);
+ 
+     if (len < PPPOE_DISCOVERY_HEADER_MIN_LEN) {
+         ENGINE_SET_EVENT(p, PPPOE_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->pppoedh = (PPPOEDiscoveryHdr *)pkt;
+     if (p->pppoedh == NULL)
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     /* parse the PPPOE code */
+     switch (p->pppoedh->pppoe_code)
+@@ -76,7 +76,7 @@ void DecodePPPOEDiscovery(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint
+         default:
+             SCLogDebug("unknown PPPOE code: 0x%0"PRIX8"", p->pppoedh->pppoe_code);
+             ENGINE_SET_EVENT(p,PPPOE_WRONG_CODE);
+-            return;
++            return TM_ECODE_FAILED;
+     }
+ 
+     /* parse any tags we have in the packet */
+@@ -93,7 +93,7 @@ void DecodePPPOEDiscovery(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint
+     if (pppoe_length > packet_length) {
+         SCLogDebug("malformed PPPOE tags");
+         ENGINE_SET_EVENT(p,PPPOE_MALFORMED_TAGS);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     while (pppoedt < (PPPOEDiscoveryTag*) (pkt + (len - sizeof(PPPOEDiscoveryTag))) && pppoe_length >=4 && packet_length >=4)
+@@ -120,24 +120,24 @@ void DecodePPPOEDiscovery(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint
+         pppoedt = pppoedt + (4 + tag_length);
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ /**
+  * \brief Main decoding function for PPPOE Session packets
+  */
+-void DecodePPPOESession(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodePPPOESession(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_pppoe, tv->sc_perf_pca);
+ 
+     if (len < PPPOE_SESSION_HEADER_LEN) {
+         ENGINE_SET_EVENT(p, PPPOE_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->pppoesh = (PPPOESessionHdr *)pkt;
+     if (p->pppoesh == NULL)
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     SCLogDebug("PPPOE VERSION %" PRIu32 " TYPE %" PRIu32 " CODE %" PRIu32 " SESSIONID %" PRIu32 " LENGTH %" PRIu32 "",
+            PPPOE_SESSION_GET_VERSION(p->pppoesh),  PPPOE_SESSION_GET_TYPE(p->pppoesh),  p->pppoesh->pppoe_code,  ntohs(p->pppoesh->session_id),  ntohs(p->pppoesh->pppoe_length));
+@@ -184,7 +184,7 @@ void DecodePPPOESession(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_
+ 
+                 if(len < (PPPOE_SESSION_HEADER_LEN + IPV4_HEADER_LEN))    {
+                     ENGINE_SET_EVENT(p,PPPVJU_PKT_TOO_SMALL);
+-                    return;
++                    return TM_ECODE_FAILED;
+                 }
+ 
+                 if(IPV4_GET_RAW_VER((IPV4Hdr *)(pkt + PPPOE_SESSION_HEADER_LEN)) == 4) {
+@@ -195,28 +195,27 @@ void DecodePPPOESession(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_
+             case PPP_IP:
+                 if(len < (PPPOE_SESSION_HEADER_LEN + IPV4_HEADER_LEN))    {
+                     ENGINE_SET_EVENT(p,PPPIPV4_PKT_TOO_SMALL);
+-                    return;
++                    return TM_ECODE_FAILED;
+                 }
+ 
+-                DecodeIPV4(tv, dtv, p, pkt + PPPOE_SESSION_HEADER_LEN, len - PPPOE_SESSION_HEADER_LEN, pq );
+-                break;
++                return DecodeIPV4(tv, dtv, p, pkt + PPPOE_SESSION_HEADER_LEN, len - PPPOE_SESSION_HEADER_LEN, pq );
+ 
+             /* PPP IPv6 was not tested */
+             case PPP_IPV6:
+                 if(len < (PPPOE_SESSION_HEADER_LEN + IPV6_HEADER_LEN))    {
+                     ENGINE_SET_EVENT(p,PPPIPV6_PKT_TOO_SMALL);
+-                    return;
++                    return TM_ECODE_FAILED;
+                 }
+ 
+-                DecodeIPV6(tv, dtv, p, pkt + PPPOE_SESSION_HEADER_LEN, len - PPPOE_SESSION_HEADER_LEN, pq );
+-                break;
++                return DecodeIPV6(tv, dtv, p, pkt + PPPOE_SESSION_HEADER_LEN, len - PPPOE_SESSION_HEADER_LEN, pq );
+ 
+             default:
+                 SCLogDebug("unknown PPP protocol: %" PRIx32 "",ntohs(p->ppph->protocol));
+                 ENGINE_SET_EVENT(p,PPP_WRONG_TYPE);
+-                return;
++                return TM_ECODE_FAILED;
+         }
+     }
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-raw.c b/src/decode-raw.c
+index ef95c35..a11419e 100644
+--- a/src/decode-raw.c
++++ b/src/decode-raw.c
+@@ -43,27 +43,28 @@
+ #include "host.h"
+ 
+ 
+-void DecodeRaw(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeRaw(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_raw, tv->sc_perf_pca);
+ 
+     /* If it is ipv4 or ipv6 it should at least be the size of ipv4 */
+     if (unlikely(len < IPV4_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p,IPV4_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     if (IP_GET_RAW_VER(pkt) == 4) {
+         SCLogDebug("IPV4 Packet");
+-        DecodeIPV4(tv, dtv, p, GET_PKT_DATA(p), GET_PKT_LEN(p), pq);
++        return DecodeIPV4(tv, dtv, p, GET_PKT_DATA(p), GET_PKT_LEN(p), pq);
+     } else if (IP_GET_RAW_VER(pkt) == 6) {
+         SCLogDebug("IPV6 Packet");
+-        DecodeIPV6(tv, dtv, p, GET_PKT_DATA(p), GET_PKT_LEN(p), pq);
++        return DecodeIPV6(tv, dtv, p, GET_PKT_DATA(p), GET_PKT_LEN(p), pq);
+     } else {
+         SCLogDebug("Unknown ip version %" PRIu8 "", IP_GET_RAW_VER(pkt));
+         ENGINE_SET_EVENT(p,IPRAW_INVALID_IPV);
++        return TM_ECODE_FAILED;
+     }
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-sctp.c b/src/decode-sctp.c
+index 24d83e4..81b6ef6 100644
+--- a/src/decode-sctp.c
++++ b/src/decode-sctp.c
+@@ -59,13 +59,13 @@ static int DecodeSCTPPacket(ThreadVars *tv, Packet *p, uint8_t *pkt, uint16_t le
+     return 0;
+ }
+ 
+-void DecodeSCTP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeSCTP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_sctp, tv->sc_perf_pca);
+ 
+     if (unlikely(DecodeSCTPPacket(tv, p,pkt,len) < 0)) {
+         p->sctph = NULL;
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+ #ifdef DEBUG
+@@ -76,7 +76,7 @@ void DecodeSCTP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+     /* Flow is an integral part of us */
+     FlowHandlePacket(tv, p);
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ /**
+  * @}
+diff --git a/src/decode-sll.c b/src/decode-sll.c
+index 201bab6..cb28ed8 100644
+--- a/src/decode-sll.c
++++ b/src/decode-sll.c
+@@ -36,38 +36,36 @@
+ #include "decode-events.h"
+ #include "util-debug.h"
+ 
+-void DecodeSll(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeSll(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_sll, tv->sc_perf_pca);
+ 
+     if (unlikely(len < SLL_HEADER_LEN)) {
+         ENGINE_SET_EVENT(p,SLL_PKT_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     SllHdr *sllh = (SllHdr *)pkt;
+     if (unlikely(sllh == NULL))
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     SCLogDebug("p %p pkt %p sll_protocol %04x", p, pkt, ntohs(sllh->sll_protocol));
+ 
+     switch (ntohs(sllh->sll_protocol)) {
+         case ETHERNET_TYPE_IP:
+-            DecodeIPV4(tv, dtv, p, pkt + SLL_HEADER_LEN,
++            return DecodeIPV4(tv, dtv, p, pkt + SLL_HEADER_LEN,
+                        len - SLL_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_IPV6:
+-            DecodeIPV6(tv, dtv, p, pkt + SLL_HEADER_LEN,
++            return DecodeIPV6(tv, dtv, p, pkt + SLL_HEADER_LEN,
+                        len - SLL_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_VLAN:
+-            DecodeVLAN(tv, dtv, p, pkt + SLL_HEADER_LEN,
++            return DecodeVLAN(tv, dtv, p, pkt + SLL_HEADER_LEN,
+                                  len - SLL_HEADER_LEN, pq);
+-            break;
+         default:
+             SCLogDebug("p %p pkt %p sll type %04x not supported", p,
+                        pkt, ntohs(sllh->sll_protocol));
+     }
++    return TM_ECODE_OK;
+ }
+ /**
+  * @}
+diff --git a/src/decode-tcp.c b/src/decode-tcp.c
+index e48a745..3fcbddd 100644
+--- a/src/decode-tcp.c
++++ b/src/decode-tcp.c
+@@ -184,14 +184,14 @@ static int DecodeTCPPacket(ThreadVars *tv, Packet *p, uint8_t *pkt, uint16_t len
+     return 0;
+ }
+ 
+-void DecodeTCP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeTCP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_tcp, tv->sc_perf_pca);
+ 
+     if (unlikely(DecodeTCPPacket(tv, p,pkt,len) < 0)) {
+         SCLogDebug("invalid TCP packet");
+         p->tcph = NULL;
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+ #ifdef DEBUG
+@@ -205,7 +205,7 @@ void DecodeTCP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+     /* Flow is an integral part of us */
+     FlowHandlePacket(tv, p);
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-teredo.c b/src/decode-teredo.c
+index fa7177c..63c2e13 100644
+--- a/src/decode-teredo.c
++++ b/src/decode-teredo.c
+@@ -42,7 +42,7 @@
+ /**
+  * \brief Function to decode Teredo packets
+  *
+- * \retval 0 if packet is not a Teredo packet, 1 if it is
++ * \retval TM_ECODE_OK for a decoded Teredo packet, TM_ECODE_FAILED otherwise
+  */
+ int DecodeTeredo(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+@@ -51,7 +51,7 @@ int DecodeTeredo(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+ 
+     /* Is this packet to short to contain an IPv6 packet ? */
+     if (len < IPV6_HEADER_LEN)
+-        return 0;
++        return TM_ECODE_FAILED;
+ 
+     /* Teredo encapsulate IPv6 in UDP and can add some custom message
+      * part before the IPv6 packet. In our case, we just want to get
+@@ -64,14 +64,14 @@ int DecodeTeredo(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+                 if (len >= TEREDO_ORIG_INDICATION_LENGTH + IPV6_HEADER_LEN)
+                     start += TEREDO_ORIG_INDICATION_LENGTH;
+                 else
+-                    return 0;
++                    return TM_ECODE_FAILED;
+                 break;
+             /* authentication: negotiation not real tunnel */
+             case 0x1:
+-                return 0;
++                return TM_ECODE_FAILED;
+             /* this case is not possible in Teredo: not that protocol */
+             default:
+-                return 0;
++                return TM_ECODE_FAILED;
+         }
+     }
+ 
+@@ -90,24 +90,20 @@ int DecodeTeredo(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+             if (pq != NULL) {
+                 int blen = len - (start - pkt);
+                 /* spawn off tunnel packet */
+-                Packet *tp = PacketPseudoPktSetup(p, start, blen,
+-                                                  IPPROTO_IPV6);
++                Packet *tp = PacketTunnelPktSetup(tv, dtv, p, start, blen, IPPROTO_IPV6, pq);
+                 if (tp != NULL) {
+                     PKT_SET_SRC(tp, PKT_SRC_DECODER_TEREDO);
+-                    /* send that to the Tunnel decoder */
+-                    DecodeTunnel(tv, dtv, tp, GET_PKT_DATA(tp), GET_PKT_LEN(tp),
+-                                 pq, IPPROTO_IPV6);
+                     /* add the tp to the packet queue. */
+                     PacketEnqueue(pq,tp);
+                     SCPerfCounterIncr(dtv->counter_teredo, tv->sc_perf_pca);
+-                    return 1;
++                    return TM_ECODE_OK;
+                 }
+             }
+         }
+-        return 0;
++        return TM_ECODE_FAILED;
+     }
+ 
+-    return 0;
++    return TM_ECODE_FAILED;
+ }
+ 
+ /**
+diff --git a/src/decode-udp.c b/src/decode-udp.c
+index 6a53bb3..a8e953e 100644
+--- a/src/decode-udp.c
++++ b/src/decode-udp.c
+@@ -70,23 +70,23 @@ static int DecodeUDPPacket(ThreadVars *t, Packet *p, uint8_t *pkt, uint16_t len)
+     return 0;
+ }
+ 
+-void DecodeUDP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeUDP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     SCPerfCounterIncr(dtv->counter_udp, tv->sc_perf_pca);
+ 
+     if (unlikely(DecodeUDPPacket(tv, p,pkt,len) < 0)) {
+         p->udph = NULL;
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     SCLogDebug("UDP sp: %" PRIu32 " -> dp: %" PRIu32 " - HLEN: %" PRIu32 " LEN: %" PRIu32 "",
+         UDP_GET_SRC_PORT(p), UDP_GET_DST_PORT(p), UDP_HEADER_LEN, p->payload_len);
+ 
+-    if (unlikely(DecodeTeredo(tv, dtv, p, p->payload, p->payload_len, pq) == 1)) {
++    if (unlikely(DecodeTeredo(tv, dtv, p, p->payload, p->payload_len, pq) == TM_ECODE_OK)) {
+         /* Here we have a Teredo packet and don't need to handle app
+          * layer */
+         FlowHandlePacket(tv, p);
+-        return;
++        return TM_ECODE_OK;
+     }
+ 
+     /* Flow is an integral part of us */
+@@ -97,7 +97,7 @@ void DecodeUDP(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, u
+         AppLayerHandleUdp(&dtv->udp_dp_ctx, p->flow, p);
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode-vlan.c b/src/decode-vlan.c
+index ccf61e7..d9172ae 100644
+--- a/src/decode-vlan.c
++++ b/src/decode-vlan.c
+@@ -56,7 +56,7 @@
+  * \param pq pointer to the packet queue
+  *
+  */
+-void DecodeVLAN(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
++int DecodeVLAN(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt, uint16_t len, PacketQueue *pq)
+ {
+     uint32_t proto;
+ 
+@@ -64,16 +64,16 @@ void DecodeVLAN(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+ 
+     if(len < VLAN_HEADER_LEN)    {
+         ENGINE_SET_EVENT(p,VLAN_HEADER_TOO_SMALL);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+     if (p->vlan_idx >= 2) {
+         ENGINE_SET_EVENT(p,VLAN_HEADER_TOO_MANY_LAYERS);
+-        return;
++        return TM_ECODE_FAILED;
+     }
+ 
+     p->vlanh[p->vlan_idx] = (VLANHdr *)pkt;
+     if(p->vlanh[p->vlan_idx] == NULL)
+-        return;
++        return TM_ECODE_FAILED;
+ 
+     proto = GET_VLAN_PROTO(p->vlanh[p->vlan_idx]);
+ 
+@@ -89,25 +89,21 @@ void DecodeVLAN(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+ 
+     switch (proto)   {
+         case ETHERNET_TYPE_IP:
+-            DecodeIPV4(tv, dtv, p, pkt + VLAN_HEADER_LEN,
++            return DecodeIPV4(tv, dtv, p, pkt + VLAN_HEADER_LEN,
+                        len - VLAN_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_IPV6:
+-            DecodeIPV6(tv, dtv, p, pkt + VLAN_HEADER_LEN,
++            return DecodeIPV6(tv, dtv, p, pkt + VLAN_HEADER_LEN,
+                        len - VLAN_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_PPPOE_SESS:
+-            DecodePPPOESession(tv, dtv, p, pkt + VLAN_HEADER_LEN,
++            return DecodePPPOESession(tv, dtv, p, pkt + VLAN_HEADER_LEN,
+                                len - VLAN_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_PPPOE_DISC:
+-            DecodePPPOEDiscovery(tv, dtv, p, pkt + VLAN_HEADER_LEN,
++            return DecodePPPOEDiscovery(tv, dtv, p, pkt + VLAN_HEADER_LEN,
+                                  len - VLAN_HEADER_LEN, pq);
+-            break;
+         case ETHERNET_TYPE_VLAN:
+             if (p->vlan_idx >= 2) {
+                 ENGINE_SET_EVENT(p,VLAN_HEADER_TOO_MANY_LAYERS);
+-                return;
++                return TM_ECODE_FAILED;
+             } else {
+                 DecodeVLAN(tv, dtv, p, pkt + VLAN_HEADER_LEN,
+                         len - VLAN_HEADER_LEN, pq);
+@@ -116,10 +112,10 @@ void DecodeVLAN(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, uint8_t *pkt,
+         default:
+             SCLogDebug("unknown VLAN type: %" PRIx32 "", proto);
+             ENGINE_SET_EVENT(p,VLAN_UNKNOWN_TYPE);
+-            return;
++            return TM_ECODE_FAILED;
+     }
+ 
+-    return;
++    return TM_ECODE_OK;
+ }
+ 
+ #ifdef UNITTESTS
+diff --git a/src/decode.c b/src/decode.c
+index bd066f3..0f73adf 100644
+--- a/src/decode.c
++++ b/src/decode.c
+@@ -61,26 +61,23 @@
+ #include "util-profiling.h"
+ #include "pkt-var.h"
+ 
+-void DecodeTunnel(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
++int DecodeTunnel(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p,
+         uint8_t *pkt, uint16_t len, PacketQueue *pq, uint8_t proto)
+ {
+     switch (proto) {
+         case PPP_OVER_GRE:
+-            DecodePPP(tv, dtv, p, pkt, len, pq);
+-            return;
++            return DecodePPP(tv, dtv, p, pkt, len, pq);
+         case IPPROTO_IP:
+-            DecodeIPV4(tv, dtv, p, pkt, len, pq);
+-            return;
++            return DecodeIPV4(tv, dtv, p, pkt, len, pq);
+         case IPPROTO_IPV6:
+-            DecodeIPV6(tv, dtv, p, pkt, len, pq);
+-            return;
++            return DecodeIPV6(tv, dtv, p, pkt, len, pq);
+        case VLAN_OVER_GRE:
+-            DecodeVLAN(tv, dtv, p, pkt, len, pq);
+-            return;
++            return DecodeVLAN(tv, dtv, p, pkt, len, pq);
+         default:
+             SCLogInfo("FIXME: DecodeTunnel: protocol %" PRIu32 " not supported.", proto);
+             break;
+     }
++    return TM_ECODE_FAILED;
+ }
+ 
+ /**
+@@ -219,7 +216,7 @@ inline int PacketCopyData(Packet *p, uint8_t *pktdata, int pktlen)
+  *
+  *  \retval p the pseudo packet or NULL if out of memory
+  */
+-Packet *PacketPseudoPktSetup(Packet *parent, uint8_t *pkt, uint16_t len, uint8_t proto)
++Packet *PacketTunnelPktSetup(ThreadVars *tv, DecodeThreadVars *dtv, Packet *parent, uint8_t *pkt, uint16_t len, uint8_t proto, PacketQueue *pq)
+ {
+     SCEnter();
+ 
+@@ -242,27 +239,18 @@ Packet *PacketPseudoPktSetup(Packet *parent, uint8_t *pkt, uint16_t len, uint8_t
+     p->ts.tv_usec = parent->ts.tv_usec;
+     p->datalink = DLT_RAW;
+ 
+-    /* set tunnel flags */
+-
+-    /* tell new packet it's part of a tunnel */
+-    SET_TUNNEL_PKT(p);
+-    /* tell parent packet it's part of a tunnel */
+-    SET_TUNNEL_PKT(parent);
+-
+-    /* increment tunnel packet refcnt in the root packet */
+-    TUNNEL_INCR_PKT_TPR(p);
+-
+-    /* disable payload (not packet) inspection on the parent, as the payload
+-     * is the packet we will now run through the system separately. We do
+-     * check it against the ip/port/other header checks though */
+-    DecodeSetNoPayloadInspectionFlag(parent);
++    if (DecodeTunnel(tv, dtv, p, GET_PKT_DATA(p), GET_PKT_LEN(p), pq, proto) != TM_ECODE_OK) {
++        PacketFreeOrRelease(p);
++        SCReturnPtr(NULL, "Packet");
++    }
++    PacketDefragPktFinishSetup(p, parent);
+     SCReturnPtr(p, "Packet");
+ }
+ 
+ /**
+  *  \brief Setup a pseudo packet (reassembled frags)
+  *
+- *  Difference with PacketPseudoPktSetup is that this func doesn't increment
++ *  Difference with PacketTunnelPktSetup is that this func doesn't increment
+  *  the recursion level. It needs to be on the same level as the frags because
+  *  we run the flow engine against this and we need to get the same flow.
+  *
+@@ -296,20 +284,6 @@ Packet *PacketDefragPktSetup(Packet *parent, uint8_t *pkt, uint16_t len, uint8_t
+     p->ts.tv_usec = parent->ts.tv_usec;
+     p->datalink = DLT_RAW;
+ 
+-    /* set tunnel flags */
+-
+-    /* tell new packet it's part of a tunnel */
+-    SET_TUNNEL_PKT(p);
+-    /* tell parent packet it's part of a tunnel */
+-    SET_TUNNEL_PKT(parent);
+-
+-    /* increment tunnel packet refcnt in the root packet */
+-    TUNNEL_INCR_PKT_TPR(p);
+-
+-    /* disable payload (not packet) inspection on the parent, as the payload
+-     * is the packet we will now run through the system separately. We do
+-     * check it against the ip/port/other header checks though */
+-    DecodeSetNoPayloadInspectionFlag(parent);
+     SCReturnPtr(p, "Packet");
+ }
+ 
+@@ -501,3 +475,21 @@ const char *PktSrcToString(enum PktSrcEnum pkt_src)
+ /**
+  * @}
+  */
++
++void PacketDefragPktFinishSetup(Packet *p, Packet *parent)
++{
++    /* set tunnel flags */
++
++    /* tell new packet it's part of a tunnel */
++    SET_TUNNEL_PKT(p);
++    /* tell parent packet it's part of a tunnel */
++    SET_TUNNEL_PKT(parent);
++
++    /* increment tunnel packet refcnt in the root packet */
++    TUNNEL_INCR_PKT_TPR(p);
++
++    /* disable payload (not packet) inspection on the parent, as the payload
++     * is the packet we will now run through the system separately. We do
++     * check it against the ip/port/other header checks though */
++    DecodeSetNoPayloadInspectionFlag(parent);
++}
+diff --git a/src/decode.h b/src/decode.h
+index f5700f7..135b777 100644
+--- a/src/decode.h
++++ b/src/decode.h
+@@ -812,7 +812,8 @@ typedef struct DecodeThreadVars_
+ 
+ 
+ void DecodeRegisterPerfCounters(DecodeThreadVars *, ThreadVars *);
+-Packet *PacketPseudoPktSetup(Packet *parent, uint8_t *pkt, uint16_t len, uint8_t proto);
++Packet *PacketTunnelPktSetup(ThreadVars *tv, DecodeThreadVars *dtv, Packet *parent, uint8_t *pkt, uint16_t len, uint8_t proto, PacketQueue *pq);
++void PacketDefragPktFinishSetup(Packet *p, Packet *parent);
+ Packet *PacketDefragPktSetup(Packet *parent, uint8_t *pkt, uint16_t len, uint8_t proto);
+ Packet *PacketGetFromQueueOrAlloc(void);
+ Packet *PacketGetFromAlloc(void);
+@@ -826,22 +827,22 @@ const char *PktSrcToString(enum PktSrcEnum pkt_src);
+ DecodeThreadVars *DecodeThreadVarsAlloc();
+ 
+ /* decoder functions */
+-void DecodeEthernet(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeSll(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodePPP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodePPPOESession(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodePPPOEDiscovery(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeTunnel(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *, uint8_t);
+-void DecodeRaw(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeIPV4(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeIPV6(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeICMPV4(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeICMPV6(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeTCP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeUDP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeSCTP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeGRE(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+-void DecodeVLAN(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeEthernet(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeSll(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodePPP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodePPPOESession(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodePPPOEDiscovery(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeTunnel(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *, uint8_t) __attribute__((warn_unused_result));
++int DecodeRaw(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeIPV4(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeIPV6(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeICMPV4(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeICMPV6(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeTCP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeUDP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeSCTP(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeGRE(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
++int DecodeVLAN(ThreadVars *, DecodeThreadVars *, Packet *, uint8_t *, uint16_t, PacketQueue *);
+ 
+ void AddressDebugPrint(Address *);
+ 
+diff --git a/src/defrag.c b/src/defrag.c
+index 9a9603d..4950149 100644
+--- a/src/defrag.c
++++ b/src/defrag.c
+@@ -825,7 +825,7 @@ DefragGetTracker(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p)
+  *     NULL is returned.
+  */
+ Packet *
+-Defrag(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p)
++Defrag(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p, PacketQueue *pq)
+ {
+     uint16_t frag_offset;
+     uint8_t more_frags;
+@@ -869,6 +869,19 @@ Defrag(ThreadVars *tv, DecodeThreadVars *dtv, Packet *p)
+     Packet *rp = DefragInsertFrag(tv, dtv, tracker, p);
+     DefragTrackerRelease(tracker);
+ 
++    if (rp != NULL) {
++        int status;
++        if (af == AF_INET) {
++            status = DecodeIPV4(tv, dtv, rp, (uint8_t *)rp->ip4h, IPV4_GET_IPLEN(rp), pq);
++        } else {
++            status = DecodeIPV6(tv, dtv, rp, (uint8_t *)rp->ip6h, IPV6_GET_PLEN(rp) + IPV6_HEADER_LEN, pq);
++        }
++        if (status != TM_ECODE_OK) {
++            PacketFreeOrRelease(rp);
++            return NULL;
++        }
++        PacketDefragPktFinishSetup(rp, p);
++    }
+     return rp;
+ }
+ 
+diff --git a/src/defrag.h b/src/defrag.h
+index cf5abe8..dd4aac0 100644
+--- a/src/defrag.h
++++ b/src/defrag.h
+@@ -133,7 +133,7 @@ void DefragReload(void); /**< use only in unittests */
+ 
+ uint8_t DefragGetOsPolicy(Packet *);
+ void DefragTrackerFreeFrags(DefragTracker *);
+-Packet *Defrag(ThreadVars *, DecodeThreadVars *, Packet *);
++Packet *Defrag(ThreadVars *, DecodeThreadVars *, Packet *, PacketQueue *);
+ void DefragRegisterTests(void);
+ 
+ #endif /* __DEFRAG_H__ */
+diff --git a/src/source-pcap-file.c b/src/source-pcap-file.c
+index 834624a..823be20 100644
+--- a/src/source-pcap-file.c
++++ b/src/source-pcap-file.c
+@@ -62,7 +62,7 @@ extern int max_pending_packets;
+ 
+ typedef struct PcapFileGlobalVars_ {
+     pcap_t *pcap_handle;
+-    void (*Decoder)(ThreadVars *, DecodeThreadVars *, Packet *, u_int8_t *, u_int16_t, PacketQueue *);
++    int (*Decoder)(ThreadVars *, DecodeThreadVars *, Packet *, u_int8_t *, u_int16_t, PacketQueue *);
+     int datalink;
+     struct bpf_program filter;
+     uint64_t cnt; /** packet counter */

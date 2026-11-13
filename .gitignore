@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.log
+auth.json
+credentials*
+.venv/
+node_modules/

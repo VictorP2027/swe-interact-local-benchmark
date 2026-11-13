@@ -1,0 +1,282 @@
+diff --git a/main.go b/main.go
+index 6940e72..486d8a5 100644
+--- a/main.go
++++ b/main.go
+@@ -397,8 +397,9 @@ func run(state overseer.State) {
+ 	e, err := engine.Start(ctx,
+ 		engine.WithConcurrency(uint8(*concurrency)),
+ 		engine.WithDecoders(decoders.DefaultDecoders()...),
+-		engine.WithDetectors(!*noVerification, engine.DefaultDetectors()...),
+-		engine.WithDetectors(!*noVerification, conf.Detectors...),
++		engine.WithDetectors(engine.DefaultDetectors()...),
++		engine.WithDetectors(conf.Detectors...),
++		engine.WithVerify(!*noVerification),
+ 		engine.WithFilterDetectors(includeFilter),
+ 		engine.WithFilterDetectors(excludeFilter),
+ 		engine.WithFilterDetectors(endpointCustomizer),
+diff --git a/pkg/engine/ahocorasickcore.go b/pkg/engine/ahocorasickcore.go
+index 2e0fa5f..96c2b53 100644
+--- a/pkg/engine/ahocorasickcore.go
++++ b/pkg/engine/ahocorasickcore.go
+@@ -5,107 +5,50 @@ import (
+ 
+ 	ahocorasick "github.com/BobuSumisu/aho-corasick"
+ 
+-	"github.com/trufflesecurity/trufflehog/v3/pkg/context"
+ 	"github.com/trufflesecurity/trufflehog/v3/pkg/detectors"
+ 	"github.com/trufflesecurity/trufflehog/v3/pkg/pb/detectorspb"
+ )
+ 
+-// detectorKey is used to identify a detector in the keywordsToDetectors map.
+-// Multiple detectors can have the same detector type but different versions.
+-// This allows us to identify a detector by its type and version.
+-type detectorKey struct {
+-	detectorType detectorspb.DetectorType
+-	version      int
+-}
+-
+-// DetectorInfo is used to store a detector and whether it should be verified.
+-type DetectorInfo struct {
+-	detectors.Detector
+-	ShouldVerify bool
+-}
+-
+-// AhoCorasickCore encapsulates the operations and data structures used for keyword matching via the
+-// Aho-Corasick algorithm. It is responsible for constructing and managing the trie for efficient
+-// substring searches, as well as mapping keywords to their associated detectors for rapid lookups.
++// AhoCorasickCore maps keyword matches directly to detector types.
+ type AhoCorasickCore struct {
+-	// prefilter is a ahocorasick struct used for doing efficient string
+-	// matching given a set of words. (keywords from the rules in the config)
+-	prefilter ahocorasick.Trie
+-	// Maps for efficient lookups during detection.
+-	detectorTypeToDetectorInfo map[detectorKey]DetectorInfo
+-	detectors                  map[bool][]detectors.Detector
+-	keywordsToDetectors        map[string][]detectorKey
++	prefilter              ahocorasick.Trie
++	detectorTypeToDetector map[detectorspb.DetectorType]detectors.Detector
++	keywordsToDetectors    map[string][]detectorspb.DetectorType
+ }
+ 
+-// NewAhoCorasickCore allocates and initializes a new instance of AhoCorasickCore.
+-// It creates an empty keyword-to-detectors map for future string matching operations.
+-// The map detectorTypeToDetectorInfo is pre-allocated based on the size of detectors
+-// provided, for efficient storage and lookup of detector information.
+-func NewAhoCorasickCore(detectors map[bool][]detectors.Detector) *AhoCorasickCore {
+-	return &AhoCorasickCore{
+-		keywordsToDetectors:        make(map[string][]detectorKey),
+-		detectors:                  detectors,
+-		detectorTypeToDetectorInfo: make(map[detectorKey]DetectorInfo, len(detectors[true])+len(detectors[false])),
++// NewAhoCorasickCore builds the keyword mappings and prefilter together.
++func NewAhoCorasickCore(allDetectors []detectors.Detector) *AhoCorasickCore {
++	ac := &AhoCorasickCore{
++		detectorTypeToDetector: make(map[detectorspb.DetectorType]detectors.Detector, len(allDetectors)),
++		keywordsToDetectors:    make(map[string][]detectorspb.DetectorType),
+ 	}
+-}
+-
+-// Setup initializes the internal state of AhoCorasickCore to prepare it for keyword matching.
+-// This involves pre-filtering setup and lookup optimization, critical for the engine's performance.
+-func (ac *AhoCorasickCore) Setup(ctx context.Context) {
+-	// Prepare maps for fast detector lookups, instead of scanning through an array of detectors for every chunk.
+ 	var keywords []string
+-	for verify, detectorsSet := range ac.detectors {
+-		for _, d := range detectorsSet {
+-			key := createDetectorKey(d)
+-			ac.detectorTypeToDetectorInfo[key] = DetectorInfo{Detector: d, ShouldVerify: verify}
+-			keywords = ac.extractAndMapKeywords(d, key, keywords)
++	for _, detector := range allDetectors {
++		detectorType := detector.Type()
++		ac.detectorTypeToDetector[detectorType] = detector
++		for _, keyword := range detector.Keywords() {
++			keyword = strings.ToLower(keyword)
++			keywords = append(keywords, keyword)
++			ac.keywordsToDetectors[keyword] = append(ac.keywordsToDetectors[keyword], detectorType)
+ 		}
+ 	}
+-
+-	// Use the Ahocorasick algorithm to create a trie structure for efficient keyword matching.
+-	// This ensures that we can rapidly match against a vast set of keywords without individually comparing each one.
+ 	ac.prefilter = *ahocorasick.NewTrieBuilder().AddStrings(keywords).Build()
+-	ctx.Logger().V(4).Info("AhoCorasickCore Setup complete")
+-}
+-
+-// createDetectorKey creates a unique key for each detector. This key based on type and version,
+-// it ensures faster lookups and reduces redundancy in our main detector store.
+-func createDetectorKey(d detectors.Detector) detectorKey {
+-	detectorType := d.Type()
+-	var version int
+-	if v, ok := d.(detectors.Versioner); ok {
+-		version = v.Version()
+-	}
+-	return detectorKey{detectorType: detectorType, version: version}
+-}
+-
+-// extractAndMapKeywords captures keywords associated with each detector and maps them.
+-// This allows us to quickly determine which detectors are relevant based on the presence of certain keywords.
+-func (ac *AhoCorasickCore) extractAndMapKeywords(d detectors.Detector, key detectorKey, keywords []string) []string {
+-	for _, kw := range d.Keywords() {
+-		kwLower := strings.ToLower(kw)
+-		keywords = append(keywords, kwLower)
+-		ac.keywordsToDetectors[kwLower] = append(ac.keywordsToDetectors[kwLower], key)
+-	}
+-	return keywords
++	return ac
+ }
+ 
+-// MatchString performs a string match using the Aho-Corasick algorithm, returning an array of matches.
+-// Designed for internal use within the AhoCorasickCore component.
++// MatchString returns case-insensitive keyword matches.
+ func (ac *AhoCorasickCore) MatchString(input string) []*ahocorasick.Match {
+ 	return ac.prefilter.MatchString(strings.ToLower(input))
+ }
+ 
+-// PopulateDetectorsByMatch populates the given detectorMap based on the Aho-Corasick match results.
+-// This method is designed to reuse the same map for performance optimization,
+-// reducing the need for repeated allocations within each detector worker in the engine.
+-func (ac *AhoCorasickCore) PopulateDetectorsByMatch(match *ahocorasick.Match, detectors map[detectorspb.DetectorType]DetectorInfo) bool {
+-	matchedKeys, ok := ac.keywordsToDetectors[match.MatchString()]
++// PopulateDetectorsByMatch adds the detectors selected by a match to a reusable map.
++func (ac *AhoCorasickCore) PopulateDetectorsByMatch(match *ahocorasick.Match, found map[detectorspb.DetectorType]detectors.Detector) bool {
++	detectorTypes, ok := ac.keywordsToDetectors[match.MatchString()]
+ 	if !ok {
+ 		return false
+ 	}
+-	for _, key := range matchedKeys {
+-		detectors[key.detectorType] = ac.detectorTypeToDetectorInfo[key]
++	for _, detectorType := range detectorTypes {
++		found[detectorType] = ac.detectorTypeToDetector[detectorType]
+ 	}
+ 	return true
+ }
+diff --git a/pkg/engine/engine.go b/pkg/engine/engine.go
+index 370c44d..42ccc51 100644
+--- a/pkg/engine/engine.go
++++ b/pkg/engine/engine.go
+@@ -53,7 +53,8 @@ type Engine struct {
+ 	// CLI flags.
+ 	concurrency uint8
+ 	decoders    []decoders.Decoder
+-	detectors   map[bool][]detectors.Detector
++	detectors   []detectors.Detector
++	verify      bool
+ 	// filterUnverified is used to reduce the number of unverified results.
+ 	// If there are multiple unverified results for the same chunk for the same detector,
+ 	// only the first one will be kept.
+@@ -100,16 +101,17 @@ func WithConcurrency(concurrency uint8) Option {
+ 
+ const ignoreTag = "trufflehog:ignore"
+ 
+-func WithDetectors(verify bool, d ...detectors.Detector) Option {
++// WithDetectors appends detectors independently of the verification setting.
++func WithDetectors(d ...detectors.Detector) Option {
+ 	return func(e *Engine) {
+-		if e.detectors == nil {
+-			e.detectors = make(map[bool][]detectors.Detector)
+-		}
+-		if e.detectors[verify] == nil {
+-			e.detectors[true] = []detectors.Detector{}
+-			e.detectors[false] = []detectors.Detector{}
+-		}
+-		e.detectors[verify] = append(e.detectors[verify], d...)
++		e.detectors = append(e.detectors, d...)
++	}
++}
++
++// WithVerify controls verification globally for the scan.
++func WithVerify(verify bool) Option {
++	return func(e *Engine) {
++		e.verify = verify
+ 	}
+ }
+ 
+@@ -166,8 +168,7 @@ func WithFilterDetectors(filterFunc func(detectors.Detector) bool) Option {
+ 		if e.detectors == nil {
+ 			return
+ 		}
+-		e.detectors[true] = filterDetectors(filterFunc, e.detectors[true])
+-		e.detectors[false] = filterDetectors(filterFunc, e.detectors[false])
++		e.detectors = filterDetectors(filterFunc, e.detectors)
+ 	}
+ }
+ 
+@@ -179,7 +180,7 @@ func WithPrinter(printer Printer) Option {
+ }
+ 
+ func filterDetectors(filterFunc func(detectors.Detector) bool, input []detectors.Detector) []detectors.Detector {
+-	var output []detectors.Detector
++	output := make([]detectors.Detector, 0, len(input))
+ 	for _, detector := range input {
+ 		if filterFunc(detector) {
+ 			output = append(output, detector)
+@@ -278,7 +279,7 @@ func Start(ctx context.Context, options ...Option) (*Engine, error) {
+ 	}
+ 	e.setDefaults(ctx)
+ 	ctx.Logger().V(4).Info("setting up aho-corasick core")
+-	e.ahoCorasickCore.Setup(ctx)
++	e.ahoCorasickCore = NewAhoCorasickCore(e.detectors)
+ 	e.sanityChecks(ctx)
+ 	e.startWorkers(ctx)
+ 
+@@ -307,12 +308,11 @@ func (e *Engine) initialize(ctx context.Context, options ...Option) error {
+ 	e.printer = new(output.PlainPrinter)
+ 	e.metrics = runtimeMetrics{Metrics: Metrics{scanStartTime: time.Now()}}
+ 
++	e.verify = true
+ 	for _, option := range options {
+ 		option(e)
+ 	}
+ 	ctx.Logger().V(4).Info("engine initialized")
+-	e.ahoCorasickCore = NewAhoCorasickCore(e.detectors)
+-
+ 	return nil
+ }
+ 
+@@ -338,10 +338,8 @@ func (e *Engine) setDefaults(ctx context.Context) {
+ 		e.decoders = decoders.DefaultDecoders()
+ 	}
+ 
+-	if len(e.detectors) == 0 {
+-		e.detectors = map[bool][]detectors.Detector{}
+-		e.detectors[true] = DefaultDetectors()
+-		e.detectors[false] = []detectors.Detector{}
++	if e.detectors == nil {
++		e.detectors = DefaultDetectors()
+ 	}
+ 	ctx.Logger().V(4).Info("default engine options set")
+ }
+@@ -350,7 +348,7 @@ func (e *Engine) setDefaults(ctx context.Context) {
+ // a detector has been configured in a way that isn't represented by
+ // the DetectorID (type and version).
+ func (e *Engine) sanityChecks(ctx context.Context) {
+-	dets := append(e.detectors[true], e.detectors[false]...)
++	dets := e.detectors
+ 	seenDetectors := make(map[config.DetectorID]struct{}, len(dets))
+ 	for _, det := range dets {
+ 		id := config.GetDetectorID(det)
+@@ -457,7 +455,7 @@ func (e *Engine) detectorWorker(ctx context.Context) {
+ 
+ 	// Reuse the same map to avoid allocations.
+ 	const avgDetectorsPerChunk = 2
+-	chunkSpecificDetectors := make(map[detectorspb.DetectorType]DetectorInfo, avgDetectorsPerChunk)
++	chunkSpecificDetectors := make(map[detectorspb.DetectorType]detectors.Detector, avgDetectorsPerChunk)
+ 	for originalChunk := range e.ChunksChan() {
+ 		for chunk := range sources.Chunker(originalChunk) {
+ 			atomic.AddUint64(&e.metrics.BytesScanned, uint64(len(chunk.Data)))
+@@ -475,7 +473,6 @@ func (e *Engine) detectorWorker(ctx context.Context) {
+ 				}
+ 
+ 				for k, detector := range chunkSpecificDetectors {
+-					decoded.Chunk.Verify = detector.ShouldVerify
+ 					wgDetect.Add(1)
+ 					e.detectableChunksChan <- detectableChunk{
+ 						chunk:    *decoded.Chunk,
+@@ -508,7 +505,7 @@ func (e *Engine) detectChunk(ctx context.Context, data detectableChunk) {
+ 	defer common.Recover(ctx)
+ 	defer cancel()
+ 
+-	results, err := data.detector.FromData(ctx, data.chunk.Verify, data.chunk.Data)
++	results, err := data.detector.FromData(ctx, e.verify, data.chunk.Data)
+ 	if err != nil {
+ 		ctx.Logger().Error(err, "error scanning chunk")
+ 	}

