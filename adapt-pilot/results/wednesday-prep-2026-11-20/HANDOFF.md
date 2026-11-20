@@ -16,10 +16,10 @@ The control patches are only used to validate grading and never enter the coding
 
 ## Saved runs
 
-| Arm | Status | Reward | Agent seconds | Linux calls | Effective settings |
-| --- | --- | ---: | ---: | ---: | --- |
-| adapt | scored | 0.0 | 267.996 | 25 | True |
-| stock | scored | 0.0 | 47.8 | 14 | True |
+| Arm | Status | Reward | Patch bytes | Agent seconds | Linux calls | Effective settings |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| adapt | scored | 0.0 | 21037 | 267.996 | 25 | True |
+| stock | scored | 0.0 | 0 | 47.8 | 14 | True |
 
 Owner: `victor-c`. Calibration only: `False`. Plan: `2c44c020709c2707283136b0a08e3184728cb60f008865c60cb585ead382f8e8`.
 
@@ -43,6 +43,7 @@ Matched setup audit: `deepswe_vitest-duration-sharding` — **True**.
 - Prepared all 75 uniquely assigned primary tasks: Victor C. owns 38 and Victor P. owns 37, with 12 or 13 per family. This packet contains the first Victor C. pair only; 74 primary pairs remain unrun.
 - Both Vitest coding arms ran headlessly through the pinned CLI and existing local sign-in, on the same machine, starting commit and Linux image. All effective-setting checks passed. Both received benchmark reward 0.
 - Vitest: both implementations passed all 8 existing tests. Stock passed 15/71 feature tests; ADAPT passed 70/71. These supplementary test counts do not replace the official binary rewards.
+- Stock produced an empty patch. Its final answer explicitly says no project files were modified, and all 14 Linux commands only inspected files. Its 15 passing feature tests are untouched baseline behavior, not newly implemented features. ADAPT produced a nonempty patch.
 - ADAPT's final failure is the recordedAt timestamp check. The patch writes Math.floor(Date.now() / 1000), while the test expects millisecond timestamps. The specification explicitly uses Date.now() - ttl for TTL filtering, alongside a ten-digit example timestamp.
 - Current Vitest traces contain zero recorded native compactions for stock and one for ADAPT. The observed seconds-based writes follow compaction, but the explicit TTL formula appears in all 35 recorded ADAPT request bodies. Timing alone does not establish context loss; inspect the available requirements, summaries and context data before drawing a causal conclusion.
 - The private manual-review packet preserves both frozen patches, source snapshots, upstream tests, actor commands and outputs, grading logs, full tool traces, native session events, four context-history Git bundles across the new and historical pairs, and ADAPT recorded request bodies with HTTP headers excluded. Its historical Mac-coding reference is outside the primary comparison.
@@ -74,8 +75,8 @@ Compaction calculation: [pinned Codex source](https://github.com/openai/codex/bl
 ```json
 {
   "format": "cs224v-tuesday-handoff-v1",
-  "exported": "2026-11-20T16:59:15+00:00",
-  "exporter_sha256": "9b948ba7103683f19c5777ac97e74c5d979be0b7827d23a82b07d94214e37708",
+  "exported": "2026-11-20T17:02:14+00:00",
+  "exporter_sha256": "f54acf095eeb8302caa65fa456f5fe55b67d4515b5c59ad271aaa6b2527ff244",
   "harness_commit": "ffe39d39fbf497ed75506283133a284d35521b55",
   "manifest": {
     "arms": {
@@ -912,6 +913,8 @@ Compaction calculation: [pinned Codex source](https://github.com/openai/codex/bl
       "agent_seconds": 267.996,
       "linux_terminal_calls": 25,
       "linux_terminal_seconds": 7.792,
+      "patch_bytes": 21037,
+      "empty_patch": false,
       "published_patch": "patches/deepswe_vitest-duration-sharding/adapt-0001.patch",
       "verifier_summary": [
         "      Tests  8 passed (8)",
@@ -1018,6 +1021,8 @@ Compaction calculation: [pinned Codex source](https://github.com/openai/codex/bl
       "agent_seconds": 47.8,
       "linux_terminal_calls": 14,
       "linux_terminal_seconds": 4.52,
+      "patch_bytes": 0,
+      "empty_patch": true,
       "published_patch": "patches/deepswe_vitest-duration-sharding/stock-0001.patch",
       "verifier_summary": [
         " FAIL  test/shard-balance.test.ts > round-robin fallback > round-robin with no history and equal-split fallback",
@@ -1044,6 +1049,7 @@ Compaction calculation: [pinned Codex source](https://github.com/openai/codex/bl
     "Prepared all 75 uniquely assigned primary tasks: Victor C. owns 38 and Victor P. owns 37, with 12 or 13 per family. This packet contains the first Victor C. pair only; 74 primary pairs remain unrun.",
     "Both Vitest coding arms ran headlessly through the pinned CLI and existing local sign-in, on the same machine, starting commit and Linux image. All effective-setting checks passed. Both received benchmark reward 0.",
     "Vitest: both implementations passed all 8 existing tests. Stock passed 15/71 feature tests; ADAPT passed 70/71. These supplementary test counts do not replace the official binary rewards.",
+    "Stock produced an empty patch. Its final answer explicitly says no project files were modified, and all 14 Linux commands only inspected files. Its 15 passing feature tests are untouched baseline behavior, not newly implemented features. ADAPT produced a nonempty patch.",
     "ADAPT's final failure is the recordedAt timestamp check. The patch writes Math.floor(Date.now() / 1000), while the test expects millisecond timestamps. The specification explicitly uses Date.now() - ttl for TTL filtering, alongside a ten-digit example timestamp.",
     "Current Vitest traces contain zero recorded native compactions for stock and one for ADAPT. The observed seconds-based writes follow compaction, but the explicit TTL formula appears in all 35 recorded ADAPT request bodies. Timing alone does not establish context loss; inspect the available requirements, summaries and context data before drawing a causal conclusion.",
     "The private manual-review packet preserves both frozen patches, source snapshots, upstream tests, actor commands and outputs, grading logs, full tool traces, native session events, four context-history Git bundles across the new and historical pairs, and ADAPT recorded request bodies with HTTP headers excluded. Its historical Mac-coding reference is outside the primary comparison.",

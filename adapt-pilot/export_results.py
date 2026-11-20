@@ -46,6 +46,8 @@ def export(output, destination, include_handoffs=()):
         artifact = output / row["artifact_path"]
         patch = artifact / "implementation.patch"
         if patch.is_file():
+            row["patch_bytes"] = patch.stat().st_size
+            row["empty_patch"] = patch.stat().st_size == 0
             target = destination / "patches" / row["task"] / f"{row['arm']}-{row['attempt']}.patch"
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(patch, target)
@@ -127,10 +129,10 @@ def export(output, destination, include_handoffs=()):
         for name, control in validation["controls"].items():
             lines.append(f"| {validation['task']} | {name} | {control['expected']:g} | {control['reward']:g} | {control['passed']} |")
     lines += ["", "## Saved runs", "",
-              "| Arm | Status | Reward | Agent seconds | Linux calls | Effective settings |",
-              "| --- | --- | ---: | ---: | ---: | --- |"]
+              "| Arm | Status | Reward | Patch bytes | Agent seconds | Linux calls | Effective settings |",
+              "| --- | --- | ---: | ---: | ---: | ---: | --- |"]
     for row in attempts:
-        lines.append(f"| {row['arm']} | {row['status']} | {row.get('reward', 'unscored')} | "
+        lines.append(f"| {row['arm']} | {row['status']} | {row.get('reward', 'unscored')} | {row.get('patch_bytes', '')} | "
                      f"{row.get('agent_seconds', '')} | {row.get('linux_terminal_calls', 0)} | "
                      f"{row.get('effective_settings', {}).get('passed', False)} |")
     if bundle["campaign"]:

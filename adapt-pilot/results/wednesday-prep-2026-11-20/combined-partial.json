@@ -105,11 +105,13 @@
               "mode": "tokens"
             }
           },
+          "empty_patch": false,
           "family": "DeepSWE",
           "image_id": "sha256:7ea5066862dcde784cb49ba556e5989a3b48bbc82c99a492987e71a664d18d8b",
           "linux_terminal_calls": 25,
           "linux_terminal_seconds": 7.792,
           "machine_id": "991f9a3ae4a310d80d104187698ad4c602e211aac4bfa92428c0b1a1271f0436",
+          "patch_bytes": 21037,
           "patch_sha256": "71ea7aa8c6b9c093a9da93b8018408a04e2178fec3d8231d3c8fbf12ca6e5ab9",
           "prompt_sha256": "123bfd91416a7bc7deca77160a284458f89f8fa8156ca656a0da72281a30ab0e",
           "published_patch": "patches/deepswe_vitest-duration-sharding/adapt-0001.patch",
@@ -211,11 +213,13 @@
               "mode": "tokens"
             }
           },
+          "empty_patch": true,
           "family": "DeepSWE",
           "image_id": "sha256:7ea5066862dcde784cb49ba556e5989a3b48bbc82c99a492987e71a664d18d8b",
           "linux_terminal_calls": 14,
           "linux_terminal_seconds": 4.52,
           "machine_id": "991f9a3ae4a310d80d104187698ad4c602e211aac4bfa92428c0b1a1271f0436",
+          "patch_bytes": 0,
           "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "prompt_sha256": "123bfd91416a7bc7deca77160a284458f89f8fa8156ca656a0da72281a30ab0e",
           "published_patch": "patches/deepswe_vitest-duration-sharding/stock-0001.patch",
@@ -275,7 +279,7 @@
     {
       "owner": "victor-c",
       "packet": "handoff.json",
-      "sha256": "c8fb8ac68883024bd10770df28ff176c676907f10c29e65a528e781d399f7867"
+      "sha256": "602a02889c98c1abfbafca1ec4ebaeff4b41e1c164dafbf29749f1df27f66921"
     }
   ],
   "unscored_or_pending": [
