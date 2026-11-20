@@ -9,7 +9,7 @@ import campaign
 import run
 
 
-def collect(plan, inputs):
+def collect(plan, inputs, *, allow_backup=False):
     owners = set()
     latest = {}
     sources = []
@@ -19,6 +19,15 @@ def collect(plan, inputs):
         owner = binding.get("owner")
         if owner not in campaign.OWNERS or binding.get("calibration") is not False:
             raise ValueError("Collect primary campaign packets; calibration and historical pilots are separate")
+        backup = packet.get("backup")
+        if backup:
+            if not allow_backup:
+                raise ValueError("Use --allow-backup to substitute a backup packet for an unavailable primary packet")
+            if (backup.get("role") != "backup" or backup.get("assigned_owner") != owner or
+                    backup.get("run_by") not in campaign.OWNERS or backup.get("run_by") == owner or
+                    backup.get("machine_id") != binding["machine_id"] or
+                    backup.get("plan_sha256") != binding["plan_sha256"]):
+                raise ValueError("Backup provenance differs from the campaign")
         if owner in owners:
             raise ValueError("Supply only the latest packet from each owner")
         owners.add(owner)
@@ -27,7 +36,10 @@ def collect(plan, inputs):
                 manifest["configuration"] != plan["configuration"] or
                 manifest["harness_sources"] != plan["source_sha256"]):
             raise ValueError("Packet configuration or harness differs from the shared plan")
-        sources.append({"owner": owner, "packet": path.name, "sha256": run.digest(path)})
+        source = {"owner": owner, "packet": path.name, "sha256": run.digest(path)}
+        if backup:
+            source["backup"] = backup
+        sources.append(source)
         for row in packet["attempts"]:
             task = row["task"]
             if task not in plan["assignments"][owner]:
@@ -73,9 +85,10 @@ def main():
     parser.add_argument("--input", action="append", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--require-complete", action="store_true")
+    parser.add_argument("--allow-backup", action="store_true", help="Use a backup packet in place of its assigned owner's primary packet")
     args = parser.parse_args()
     plan = campaign.read_plan(args.plan, verify_sources=False)
-    result = collect(plan, args.input)
+    result = collect(plan, args.input, allow_backup=args.allow_backup)
     if args.require_complete and result["completed_pairs"] != 75:
         raise ValueError("Not all 75 pairs have scored results")
     result["collector_sha256"] = run.digest(Path(__file__))

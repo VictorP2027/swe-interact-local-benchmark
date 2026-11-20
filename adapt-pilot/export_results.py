@@ -115,6 +115,8 @@ def export(output, destination, include_handoffs=()):
                   ],
               }}
     plan_path = run.ROOT / "assignments/wednesday.json"
+    if (output / "backup.json").is_file():
+        bundle["backup"] = json.loads((output / "backup.json").read_text())
     if bundle["campaign"] and plan_path.exists():
         assignment_plan = json.loads(plan_path.read_text())
         if assignment_plan["plan_sha256"] == bundle["campaign"]["plan_sha256"]:
@@ -123,7 +125,9 @@ def export(output, destination, include_handoffs=()):
     run.save(destination / "manifest.json", manifest)
     run.save(destination / "validation.json", validations)
     run.save(destination / "attempts.json", attempts)
-    lines = ["# Wednesday paired campaign" if bundle["campaign"] else "# Tuesday harness validation and smoke test", "",
+    title = "# Wednesday backup results" if bundle.get("backup") else (
+        "# Wednesday paired campaign" if bundle["campaign"] else "# Tuesday harness validation and smoke test")
+    lines = [title, "",
              "This is the shared single-turn SWE-Interact setup for stock Codex versus ADAPT.",
              "Both arms receive the full task specification plus the same Linux execution instructions.",
              "The fixed task-order seed is 224. Model temperature and sampling seed are not exposed.",
@@ -145,6 +149,9 @@ def export(output, destination, include_handoffs=()):
         lines += ["", f"Owner: `{bundle['campaign']['owner']}`. "
                   f"Calibration only: `{bundle['campaign']['calibration']}`. "
                   f"Plan: `{bundle['campaign']['plan_sha256']}`."]
+    if backup := bundle.get("backup"):
+        lines += ["", f"Backup run by `{backup['run_by']}` on the primary Mac for the tasks assigned to "
+                  f"`{backup['assigned_owner']}`. The backup has {backup['eligible_tasks']} eligible tasks."]
     if bundle["evaluation_protocol"]:
         lines += ["", "## Evaluation adjustments", "",
                   "The FastAPI verifier used its upstream warning policy after the legacy warning class was found missing.",

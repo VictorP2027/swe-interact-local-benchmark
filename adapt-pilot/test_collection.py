@@ -29,11 +29,12 @@ class CollectionChecks(unittest.TestCase):
         self.packet = {"campaign": binding, "attempts": rows,
                        "manifest": {"configuration": config, "harness_sources": self.plan["source_sha256"]}}
 
-    def collect(self, duplicate=False):
+    def collect(self, duplicate=False, allow_backup=False):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "handoff.json"
             path.write_text(json.dumps(self.packet))
-            return collect_results.collect(self.plan, [path, path] if duplicate else [path])
+            return collect_results.collect(self.plan, [path, path] if duplicate else [path],
+                                           allow_backup=allow_backup)
 
     def test_partial_primary_collection_preserves_missing_coverage(self):
         result = self.collect()
@@ -49,6 +50,17 @@ class CollectionChecks(unittest.TestCase):
     def test_duplicate_owner_is_rejected(self):
         with self.assertRaises(ValueError):
             self.collect(duplicate=True)
+
+    def test_backup_requires_explicit_substitution_and_preserves_provenance(self):
+        binding = self.packet["campaign"]
+        backup = {"role": "backup", "assigned_owner": "victor-c", "run_by": "victor-p",
+                  "machine_id": binding["machine_id"], "plan_sha256": binding["plan_sha256"]}
+        self.packet["backup"] = backup
+        with self.assertRaises(ValueError):
+            self.collect()
+        self.assertEqual(self.collect(allow_backup=True)["source_packets"][0]["backup"], backup)
+        with self.assertRaises(ValueError):
+            self.collect(duplicate=True, allow_backup=True)
 
     def test_mismatched_machine_or_image_is_rejected(self):
         for key in ("machine_id", "image_id"):

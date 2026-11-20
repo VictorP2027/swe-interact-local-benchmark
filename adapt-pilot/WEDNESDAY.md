@@ -73,6 +73,15 @@ python3 collect_results.py --input results/wednesday-victor-c/handoff.json \
 
 Add `--require-complete` when all 75 pairs should be scored. Partial collections report the missing and unscored tasks.
 
+Use `run_overflow.py` to queue a backup on Victor C.'s Mac after all 38 primary pairs have scores. It reuses the matching verifier validation and writes the backup separately.
+
+```sh
+caffeinate -i python3 run_overflow.py --primary output-wednesday-victor-c \
+  --output output-wednesday-victor-c-backup
+```
+
+Use the backup packet only if Victor P.'s primary packet is unavailable. Pass `--allow-backup` to the collector to substitute it. The combined report records the backup's actual machine and operator.
+
 ## Manual review
 
 Build the full private packet with `review_evidence.py`, then open `output-wednesday-*/manual-review/deepswe_vitest-duration-sharding/README.md`. Request-body views need Python 3.14+ or the `zstd` command; the rest of the harness supports Python 3.11+. Each private packet includes the specification, supplied tests, frozen implementations, source archives, actor test commands and outputs, grading results, final answers, context data and full tool traces. Filtered session events and context-history Git bundles preserve context before and after compaction. ADAPT request-body views exclude HTTP headers. Add `--historical-output /path/to/older/output` to include a separate historical reference. `CHECKSUMS.json` identifies the saved evidence, and `NOTES.md` has a comparison template that survives rebuilding the packet.
