@@ -1,0 +1,128 @@
+[
+  {
+    "base_commit": "41607fae1289de2787523c452d75212206b9c7c0",
+    "configuration": {
+      "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+      "catalog_share": 0.1,
+      "codex_version": "0.159.0",
+      "context_window": 48000,
+      "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+      "environment_mode": "linux-terminal",
+      "first_task": "deepswe_fastapi-deprecation-response-headers",
+      "image_overrides": {},
+      "image_source": "upstream-prebuilt",
+      "lane": "subscription",
+      "max_continuations": 8,
+      "model": "gpt-6-luna",
+      "model_seed": null,
+      "platform": "linux/amd64",
+      "protocol": "singleturn-with-conditional-continue",
+      "reasoning_effort": "medium",
+      "require_verifier_validation": true,
+      "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+      "rubric_model": "gpt-6-luna",
+      "rubric_reasoning_effort": "medium",
+      "rubric_transport": "local-codex-cli",
+      "task_order_seed": 224,
+      "temperature": null,
+      "tool_output_limit": 10000,
+      "trial_wall_clock_s": 3600,
+      "verifier_pytest_addopts": {
+        "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+      }
+    },
+    "controls": {
+      "known-good": {
+        "exit_code": 0,
+        "expected": 1.0,
+        "passed": true,
+        "patch_sha256": "a8f5455e5869497e2e2e342bd28b7ba6c38efdec5ca2d5728161a7d73e778909",
+        "reward": 1.0
+      },
+      "untouched": {
+        "exit_code": 0,
+        "expected": 0.0,
+        "passed": true,
+        "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "reward": 0.0
+      }
+    },
+    "finished": "2026-11-20T16:05:06+00:00",
+    "image_id": "sha256:2b7933a7c57daa5532fd1d097dc4a97694047076ac4a213334025bbaec08e34b",
+    "passed": true,
+    "source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "dd876e08e49b164484d8174047a43f889c2908296e7e0dc9aa361ce14ff167f1",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T16:04:53+00:00",
+    "task": "deepswe_returns-validated-error-accumulation",
+    "tests_sha256": {
+      "tests/test.patch": "d4f92adfa57f16c3a05b6990022f4e9cd75979ef63e8f9ee10eb63fe313847d3",
+      "tests/test.sh": "2b154992f156f78b6feb653a743d6e2989dce808f0f7af8db0c501d8ef0b37a2"
+    }
+  },
+  {
+    "base_commit": "647e6ade3b99523e3a0387a65fccfe918c331236",
+    "configuration": {
+      "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+      "catalog_share": 0.1,
+      "codex_version": "0.159.0",
+      "context_window": 48000,
+      "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+      "environment_mode": "linux-terminal",
+      "first_task": "deepswe_fastapi-deprecation-response-headers",
+      "image_overrides": {},
+      "image_source": "upstream-prebuilt",
+      "lane": "subscription",
+      "max_continuations": 8,
+      "model": "gpt-6-luna",
+      "model_seed": null,
+      "platform": "linux/amd64",
+      "protocol": "singleturn-with-conditional-continue",
+      "reasoning_effort": "medium",
+      "require_verifier_validation": true,
+      "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+      "rubric_model": "gpt-6-luna",
+      "rubric_reasoning_effort": "medium",
+      "rubric_transport": "local-codex-cli",
+      "task_order_seed": 224,
+      "temperature": null,
+      "tool_output_limit": 10000,
+      "trial_wall_clock_s": 3600,
+      "verifier_pytest_addopts": {
+        "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+      }
+    },
+    "controls": {
+      "known-good": {
+        "exit_code": 0,
+        "expected": 1.0,
+        "passed": true,
+        "patch_sha256": "c68cb8d4cee97c4c4a48f28fae04c42d1dece9ff8da3d470bfc5f1342a26d911",
+        "reward": 1.0
+      },
+      "untouched": {
+        "exit_code": 0,
+        "expected": 0.0,
+        "passed": true,
+        "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "reward": 0.0
+      }
+    },
+    "finished": "2026-11-20T16:17:13+00:00",
+    "image_id": "sha256:7ea5066862dcde784cb49ba556e5989a3b48bbc82c99a492987e71a664d18d8b",
+    "passed": true,
+    "source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "dd876e08e49b164484d8174047a43f889c2908296e7e0dc9aa361ce14ff167f1",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T16:10:49+00:00",
+    "task": "deepswe_vitest-duration-sharding",
+    "tests_sha256": {
+      "tests/test.patch": "96479d5febcfa6d74499fe5da3abc8c6e861f557f26237acf8b51fe4fc8fc406",
+      "tests/test.sh": "f8664ff5d27cf134a5cb900307c66a9d2dca4292cf78d83630396e1ed7699af4"
+    }
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+    "agent_exit": "completed",
+    "agent_seconds": 103.413,
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 252800,
+      "completed_turns": 1,
+      "input_tokens": 283142,
+      "output_tokens": 4380,
+      "reasoning_output_tokens": 384,
+      "total_tokens": 287522
+    },
+    "arm": "stock",
+    "artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+    "attempt": "0001",
+    "compaction_source_audit": {
+      "codex_commit": "687a119f0fcaace47e1f1abcc77cec6c813fd6da",
+      "default_auto_compact_token_limit": 43200,
+      "source": "https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535",
+      "usable_input_context": 45600
+    },
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "effective_settings": {
+      "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+      "catalog_share": 0.1,
+      "checks": {
+        "budget": true,
+        "catalog_share": true,
+        "compaction_default": true,
+        "context": true,
+        "effort": true,
+        "model": true,
+        "release": true,
+        "tool_cap": true,
+        "version": true
+      },
+      "config_sha256": "f568e2736edb1d1efd2284347fa367a069bfceb8b085115a6dd85706a25a9953",
+      "context_window": 48000,
+      "mcp_servers": [
+        "task_terminal"
+      ],
+      "model_catalog_sha256": "f48a58c26f49e7535798db2eb54c45b66ae1e2fe6555d50a0aea1739e81f26d5",
+      "passed": true,
+      "tool_output_limit": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    },
+    "family": "DeepSWE",
+    "free_disk_gib": 17.72,
+    "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+    "linux_terminal_calls": 11,
+    "linux_terminal_seconds": 3.352,
+    "patch_sha256": "4eb62fd8e5d2236b5d31379c10c052eab9aa4a278cf88f452bf065dca7001d29",
+    "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+    "published_patch": "patches/deepswe_kombu-single-active-consumer-priority/stock-0001.patch",
+    "repository_path": "/app",
+    "run_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001/runs/deepswe_kombu-single-active-consumer-priority-20261120T155847-51ad",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "c7ddd16d9a9865c2d2f30df75350ab7a88a0dd2824265c74b25fe27a9cc7c6e0",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T15:58:46+00:00",
+    "status": "interrupted",
+    "task": "deepswe_kombu-single-active-consumer-priority",
+    "trace": {
+      "calls": 28,
+      "steps": 16,
+      "user_messages": 1
+    },
+    "updated": "2026-11-20T16:04:02+00:00",
+    "upstream_base": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+    "verifier_summary": []
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "actor_prompt_sha256": "07bf5962a2f22433ad6ef85466507216bae074558a5dc52a250d00fbdf255bd6",
+    "agent_exit": "completed",
+    "agent_seconds": 107.631,
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 336384,
+      "completed_turns": 1,
+      "input_tokens": 372798,
+      "output_tokens": 4443,
+      "reasoning_output_tokens": 928,
+      "total_tokens": 377241
+    },
+    "arm": "adapt",
+    "artifact_path": "attempts/deepswe_returns-validated-error-accumulation/adapt/0001",
+    "attempt": "0001",
+    "compaction_source_audit": {
+      "codex_commit": "687a119f0fcaace47e1f1abcc77cec6c813fd6da",
+      "default_auto_compact_token_limit": 43200,
+      "source": "https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535",
+      "usable_input_context": 45600
+    },
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "effective_settings": {
+      "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+      "catalog_share": 0.1,
+      "checks": {
+        "budget": true,
+        "catalog_share": true,
+        "compaction_default": true,
+        "context": true,
+        "effort": true,
+        "model": true,
+        "release": true,
+        "tool_cap": true,
+        "version": true
+      },
+      "config_sha256": "9b9cbd42eb22dada057ef70ee850887587909d692344f43a09672d85654e87f5",
+      "context_window": 48000,
+      "mcp_servers": [
+        "task_terminal"
+      ],
+      "model_catalog_sha256": "0874a59f0bca5de9d343ddd140dabe22ba7b94f98d386f2f76136df3ff14d647",
+      "passed": true,
+      "tool_output_limit": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    },
+    "family": "DeepSWE",
+    "image_id": "sha256:2b7933a7c57daa5532fd1d097dc4a97694047076ac4a213334025bbaec08e34b",
+    "linux_terminal_calls": 10,
+    "linux_terminal_seconds": 2.858,
+    "patch_sha256": "77ad4ddfd7e999cc23c7df907915b25ba6468876b4ec5cabd086648a37549b80",
+    "prompt_sha256": "4a1ff83df1e3502f3e15fab4647cc4a607f4affc51db970b5ac1f45359b20f0d",
+    "published_patch": "patches/deepswe_returns-validated-error-accumulation/adapt-0001.patch",
+    "repository_path": "/app",
+    "reward": 0.0,
+    "run_path": "attempts/deepswe_returns-validated-error-accumulation/adapt/0001/runs/deepswe_returns-validated-error-accumulation-20261120T160806-5e7f",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "dd876e08e49b164484d8174047a43f889c2908296e7e0dc9aa361ce14ff167f1",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T16:08:05+00:00",
+    "status": "scored",
+    "task": "deepswe_returns-validated-error-accumulation",
+    "trace": {
+      "calls": 29,
+      "steps": 16,
+      "user_messages": 1
+    },
+    "updated": "2026-11-20T16:09:59+00:00",
+    "upstream_base": "41607fae1289de2787523c452d75212206b9c7c0",
+    "verifier_exit_code": 0,
+    "verifier_summary": [
+      "[verifier] Baseline exit code: 0",
+      "FAILED tests/test_validated/test_validated_apply.py::test_apply_valid_valid",
+      "[verifier] New tests exit code: 1"
+    ]
+  },
+  {
+    "actor_prompt_sha256": "07bf5962a2f22433ad6ef85466507216bae074558a5dc52a250d00fbdf255bd6",
+    "agent_exit": "completed",
+    "agent_seconds": 161.497,
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 379776,
+      "completed_turns": 1,
+      "input_tokens": 421821,
+      "output_tokens": 7264,
+      "reasoning_output_tokens": 1609,
+      "total_tokens": 429085
+    },
+    "arm": "stock",
+    "artifact_path": "attempts/deepswe_returns-validated-error-accumulation/stock/0001",
+    "attempt": "0001",
+    "compaction_source_audit": {
+      "codex_commit": "687a119f0fcaace47e1f1abcc77cec6c813fd6da",
+      "default_auto_compact_token_limit": 43200,
+      "source": "https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535",
+      "usable_input_context": 45600
+    },
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "effective_settings": {
+      "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+      "catalog_share": 0.1,
+      "checks": {
+        "budget": true,
+        "catalog_share": true,
+        "compaction_default": true,
+        "context": true,
+        "effort": true,
+        "model": true,
+        "release": true,
+        "tool_cap": true,
+        "version": true
+      },
+      "config_sha256": "874759a1eaaca11401a3b8cb3f88c47e79fc5524fca429b23f1f429521f2a2a1",
+      "context_window": 48000,
+      "mcp_servers": [
+        "task_terminal"
+      ],
+      "model_catalog_sha256": "f48a58c26f49e7535798db2eb54c45b66ae1e2fe6555d50a0aea1739e81f26d5",
+      "passed": true,
+      "tool_output_limit": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    },
+    "family": "DeepSWE",
+    "image_id": "sha256:2b7933a7c57daa5532fd1d097dc4a97694047076ac4a213334025bbaec08e34b",
+    "linux_terminal_calls": 17,
+    "linux_terminal_seconds": 6.063,
+    "patch_sha256": "274beab82bd59e35651a8cac1b8740f720c6f8faedb879a90603f976fc864888",
+    "prompt_sha256": "4a1ff83df1e3502f3e15fab4647cc4a607f4affc51db970b5ac1f45359b20f0d",
+    "published_patch": "patches/deepswe_returns-validated-error-accumulation/stock-0001.patch",
+    "repository_path": "/app",
+    "reward": 0.0,
+    "run_path": "attempts/deepswe_returns-validated-error-accumulation/stock/0001/runs/deepswe_returns-validated-error-accumulation-20261120T160518-ed1c",
+    "runner_source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "dd876e08e49b164484d8174047a43f889c2908296e7e0dc9aa361ce14ff167f1",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T16:05:17+00:00",
+    "status": "scored",
+    "task": "deepswe_returns-validated-error-accumulation",
+    "trace": {
+      "calls": 35,
+      "steps": 19,
+      "user_messages": 1
+    },
+    "updated": "2026-11-20T16:08:05+00:00",
+    "upstream_base": "41607fae1289de2787523c452d75212206b9c7c0",
+    "verifier_exit_code": 0,
+    "verifier_summary": [
+      "[verifier] Baseline exit code: 0",
+      "FAILED tests/test_validated/test_validated_bind.py::test_lash_valid - assert ...",
+      "[verifier] New tests exit code: 1"
+    ]
+  }
+]

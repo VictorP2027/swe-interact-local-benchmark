@@ -1,0 +1,65 @@
+[
+  {
+    "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+    "configuration": {
+      "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+      "catalog_share": 0.1,
+      "codex_version": "0.159.0",
+      "context_window": 48000,
+      "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+      "environment_mode": "linux-terminal",
+      "first_task": "deepswe_fastapi-deprecation-response-headers",
+      "image_overrides": {},
+      "image_source": "upstream-prebuilt",
+      "lane": "subscription",
+      "max_continuations": 8,
+      "model": "gpt-6-luna",
+      "model_seed": null,
+      "platform": "linux/amd64",
+      "protocol": "singleturn-with-conditional-continue",
+      "reasoning_effort": "medium",
+      "require_verifier_validation": true,
+      "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+      "rubric_model": "gpt-6-luna",
+      "rubric_reasoning_effort": "medium",
+      "rubric_transport": "local-codex-cli",
+      "task_order_seed": 224,
+      "temperature": null,
+      "tool_output_limit": 10000,
+      "trial_wall_clock_s": 3600,
+      "verifier_pytest_addopts": {
+        "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+      }
+    },
+    "controls": {
+      "known-good": {
+        "exit_code": 0,
+        "expected": 1.0,
+        "passed": true,
+        "patch_sha256": "84361606f4ec2cd2996466fe86f8b12d7ddc6c30a5853a9565b76ba5bd48552c",
+        "reward": 1.0
+      },
+      "untouched": {
+        "exit_code": 0,
+        "expected": 0.0,
+        "passed": true,
+        "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "reward": 0.0
+      }
+    },
+    "finished": "2026-11-20T15:58:26+00:00",
+    "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+    "passed": true,
+    "source_sha256": {
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "run.py": "c7ddd16d9a9865c2d2f30df75350ab7a88a0dd2824265c74b25fe27a9cc7c6e0",
+      "task_terminal.py": "f55849a767ff159d3cee282cacb1ee15bedbfd3277421077a49c1ceb2e7fd25e"
+    },
+    "started": "2026-11-20T15:56:59+00:00",
+    "task": "deepswe_kombu-single-active-consumer-priority",
+    "tests_sha256": {
+      "tests/test.patch": "d1b4ae8f13799d4d7590f70707482e5d76a18712a9c332ff15e933de089edae7",
+      "tests/test.sh": "b53a7435766b5149d1fd355bfcee189301059f0053540643267d9119bc677f02"
+    }
+  }
+]

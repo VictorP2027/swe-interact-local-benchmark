@@ -67,13 +67,22 @@ def export(output, destination, include_handoffs=()):
         pairs.append({"task": task, "checks": checks, "passed": all(checks.values())})
     bundle = {"format": "cs224v-tuesday-handoff-v1", "exported": run.now(),
               "exporter_sha256": run.digest(Path(__file__)),
-              "harness_commit": run.capture(["git", "-C", run.ROOT, "log", "-1", "--format=%H", "--",
-                                               "run.py", "codex_continue.py", "task_terminal.py", "config.json"]),
+              "harness_commit": (run.capture(["git", "-C", run.ROOT, "log", "-1", "--format=%H", "--",
+                                               "run.py", "codex_continue.py", "task_terminal.py", "config.json"])
+                                 if manifest.get("harness_sources") == run.source_hashes() else None),
               "manifest": manifest, "verifier_validations": validations, "paired_checks": pairs,
               "attempts": attempts,
               "prior_experiments": [json.loads(path.read_text()) for path in include_handoffs],
               "linux_environment_audit": (json.loads((output / "linux-environment-audit.json").read_text())
                                           if (output / "linux-environment-audit.json").exists() else None),
+              "run_events": (json.loads((output / "run-events.json").read_text())
+                             if (output / "run-events.json").exists() else []),
+              "timeout_cleanup_check": (json.loads((output / "timeout-cleanup-check.json").read_text())
+                                        if (output / "timeout-cleanup-check.json").exists() else None),
+              "harness_regressions": (json.loads((output / "harness-regressions.json").read_text())
+                                      if (output / "harness-regressions.json").exists() else None),
+              "analysis_notes": (json.loads((output / "analysis-notes.json").read_text())
+                                 if (output / "analysis-notes.json").exists() else []),
               "architecture": {
                   "controller": "Pinned macOS ADAPT binary, both arms",
                   "coding": "Separate Linux containers from the same upstream image ID",
@@ -119,6 +128,13 @@ def export(output, destination, include_handoffs=()):
                   "It was interrupted and saved as unscored. Its untouched/known-good verifier controls passed. "
                   "That run exposed missing container cleanup on interrupted verification; the final harness fixes it. "
                   "The complete earlier configuration and result are included below as a separate experiment."]
+    if bundle["harness_regressions"]:
+        lines += ["", "## Harness checks", "",
+                  f"Harness regression checks: {bundle['harness_regressions']['tests_run']} passed. "
+                  "A separate forced-timeout test in real Docker confirmed that the verifier container was removed. "
+                  "The benchmark coding budget remains 3,600 seconds; the benchmark verifier limit remains upstream's 1,800 seconds."]
+    if bundle["analysis_notes"]:
+        lines += ["", "## Findings and next steps", "", *[f"- {note}" for note in bundle["analysis_notes"]]]
     lines += ["", "## Architecture and limits", ""]
     lines += [f"- {value}" for value in bundle["architecture"].values() if isinstance(value, str)]
     lines += [f"- {value}" for value in bundle["architecture"]["limitations"]]

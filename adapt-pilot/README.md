@@ -51,6 +51,8 @@ Validate the planned manual-review task after the smoke pair finishes and retire
 python3 run.py validate --output output-linux --local-rubric --cycle-images \
   --task deepswe_vitest-duration-sharding \
   --known-good-patch ../patches/deepswe_vitest-duration-sharding.patch
+python3 run.py run --output output-linux --local-rubric --cycle-images \
+  --task deepswe_vitest-duration-sharding
 ```
 
 The known-good patches come from Victor P.'s archived first-attempt implementations. They validate grading and are not supplied to either coding actor. Compaction defaults are checked against [the exact upstream Codex source](https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535).
