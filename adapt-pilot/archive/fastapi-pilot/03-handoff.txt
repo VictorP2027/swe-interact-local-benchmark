@@ -1,0 +1,5 @@
+Please finish with consistent defaults across all FastAPI and APIRouter route registration APIs, including add_api_route, route decorators, router and app constructors, and include_router. Apply precedence independently to deprecated, sunset, deprecation_date, and successor_url. Explicit route values take precedence, including deprecated=False. For omitted route values, include_router overrides the included router's defaults at that boundary. In nested routers, nearer defaults take precedence over farther ones. The FastAPI constructor supplies the outermost defaults.
+
+Add DeprecationTrackingMiddleware in fastapi/middleware/deprecation.py. Track HTTP hits by request path with keys deprecated_hits (deprecated=True or deprecation_date) and sunset_hits (sunset set). Skip non-HTTP scopes. Expose get_stats() with copy semantics and reset_stats().
+
+Keep the prior header, preservation, Link merging, and OpenAPI requirements. Add focused tests for the feature and the revised Link behavior. Run the checks available in this checkout and summarize the results and any limitations. Leave your changes in the working tree.

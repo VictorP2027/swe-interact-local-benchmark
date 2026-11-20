@@ -1,5 +1,7 @@
 # ADAPT SWE-Interact comparison
 
+Start with the [November 20 team handoff](TEAM-HANDOFF.md) for the shared conclusions, code inventory, and two cases to compare. The [analysis folder](analysis/) reproduces the aggregate from the saved trial artifacts.
+
 Use [WEDNESDAY.md](WEDNESDAY.md) to run the shared campaign. The committed [assignment plan](assignments/wednesday.json) gives Victor C. 38 tasks and Victor P. 37. Run both stock Codex and ADAPT for every assigned task on the same machine. All 75 tasks are included.
 
 Both arms receive the full single-turn specification and use GPT-6 Luna, medium reasoning, Codex 0.159.0, ADAPT commit `166c433f`, a 48K context, a 10K tool-output cap and a one-hour coding budget. The wrapper replies `continue` to a clarification question within that same budget, with a local eight-continuation cap. Seed 224 fixes assignment order. The supplied runner does not expose model seed or temperature.
