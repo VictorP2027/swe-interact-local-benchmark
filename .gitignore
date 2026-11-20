@@ -8,3 +8,7 @@ auth.json
 credentials*
 .venv/
 node_modules/
+
+# Local benchmark workspaces and raw traces
+adapt-pilot/output*/
+adapt-pilot/.image-cycle.lock

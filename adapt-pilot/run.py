@@ -132,6 +132,7 @@ def load_experiment(out, local_rubric=False):
         raise ValueError("Bundled model tool output limit does not match config.json")
     tasks = task_manifest(config["task_order_seed"], config["first_task"])
     manifest = {"configuration": config, "task_order": list(tasks), "tasks": tasks, "arms": ARMS,
+                "harness_sources": source_hashes(),
                 "runner_sha256": digest(RELEASE / "lib/ours"), "model_catalog_sha256": digest(catalog)}
     manifest = json.loads(json.dumps(manifest))
     path = out / "manifest.json"
@@ -256,7 +257,10 @@ def report(out, manifest, destination=None):
         "A trial counts as resolved when the upstream verifier returns reward 1.",
         "Only scored attempts enter the denominators. Interrupted and unscored attempts stay in the history.",
         "Token totals include cached input. A context window is a per-call budget.",
-        "The local adapter runs the coding agent on macOS and upstream verification in Linux Docker.",
+        ("Both coding arms use the task_terminal MCP tool in isolated Linux containers from the verifier image. "
+         "The ADAPT controller runs on macOS; its native workspace stores context data, not project code."
+         if config.get("environment_mode") == "linux-terminal" else
+         "The local adapter runs the coding agent on macOS and upstream verification in Linux Docker."),
         "The upstream single-turn verifier runs on the frozen candidate.",
         "Attempts using image cycling share a task image across both arms and retire it after both scores are saved.",
         "Prior local stock attempts are reused only after checking their prompt, model settings, release,",
@@ -394,7 +398,7 @@ def checkpoint(out, attempt, row, manifest, **fields):
 
 
 def source_hashes():
-    names = ("run.py", "codex_continue.py")
+    names = ("run.py", "codex_continue.py", "task_terminal.py")
     return {name: digest(ROOT / name) for name in names if (ROOT / name).is_file()}
 
 
@@ -426,6 +430,11 @@ def retire_scored_image(task, rows):
         if local_image_id(ref) in ids:
             docker("image", "rm", ref)
             print(f"Retired saved task image: {ref}", flush=True)
+    # Pulling an upstream image creates a second tag for the same task layers.
+    definition = tomllib.loads((SINGLE_TURN / task / "task.toml").read_text())
+    upstream = definition["environment"].get("docker_image")
+    if upstream and local_image_id(upstream) in ids:
+        docker("image", "rm", upstream)
 
 
 def guard_cycle_image(tag):
@@ -471,6 +480,12 @@ def image_for(task_dir, task, config, attempt, cycle=False):
     if cycle:
         guard_cycle_image(tag)
     image_id = override or local_image_id(tag)
+    if not image_id and config.get("image_source") == "upstream-prebuilt":
+        source = tomllib.loads((task_dir / "task.toml").read_text())["environment"]["docker_image"]
+        if logged(["docker", "pull", "--platform", config["platform"], source], attempt / "image-pull.log"):
+            raise Blocked("Upstream task image pull failed. See image-pull.log.")
+        docker("tag", source, tag)
+        image_id = local_image_id(tag)
     if not image_id:
         command = ["--platform", config["platform"], "-t", tag, task_dir / "environment"]
         if cycle:
@@ -542,11 +557,55 @@ def repo_location(task_dir, image, config, task):
 
 
 def agent_command(attempt, config, task, harness, seed, prompt, delegate):
-    return [RELEASE / "ours", "run", "--harness", harness, "--task", task,
+    command = [RELEASE / "ours", "run", "--harness", harness, "--task", task,
             "--model", config["model"], "--reasoning-effort", config["reasoning_effort"],
             "--context-window", config["context_window"], "--lane", config["lane"],
             "--wall-clock-s", config["trial_wall_clock_s"], "--seed", seed,
             "--runs-root", attempt / "runs", "--prompt", prompt, "--codex-bin", delegate]
+    command += ["--catalog-share", config.get("catalog_share", 0.1)]
+    if config.get("environment_mode") == "linux-terminal":
+        command += ["--mcp-servers", attempt / "mcp-servers.json"]
+    return command
+
+
+def task_network(task_dir):
+    settings = tomllib.loads((task_dir / "task.toml").read_text())
+    return "bridge" if settings["environment"].get("allow_internet", False) else "none"
+
+
+@contextmanager
+def coding_environment(attempt, image, repo, config, task_dir):
+    """Keep project files and their installed dependencies together in Linux."""
+    settings = tomllib.loads((task_dir / "task.toml").read_text())["environment"]
+    name = "cs224v-actor-" + hashlib.sha256(os.fsencode(attempt)).hexdigest()[:16]
+    container = docker("run", "--detach", "--init", "--name", name,
+                       "--label", "cs224v.role=coding", "--platform", config["platform"],
+                       "--network", task_network(task_dir), "--cpus", settings.get("cpus", 2),
+                       "--memory", f"{settings.get('memory_mb', 8192)}m", "--workdir", repo,
+                       "--entrypoint", "bash", image, "-lc", "exec sleep infinity")
+    try:
+        docker("exec", container, "git", "config", "user.name", "CS224V benchmark")
+        docker("exec", container, "git", "config", "user.email", "benchmark@localhost")
+        save(attempt / "mcp-servers.json", {"task_terminal": {
+            "command": sys.executable,
+            "args": [str(ROOT / "task_terminal.py"), "--container", container,
+                     "--repository", repo, "--log", str(attempt / "terminal.jsonl")],
+        }})
+        seed = attempt / "seed"
+        seed.mkdir()
+        yield container, seed
+    finally:
+        subprocess.run(["docker", "rm", "--force", container], stdout=subprocess.DEVNULL, check=True)
+
+
+def freeze_container_patch(container, repo, base, attempt):
+    patch = attempt / "implementation.patch"
+    command = ('set -e; export GIT_INDEX_FILE=/tmp/cs224v-candidate.index; '
+               'git read-tree "$1"; git add --all -- .; git diff --cached --binary "$1"')
+    with patch.open("wb") as stream:
+        subprocess.run(["docker", "exec", "--workdir", repo, container,
+                        "bash", "-c", command, "freeze", base], stdout=stream, check=True)
+    return patch
 
 
 def agent_environment():
@@ -585,7 +644,7 @@ def freeze_patch(run, attempt):
 def verifier_environment(task, config, logs):
     env = dict(os.environ)
     if not task.startswith("rf_"):
-        yield env, ["--network", "none"]
+        yield env, ["--network", task_network(SINGLE_TURN / task)]
         return
     options = ["--env", "EVAL_API_KEY", "--env", "EVAL_BASE_URL", "--env", "EVAL_MODEL"]
     env["EVAL_MODEL"] = config["rubric_model"]
@@ -608,9 +667,11 @@ def verifier_environment(task, config, logs):
 def verify_candidate(task, task_dir, image, repo, patch, config, attempt):
     logs = grading_directory(attempt)
     settings = tomllib.loads((task_dir / "task.toml").read_text())
+    container_name = "cs224v-verifier-" + hashlib.sha256(os.fsencode(logs)).hexdigest()[:16]
     with verifier_environment(task, config, logs) as (env, options):
         verifier_command = [
-            "docker", "run", "--rm", "--platform", config["platform"], *options,
+            "docker", "run", "--rm", "--name", container_name, "--label", "cs224v.role=verifier",
+            "--platform", config["platform"], *options,
             "--mount", f"type=bind,source={task_dir / 'tests'},target=/tests,readonly",
             "--mount", f"type=bind,source={patch},target=/candidate.patch,readonly",
             "--mount", f"type=bind,source={logs},target=/logs",
@@ -619,7 +680,17 @@ def verify_candidate(task, task_dir, image, repo, patch, config, attempt):
             'set -e; if test -s /candidate.patch; then git apply --whitespace=nowarn /candidate.patch; fi; '
             'mkdir -p /logs/verifier /logs/artifacts; bash /tests/test.sh',
         ]
-        code = logged(verifier_command, logs / "verifier.log", env=env, timeout=settings["verifier"]["timeout_sec"])
+        try:
+            code = logged(verifier_command, logs / "verifier.log", env=env,
+                          timeout=settings["verifier"]["timeout_sec"])
+        except subprocess.TimeoutExpired as exc:
+            save(logs / "timeout.json", {"timeout_sec": settings["verifier"]["timeout_sec"],
+                                        "image_id": image, "at": now()})
+            raise Blocked("Upstream verifier time limit reached. Frozen patch saved; attempt is unscored.") from exc
+        finally:
+            # Killing the Docker client alone leaves its container running.
+            subprocess.run(["docker", "rm", "--force", container_name],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if task.startswith("rf_") and config.get("rubric_transport") == "local-codex-cli":
         rubric_path = logs / "verifier/rubrics_results.json"
         if not rubric_path.is_file():
@@ -645,6 +716,21 @@ def verifier_reward(logs, code):
         raise Blocked(f"Verifier exited {code} without a task reward.")
     if not 0 <= reward <= 1:
         raise Blocked("Unexpected verifier reward. See grading artifacts.")
+    # Upstream wrappers sometimes write zero after dependency/bootstrap failures.
+    # Keep explicit infrastructure failures out of the scored denominator.
+    infra = re.compile(
+        r"network is unreachable|temporary failure in name resolution|"
+        r"could not resolve host|failed to establish a new connection|"
+        r"no space left on device|cannot connect to the docker daemon|"
+        r"error during connect|TLS handshake timeout|"
+        r"failed to download.*(?:https?://|package)|"
+        r"fatal error: runtime: out of memory", re.I)
+    if reward == 0:
+        for path in logs.rglob("*"):
+            if path.is_file() and path.suffix in (".log", ".txt") and path.name != "reward.txt":
+                text = path.read_text(errors="replace")
+                if infra.search(text):
+                    raise Blocked("Verifier infrastructure/dependency failure. See grading artifacts; this is unscored.")
     task_errors = ("working tree must be clean", "/tmp/base_commit.txt is missing",
                    "base commit is invalid", "missing implementation parent commit",
                    "missing separate implementation and test commits", "test commit diff is empty")
@@ -692,9 +778,39 @@ def trial(out, manifest, config, task, arm, attempt, row, cycle=False):
     if task.startswith("rf_"):
         row["rubric"] = {key: value for key, value in config.items() if key.startswith("rubric_")}
     checkpoint(out, attempt, row, manifest, image_id=image, upstream_base=base, repository_path=repo)
-    seed = prepare_seed(image, repo, base, config["platform"], attempt)
     prompt = task_dir.joinpath("instruction.md").read_text()
     checkpoint(out, attempt, row, manifest, prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest())
+    if config.get("environment_mode") == "linux-terminal":
+        with coding_environment(attempt, image, repo, config, task_dir) as (container, seed):
+            actor_prompt = (prompt + "\n\nExecution environment:\n"
+                f"The project is in an isolated Linux container at {repo}. "
+                "Use task_terminal.run for ALL project reads, edits, git commands, builds and tests. "
+                "Use shell or Python heredocs through that tool to edit files. "
+                "The native workspace is only for context data under data_structures/; "
+                "project files written there are not evaluated. Hidden grading tests are unavailable.\n")
+            row["actor_prompt_sha256"] = hashlib.sha256(actor_prompt.encode()).hexdigest()
+            run, details = run_agent(attempt, config, task, harness, seed, actor_prompt)
+            if not record_agent(out, manifest, attempt, row, run, details):
+                return
+            if not (attempt / "terminal.jsonl").is_file():
+                raise Blocked("Agent did not use the shared Linux terminal.")
+            unexpected = [p.name for p in (run / "workspace").iterdir()
+                          if p.name not in {"trace", "data_structures"}]
+            if unexpected:
+                raise Blocked("Agent wrote project files outside Linux; candidate is not comparable.")
+            patch = freeze_container_patch(container, repo, base, attempt)
+    else:
+        seed = prepare_seed(image, repo, base, config["platform"], attempt)
+        run, details = run_agent(attempt, config, task, harness, seed, prompt)
+        if not record_agent(out, manifest, attempt, row, run, details):
+            return
+        patch = freeze_patch(run, attempt)
+    checkpoint(out, attempt, row, manifest, status="grading", patch_sha256=digest(patch))
+    reward, code = verify_candidate(task, task_dir, image, repo, patch, config, attempt)
+    checkpoint(out, attempt, row, manifest, status="scored", reward=reward, verifier_exit_code=code)
+
+
+def run_agent(attempt, config, task, harness, seed, prompt):
     with tempfile.TemporaryDirectory(prefix="swe-continue-") as folder:
         delegate = Path(folder) / "codex"
         delegate.write_text(f"#!{sys.executable}\n" + (ROOT / "codex_continue.py").read_text())
@@ -707,12 +823,7 @@ def trial(out, manifest, config, task, arm, attempt, row, cycle=False):
                cwd=RELEASE, env=env)
     run, details = metadata(attempt)
     shutil.rmtree(seed)
-    if not record_agent(out, manifest, attempt, row, run, details):
-        return
-    patch = freeze_patch(run, attempt)
-    checkpoint(out, attempt, row, manifest, status="grading", patch_sha256=digest(patch))
-    reward, code = verify_candidate(task, task_dir, image, repo, patch, config, attempt)
-    checkpoint(out, attempt, row, manifest, status="scored", reward=reward, verifier_exit_code=code)
+    return run, details
 
 
 def resume_grading(out, manifest, config, task, parent):
@@ -778,6 +889,12 @@ def record_agent(out, manifest, attempt, row, run, details):
         if details.get("harness", {}).get("name") != ARMS[row["arm"]]:
             status = "agent_error"
             row["detail"] = "Recorded harness differs from the requested arm."
+        audit = effective_settings(run, details, expected)
+        save(attempt / "effective-settings.json", audit)
+        row["effective_settings"] = audit
+        if not audit["passed"]:
+            status = "agent_error"
+            row["detail"] = "Effective settings failed the pinned configuration audit."
     continuation_log = run / "harness/continuations.jsonl"
     continuations = len(continuation_log.read_text().splitlines()) if continuation_log.exists() else 0
     checkpoint(out, attempt, row, manifest, status=status, agent_exit=exit_reason,
@@ -788,14 +905,72 @@ def record_agent(out, manifest, attempt, row, run, details):
     return status == "agent_complete"
 
 
+def effective_settings(run, details, expected):
+    home = run / "harness/codex_home"
+    config = tomllib.loads((home / "config.toml").read_text())
+    model = next(m for m in json.loads((home / "model_catalog.json").read_text())["models"]
+                 if m["slug"] == expected["model"])
+    settings = details.get("settings", {})
+    checks = {
+        "model": config.get("model") == expected["model"],
+        "effort": config.get("model_reasoning_effort") == expected["reasoning_effort"],
+        "context": config.get("model_context_window") == model.get("context_window") == expected["context_window"],
+        "tool_cap": model.get("truncation_policy") == {"mode": "tokens", "limit": expected["tool_output_limit"]},
+        "budget": settings.get("wall_clock_s") == expected["trial_wall_clock_s"],
+        "catalog_share": settings.get("catalog_share") == expected.get("catalog_share", 0.1),
+        "version": details.get("harness", {}).get("version") == f"codex-cli {expected['codex_version']}",
+        "release": details.get("code", {}).get("commit") == expected["adapt_commit"]
+                   and not details.get("code", {}).get("dirty", True),
+        "compaction_default": "model_auto_compact_token_limit" not in config,
+    }
+    return {"passed": all(checks.values()), "checks": checks,
+            "context_window": config.get("model_context_window"),
+            "tool_output_limit": model.get("truncation_policy"),
+            "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+            "catalog_share": settings.get("catalog_share"),
+            "mcp_servers": sorted(config.get("mcp_servers", {})),
+            "config_sha256": digest(home / "config.toml"),
+            "model_catalog_sha256": digest(home / "model_catalog.json")}
+
+
+def validate_verifier(out, config, manifest, task, known_good, cycle=False):
+    if task.startswith("rf_"):
+        raise Blocked("Choose a test-based task for the deterministic verifier control.")
+    root = out / "validation" / task / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
+    root.mkdir(parents=True)
+    image = image_for(SINGLE_TURN / task, task, config, root, cycle)
+    repo, base = repo_location(SINGLE_TURN / task, image, config, task)
+    summary = {"task": task, "image_id": image, "base_commit": base, "started": now(),
+               "configuration": config, "source_sha256": source_hashes(),
+               "tests_sha256": {str(p.relative_to(SINGLE_TURN / task)): digest(p)
+                                for p in (SINGLE_TURN / task / "tests").rglob("*") if p.is_file()},
+               "controls": {}, "passed": False}
+    save(root / "validation.json", summary)
+    for name, contents, expected in (("untouched", b"", 0.0), ("known-good", known_good.read_bytes(), 1.0)):
+        attempt = root / name
+        attempt.mkdir()
+        patch = attempt / "implementation.patch"
+        patch.write_bytes(contents)
+        reward, code = verify_candidate(task, SINGLE_TURN / task, image, repo, patch, config, attempt)
+        summary["controls"][name] = {"reward": reward, "expected": expected, "exit_code": code,
+                                     "patch_sha256": digest(patch), "passed": reward == expected}
+        save(root / "validation.json", summary)
+        print(f"Verifier control {name}: {reward:g}, expected {expected:g}", flush=True)
+    summary.update(passed=all(c["passed"] for c in summary["controls"].values()), finished=now())
+    save(root / "validation.json", summary)
+    save(out / "verifier-validation.json", summary)
+    return 0 if summary["passed"] else 1
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("run", "report", "preflight"))
+    parser.add_argument("command", choices=("run", "report", "preflight", "validate"))
     parser.add_argument("--output", type=Path, default=ROOT / "output-singleturn")
     parser.add_argument("--task", action="append")
     parser.add_argument("--arm", action="append", choices=ARMS)
     parser.add_argument("--cycle-images", action="store_true", help="Keep only the current task's Docker image")
     parser.add_argument("--local-rubric", action="store_true", help="Use the Codex login for SWE Atlas rubric grading")
+    parser.add_argument("--known-good-patch", type=Path, help="Passing control patch for the selected validation task")
     parser.add_argument("--limit", type=int, help="Maximum number of new trial attempts for this invocation")
     parser.add_argument("--snapshot", type=Path, help="Write a separate report from saved results while the run is active")
     parser.add_argument("--follow", action="store_true", help="Refresh a report snapshot until the active batch stops")
@@ -837,6 +1012,10 @@ def main():
             print(f"{len(manifest['tasks'])} pinned tasks, {len(ARMS)} arms, "
                   f"{(len(manifest['tasks']) - len(REVIEW_TASKS)) * len(ARMS)} eligible trials.")
             print(capture([RELEASE / "codex/bin/codex", "login", "status"]))
+            if capture([RELEASE / "codex/bin/codex", "--version"]) != f"codex-cli {config['codex_version']}":
+                raise Blocked("Bundled Codex version differs from config.json")
+            print("Docker engine: " + docker("info", "--format", "{{.ServerVersion}}"))
+            print(f"Project environment: {config.get('environment_mode', 'macOS host')}")
             if local_rubric:
                 print("SWE Atlas rubric: GPT-6 Luna at medium via the Codex CLI")
             else:
@@ -844,6 +1023,16 @@ def main():
                     print(f"{key}: {'set' if os.getenv(key) else 'missing'}")
             print(f"Free disk space: {shutil.disk_usage(out).free / 1024**3:.1f} GiB")
             return 0
+        if args.command == "validate":
+            if not args.task or len(args.task) != 1 or not args.known_good_patch:
+                parser.error("validate requires one --task and --known-good-patch")
+            return validate_verifier(out, config, manifest, tasks[0], args.known_good_patch.resolve(), args.cycle_images)
+        if config.get("require_verifier_validation"):
+            path = out / "verifier-validation.json"
+            validation = json.loads(path.read_text()) if path.is_file() else {}
+            if (not validation.get("passed") or validation.get("configuration") != config
+                    or validation.get("source_sha256") != source_hashes()):
+                raise Blocked("Run validate with untouched and known-good controls for this configuration before coding trials.")
         if args.cycle_images:
             with (ROOT / ".image-cycle.lock").open("w") as cycle_lock:
                 fcntl.flock(cycle_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)

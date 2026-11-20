@@ -19,5 +19,9 @@
   "image_overrides": {},
   "verifier_pytest_addopts": {
     "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
-  }
+  },
+  "environment_mode": "linux-terminal",
+  "image_source": "upstream-prebuilt",
+  "catalog_share": 0.1,
+  "require_verifier_validation": true
 }

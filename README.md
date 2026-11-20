@@ -22,6 +22,10 @@ The assessment includes documented native-runtime fallbacks, recovered artifacts
 
 The code and result records allow inspection of the local work. Raw execution/model logs, credentials, environment files, build caches and full upstream checkouts are retained locally and are not bundled. References starting with `LOCAL_WORKSPACE` identify those omitted local artifacts. This export is not a self-contained replay of the original chat or the full evaluation environment.
 
+## Shared stock/ADAPT harness
+
+Use [adapt-pilot](adapt-pilot/README.md) for the pinned single-turn comparison. Both coding arms now work through the same Linux task terminal and grade frozen patches with the supplied tests. See [the Tuesday handoff](adapt-pilot/results/tuesday-2026-11-20/HANDOFF.md) for verifier controls, the paired smoke test, settings audits and the interrupted Kombu attempt. These runs are separate from the 41/75 archive above and the earlier macOS coding pilot.
+
 ## Separate context-loss pilot
 
 A later six-call Bandit pilot compared original requirements with one short summary. Both conditions had zero task passes; three calls returned no edits. It did not establish that context loss caused earlier failures. The pilot does not contribute to the 41/75 score.
