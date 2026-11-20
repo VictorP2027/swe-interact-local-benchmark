@@ -1,0 +1,1279 @@
+{
+  "assignments": {
+    "victor-c": [
+      "deepswe_vitest-duration-sharding",
+      "deepswe_fastapi-deprecation-response-headers",
+      "deepswe_awilix-async-container-initialization",
+      "rf_task-69b7c2a04b6f8ff9ed98813b",
+      "deepswe_cattrs-partial-structuring-recovery",
+      "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367",
+      "rf_task-69b7c2a04b6f8ff9ed988137",
+      "rf_task-696719205599a51110d4b436",
+      "rf_task-696719205599a51110d4b458",
+      "deepswe_sqlite-utils-safe-import-checkpoints",
+      "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan",
+      "deepswe_arcane-drift-detection-baselines",
+      "deepswe_httpx-streaming-json-iteration",
+      "rf_task-694b4b99829f00e24fd11889",
+      "rf_task-696719205599a51110d4b451",
+      "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e",
+      "deepswe_bandit-structured-nosec-directives",
+      "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818",
+      "rf_task-696719205599a51110d4b441",
+      "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26",
+      "deepswe_clack-async-autocomplete-options",
+      "rf_task-69d196f015a150488265afb9",
+      "rf_task-696719205599a51110d4b455",
+      "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4",
+      "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "deepswe_returns-validated-error-accumulation",
+      "rf_task-69391d8d1ce51c407be1e533",
+      "swebenchpro_instance_internetarchive__openlibrary-5de7de19211e71b29b2f2ba3b1dff2fe065d660f-v08d8e8889ec945ab821fb156c04c7d2e2810debb",
+      "swebenchpro_instance_nodebb__nodebb-f083cd559d69c16481376868c8da65172729c0ca-vnan",
+      "rf_task-694b4b99829f00e24fd11885",
+      "swebenchpro_instance_element-hq__element-web-d06cf09bf0b3d4a0fbe6bd32e4115caea2083168-vnan",
+      "deepswe_drizzle-orm-window-function-builders",
+      "swebenchpro_instance_navidrome__navidrome-3972616585e82305eaf26aa25697b3f5f3082288",
+      "rf_task-696719205599a51110d4b476",
+      "deepswe_boa-hierarchical-evaluation-cancellation",
+      "deepswe_kcp-go-multiplexed-kcp-streams",
+      "swebenchpro_instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4",
+      "rf_task-69391d8d1ce51c407be1e531"
+    ],
+    "victor-p": [
+      "deepswe_kombu-single-active-consumer-priority",
+      "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d",
+      "rf_task-69d196f015a150488265afb7",
+      "deepswe_wazero-multi-module-snapshots",
+      "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26",
+      "rf_task-69b7c2a04b6f8ff9ed98812f",
+      "rf_task-694b4b99829f00e24fd11891",
+      "deepswe_tomlkit-toml-table-converters",
+      "deepswe_etree-xml-diff-patch",
+      "deepswe_testem-bail-on-test-failure",
+      "rf_task-696719205599a51110d4b428",
+      "rf_task-696719205599a51110d4b40c",
+      "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c",
+      "deepswe_mobly-grouped-test-barriers",
+      "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86",
+      "rf_task-696719205599a51110d4b447",
+      "deepswe_pwntools-tube-multiplexing",
+      "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171",
+      "rf_task-696719205599a51110d4b446",
+      "rf_task-696719205599a51110d4b434",
+      "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86",
+      "swebenchpro_instance_future-architect__vuls-7eb77f5b5127c847481bcf600b4dca2b7a85cf3e",
+      "deepswe_httpx-deterministic-cookie-store",
+      "rf_task-69b7c2a04b6f8ff9ed98813d",
+      "swebenchpro_instance_qutebrowser__qutebrowser-deeb15d6f009b3ca0c3bd503a7cef07462bd16b4-v363c8a7e5ccdf6968fc7ab84a2053ac78036691d",
+      "rf_task-69d196f015a150488265afc1",
+      "swebenchpro_instance_flipt-io__flipt-c1728053367c753688f114ec26e703c8fdeda125",
+      "swebenchpro_instance_ansible__ansible-4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6-v1055803c3a812189a1133297f7f5468579283f86",
+      "swebenchpro_instance_qutebrowser__qutebrowser-fea33d607fde83cf505b228238cf365936437a63-v9f8e9d96c85c85a605e382f1510bd08563afc566",
+      "deepswe_ofetch-per-origin-circuit-breaker",
+      "rf_task-696719205599a51110d4b440",
+      "deepswe_participle-grammar-conflict-analysis",
+      "swebenchpro_instance_flipt-io__flipt-96820c3ad10b0b2305e8877b6b303f7fafdf815f",
+      "rf_task-694b4b99829f00e24fd118a1",
+      "deepswe_helm-array-merge-strategies",
+      "swebenchpro_instance_gravitational__teleport-f432a71a13e698b6e1c4672a2e9e9c1f32d35c12",
+      "deepswe_fastapi-implicit-head-options"
+    ]
+  },
+  "configuration": {
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "artifact_policy": "frozen-patch-and-source-tree-v1",
+    "catalog_share": 0.1,
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "environment_mode": "linux-terminal",
+    "first_task": "deepswe_fastapi-deprecation-response-headers",
+    "image_overrides": {},
+    "image_source": "upstream-prebuilt",
+    "lane": "subscription",
+    "max_continuations": 8,
+    "model": "gpt-6-luna",
+    "model_seed": null,
+    "platform": "linux/amd64",
+    "protocol": "singleturn-with-conditional-continue",
+    "reasoning_effort": "medium",
+    "require_verifier_validation": true,
+    "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+    "rubric_model": "gpt-6-luna",
+    "rubric_reasoning_effort": "medium",
+    "rubric_transport": "local-codex-cli",
+    "task_order_seed": 224,
+    "temperature": null,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "verifier_pytest_addopts": {
+      "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+    }
+  },
+  "format": "cs224v-paired-campaign-v1",
+  "plan_sha256": "2c44c020709c2707283136b0a08e3184728cb60f008865c60cb585ead382f8e8",
+  "policy": "Both arms of every primary task run on its owner's same machine. Calibration runs are separate.",
+  "seed": 224,
+  "smoke_task": "deepswe_vitest-duration-sharding",
+  "source_sha256": {
+    "campaign.py": "76552a092d7829dee47a8de2b62ec2ce4800c904a99d65b89879c8e90de5a09d",
+    "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+    "provenance.py": "14f0f2853a18bc055bc9d85d34b45249aa4241237b15df574d6fde115ef8c3c8",
+    "review.py": "b4b716ad7dad1848b6ad5132f1465fb414022511c11709aacfce4ab9c7986186",
+    "run.py": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2",
+    "task_terminal.py": "c9b89ef24a3e7465679f1239e0580f10f46a4eeb2ed6d2f8f515cfe5138a0cbf"
+  },
+  "tasks": {
+    "deepswe_arcane-drift-detection-baselines": {
+      "base_commit_hash": "d34a5e2a6c5eb0f0955039775f5b9538424b58ff",
+      "category": "feature_request",
+      "display_description": "Implement baseline capture, drift comparison, and compliance tracking for container configurations.",
+      "display_title": "Add drift detection and compliance baselines",
+      "environment_dockerfile_sha256": "99ce7cbfd3df620d830a467f69e275f8ec86f044a9968953be228e1c22e51f4a",
+      "ext_id": "kh70nj38qyatmsmj1d5zh57j25820vrx",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh70nj38qyatmsmj1d5zh57j25820vrx",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "Environment Drift Detection and Compliance Engine",
+      "prompt_sha256": "0f1d4b1f3a6340cd091479adcf4a771853bc9c3165e9e5496188a8f2dba5079e",
+      "repository_url": "https://github.com/getarcaneapp/arcane.git",
+      "task_id": "arcane-drift-detection-baselines"
+    },
+    "deepswe_awilix-async-container-initialization": {
+      "base_commit_hash": "82ac179c1de4c216c4e333093044fac643303f0c",
+      "category": "feature_request",
+      "display_description": "Add dependency-aware asynchronous container initialization with ordered startup, concurrency limits, and rollback on failure.",
+      "display_title": "Add dependency-aware async initialization to the container",
+      "environment_dockerfile_sha256": "e00aa837d5fa1236a810788eebd40e88e4da2b80d81d111618126fadcef99c03",
+      "ext_id": "kh70bg8gy4xks4eyh1s71ecmk9822p9c",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh70bg8gy4xks4eyh1s71ecmk9822p9c",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Async Initialization with Dependency-Aware Startup Ordering",
+      "prompt_sha256": "ba90df199ecdd07f71ca0459feca102b3e29d1bb87783fabcdf99c4f13ec7d82",
+      "repository_url": "https://github.com/jeffijoe/awilix",
+      "task_id": "awilix-async-container-initialization"
+    },
+    "deepswe_bandit-structured-nosec-directives": {
+      "base_commit_hash": "b46fa3a2723635aa29cc012538df4867ac2ac006",
+      "category": "feature_request",
+      "display_description": "Add region and next-line nosec directives with selector expressions and ignore-nosec handling.",
+      "display_title": "Add structured nosec directives for regions and next line",
+      "environment_dockerfile_sha256": "e9db1eae16134d3669913e35970922ada8e35ec64914cbb3e0690680f1d3e5f1",
+      "ext_id": "kh757d8ggvnfaszv8zcav3msy982ma7f",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh757d8ggvnfaszv8zcav3msy982ma7f",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Structured nosec suppression directives for region and next-line scopes",
+      "prompt_sha256": "25b8b91ba2f2286244fe4acc79cc440e033300afca907f259b8afc19402eebb4",
+      "repository_url": "https://github.com/PyCQA/bandit.git",
+      "task_id": "bandit-structured-nosec-directives"
+    },
+    "deepswe_boa-hierarchical-evaluation-cancellation": {
+      "base_commit_hash": "70409a5052984325dccfdc5f6520818568a81f39",
+      "category": "feature_request",
+      "display_description": "Add cancellable evaluation handles that propagate through nested script, module, and job execution.",
+      "display_title": "Add hierarchical evaluation cancellation to Boa",
+      "environment_dockerfile_sha256": "d269f9061f0aa3288cd030dffe45671d4512e1d08679141ab5846a72969cfab8",
+      "ext_id": "kh71kat2v58yys3pnyybkgycax832vj2",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh71kat2v58yys3pnyybkgycax832vj2",
+      "language": "rust",
+      "network": "bridge",
+      "original_title": "Hierarchical Evaluation Cancellation",
+      "prompt_sha256": "138411e111afc2e0da5ba564fd39fb0ab62f30c71627a9a2c62a618c9eba5821",
+      "repository_url": "https://github.com/boa-dev/boa",
+      "task_id": "boa-hierarchical-evaluation-cancellation"
+    },
+    "deepswe_cattrs-partial-structuring-recovery": {
+      "base_commit_hash": "6bc4708fb9b2ac52d9a18997e923da6a58916102",
+      "category": "feature_request",
+      "display_description": "Add `partial_structure` and `PartialResult` for recoverable, field-level structuring with nested partial results.",
+      "display_title": "Add partial structuring with error recovery to cattrs",
+      "environment_dockerfile_sha256": "987766340a13d7bc10ad9f4bc00150232fbf5415d121b778656b885ecbad5b54",
+      "ext_id": "kh7f7cahc5ddm1qzpxz13kpmrh8235pc",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7f7cahc5ddm1qzpxz13kpmrh8235pc",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Partial Structuring with Error Recovery Mode",
+      "prompt_sha256": "e152e2b2c2c6ba4429694437fe5a645427c1777ebc9fc1fcd96fe0cc3fd59fcc",
+      "repository_url": "https://github.com/python-attrs/cattrs",
+      "task_id": "cattrs-partial-structuring-recovery"
+    },
+    "deepswe_clack-async-autocomplete-options": {
+      "base_commit_hash": "8a96e2dcd7f821d1250b58cf71c327679f94de25",
+      "category": "feature_request",
+      "display_description": "Add async option fetching with caching, retries, debouncing, and loading state to AutocompletePrompt.",
+      "display_title": "Add async autocomplete options and fetch lifecycle handling",
+      "environment_dockerfile_sha256": "9dd303d6d46d9f58e40be5d6b56603edbdbe6138e7de5dde01ea441994945067",
+      "ext_id": "kh78c5dwwna57y757p2y5ktw79836dnv",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh78c5dwwna57y757p2y5ktw79836dnv",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Async Options for AutocompletePrompt",
+      "prompt_sha256": "7a279779b52998ed5d5b7fe7122e5951c5b923c5f389c56728e8ba6958baf3fc",
+      "repository_url": "https://github.com/bombshell-dev/clack",
+      "task_id": "clack-async-autocomplete-options"
+    },
+    "deepswe_drizzle-orm-window-function-builders": {
+      "base_commit_hash": "e8e6edfef5ca69c6188d320388ad440265911057",
+      "category": "feature_request",
+      "display_description": "Add typed query-builder helpers for SQL window functions, named windows, and frame specs.",
+      "display_title": "Add typed window function builders with OVER clauses",
+      "environment_dockerfile_sha256": "71022e53c416d3c97bc331383a0f55a27e24434df877524283ce39ea4bbcf323",
+      "ext_id": "kh70cshdjenz3z5gq2wrqzhjmn82xbb0",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh70cshdjenz3z5gq2wrqzhjmn82xbb0",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Add window function expressions with OVER clause to the query builder",
+      "prompt_sha256": "a662685ef4c96aa4b8476daa456db35060d999afb694e586f8b1b8de7f2dcaf4",
+      "repository_url": "https://github.com/drizzle-team/drizzle-orm",
+      "task_id": "drizzle-orm-window-function-builders"
+    },
+    "deepswe_etree-xml-diff-patch": {
+      "base_commit_hash": "4032e04c8f2e2f35e43ce5d772fcef14a5df4d74",
+      "category": "feature_request",
+      "display_description": "Add recursive XML diffing, patch generation and application, reverse patching, three-way merge, and diff summaries.",
+      "display_title": "Add XML diff, patch, and merge operations to etree",
+      "environment_dockerfile_sha256": "79f61e63b1262c5fadce3d18632a90895d4841d0972750e49382796ffff50c61",
+      "ext_id": "kh7e0e2z02keqh6j7db6bcg1c9822140",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7e0e2z02keqh6j7db6bcg1c9822140",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "XML Diff/Patch Engine",
+      "prompt_sha256": "0307e92b5c299f6e3a8b8b7b6c2ca1e260b1070a6617c3f42026fe8b22fd6e5c",
+      "repository_url": "https://github.com/beevik/etree",
+      "task_id": "etree-xml-diff-patch"
+    },
+    "deepswe_fastapi-deprecation-response-headers": {
+      "base_commit_hash": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+      "category": "feature_request",
+      "display_description": "Add runtime Deprecation, Sunset, and Link headers plus OpenAPI metadata and tracking middleware for deprecated routes.",
+      "display_title": "Add deprecation, sunset, and successor headers to FastAPI routes",
+      "environment_dockerfile_sha256": "7ff7cc78b72adbfab923ff52c6dd8b4c3f76abca6b0985a34208700e3df387ab",
+      "ext_id": "kh75azsnb5eqs3mf4xm0zkzha582rvcd",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh75azsnb5eqs3mf4xm0zkzha582rvcd",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Deprecation & Sunset Response Headers for FastAPI Routes",
+      "prompt_sha256": "18d4265c30bc5d28c43bbd44a128b21ad20aed6acbf4b59e9e69adb67c02ee8f",
+      "repository_url": "https://github.com/fastapi/fastapi",
+      "task_id": "fastapi-deprecation-response-headers"
+    },
+    "deepswe_fastapi-implicit-head-options": {
+      "base_commit_hash": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+      "category": "feature_request",
+      "display_description": "Add configurable implicit HEAD handling and automatic OPTIONS responses for FastAPI routes, routers, and included routers.",
+      "display_title": "Add implicit HEAD and automatic OPTIONS responses to FastAPI routes",
+      "environment_dockerfile_sha256": "e16761af68344704c34b6d8d276a75bf14257037faa9da0e365c0b84e81cdfbb",
+      "ext_id": "kh7191qb52n5pfwh0a4yhahmt18343sn",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7191qb52n5pfwh0a4yhahmt18343sn",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Implicit HEAD Support and Informative Automatic OPTIONS Responses for FastAPI Routes",
+      "prompt_sha256": "9c24e76e0fe9bc4fc0bccbbe0ad3532d7ef8ee8d6d72e46b4397a2eb5a5d9c08",
+      "repository_url": "https://github.com/fastapi/fastapi",
+      "task_id": "fastapi-implicit-head-options"
+    },
+    "deepswe_helm-array-merge-strategies": {
+      "base_commit_hash": "42f78ba60edf531d5161e00d9819a7c34d976343",
+      "category": "feature_request",
+      "display_description": "Add chart-scoped append and key-based merge strategies for coalescing arrays during Helm value merging.",
+      "display_title": "Add configurable array merge strategies to Helm value coalescing",
+      "environment_dockerfile_sha256": "539191738d161418bfea5dde7bda333a202d4fb758e2421c0fa7f64dbf1ed3cd",
+      "ext_id": "kh72a3qcr0kjpdr153havavn8s83bx8t",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh72a3qcr0kjpdr153havavn8s83bx8t",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "Array Merge Strategies for Value Coalescing",
+      "prompt_sha256": "c52330c132e01286d8ff1760738373ba5f478e198ba04aacec3a6d3a0404249e",
+      "repository_url": "https://github.com/helm/helm",
+      "task_id": "helm-array-merge-strategies"
+    },
+    "deepswe_httpx-deterministic-cookie-store": {
+      "base_commit_hash": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "category": "feature_request",
+      "display_description": "Add a deterministic CookieStore with modern Set-Cookie parsing, cookie eviction, and request header handling.",
+      "display_title": "Add a deterministic CookieStore with modern Set-Cookie parsing",
+      "environment_dockerfile_sha256": "91b33a7057c9600321772c469fbc4cc202a2e15c1ea0215e1ee161060a5156e2",
+      "ext_id": "kh7ccr1w93zymhy42k5hs2m9w1831xpx",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7ccr1w93zymhy42k5hs2m9w1831xpx",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Deterministic CookieStore with modern Set-Cookie parsing",
+      "prompt_sha256": "9d58684576a7022a6d4d3c2de20b3d1eb72dd759ebe306ab394b699f9f69848f",
+      "repository_url": "https://github.com/encode/httpx",
+      "task_id": "httpx-deterministic-cookie-store"
+    },
+    "deepswe_httpx-streaming-json-iteration": {
+      "base_commit_hash": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "category": "feature_request",
+      "display_description": "Add response iterators that incrementally parse JSON values from supported streaming media types.",
+      "display_title": "Add streaming JSON iteration to HTTPX responses",
+      "environment_dockerfile_sha256": "91b33a7057c9600321772c469fbc4cc202a2e15c1ea0215e1ee161060a5156e2",
+      "ext_id": "kh73snc7v9x3psk69rg4eqvjgs836v5a",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh73snc7v9x3psk69rg4eqvjgs836v5a",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Add streaming JSON iteration",
+      "prompt_sha256": "55d75790bcb55cef77bef12bad4cc686cbfd852d035d9170431b3de3c577db6c",
+      "repository_url": "https://github.com/encode/httpx",
+      "task_id": "httpx-streaming-json-iteration"
+    },
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "base_commit_hash": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "category": "feature_request",
+      "display_description": "Add a multiplexing layer that carries many ordered sub-streams over one KCP connection with flow control, priority scheduling, and SNMP counters.",
+      "display_title": "Add multiplexed ordered streams over KCP",
+      "environment_dockerfile_sha256": "99e9c11be9ffbf0c0abaeedc0e77f58010b0ef9e76a69fa4f176168f069d6ccb",
+      "ext_id": "kh72w47mwm321wh9xj47vskc8d822e9t",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh72w47mwm321wh9xj47vskc8d822e9t",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "Multiplexed Streams Over KCP",
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repository_url": "https://github.com/xtaci/kcp-go",
+      "task_id": "kcp-go-multiplexed-kcp-streams"
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "base_commit_hash": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "category": "feature_request",
+      "display_description": "Add single-active-consumer semantics, consumer priority selection, cancel notifications, and lifecycle tracking to virtual transports.",
+      "display_title": "Add single-active-consumer priority and cancel tracking to virtual transports",
+      "environment_dockerfile_sha256": "d583c842afbd343b095b8c51391f6db8ec7797e86803a504e71803fd8ec9d661",
+      "ext_id": "kh71vrtr4b1jj5vavv6aybnvjd83pcar",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh71vrtr4b1jj5vavv6aybnvjd83pcar",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Single Active Consumer and Consumer Priority for Virtual Transports",
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repository_url": "https://github.com/celery/kombu",
+      "task_id": "kombu-single-active-consumer-priority"
+    },
+    "deepswe_mobly-grouped-test-barriers": {
+      "base_commit_hash": "ec052921917ef201e73cc8e275dc91c5706b345f",
+      "category": "feature_request",
+      "display_description": "Add grouped execution phases with explicit synchronization barriers and per-group setup and teardown.",
+      "display_title": "Add grouped test phases with synchronized barriers",
+      "environment_dockerfile_sha256": "9abd9c2f2c1b84429afc7a4bb763aae047bdd269103d9bf81252022b5eedb489",
+      "ext_id": "kh74b2m0tjfn59vq8btqrj774s821570",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh74b2m0tjfn59vq8btqrj774s821570",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Test Execution Phases with Explicit Barriers",
+      "prompt_sha256": "df66be2eb22fad62613f9979ed2162c51c20caf399473dae55a31908547cc570",
+      "repository_url": "https://github.com/google/mobly",
+      "task_id": "mobly-grouped-test-barriers"
+    },
+    "deepswe_ofetch-per-origin-circuit-breaker": {
+      "base_commit_hash": "dfbe3ca4ef8a22fc023fca5a5ef530e525f5e523",
+      "category": "feature_request",
+      "display_description": "Add an opt-in per-origin circuit breaker for fetch requests with half-open probing and shared state across clients.",
+      "display_title": "Add a per-origin circuit breaker to ofetch",
+      "environment_dockerfile_sha256": "35062365147e8cbe313b1e9942a021735fd48c44e34d478fd8eb904aaa597971",
+      "ext_id": "kh7aq6h38q4e91mragyvr8cd3n82xxxr",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7aq6h38q4e91mragyvr8cd3n82xxxr",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Per-Origin Circuit Breaker with Half-Open Probe Control",
+      "prompt_sha256": "0ba148af8d6cf629a1384381488a8cfea7dd70f111ae2a0ee8717f0ba659083e",
+      "repository_url": "https://github.com/unjs/ofetch",
+      "task_id": "ofetch-per-origin-circuit-breaker"
+    },
+    "deepswe_participle-grammar-conflict-analysis": {
+      "base_commit_hash": "1051d4767b5a469936daf5f1cebb63da6c9fb776",
+      "category": "feature_request",
+      "display_description": "Add build-time static analysis that detects ambiguous participle grammars and reports conflicts.",
+      "display_title": "Add build-time grammar conflict analysis to participle",
+      "environment_dockerfile_sha256": "b0fd5db19888e23b80912f25931d38034289157ce4cc5e45edbbdb7a1e234ac2",
+      "ext_id": "kh74m2j63pskf6htk1sxxevvv1823hvd",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh74m2j63pskf6htk1sxxevvv1823hvd",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "Grammar Conflict Detection",
+      "prompt_sha256": "464be0987c72101ee6656df6c134dda44ec7269b67cf3bc71092212183dfc8ca",
+      "repository_url": "https://github.com/alecthomas/participle.git",
+      "task_id": "participle-grammar-conflict-analysis"
+    },
+    "deepswe_pwntools-tube-multiplexing": {
+      "base_commit_hash": "76894a5404a65d2800b6d0adaf3485ecba275caa",
+      "category": "feature_request",
+      "display_description": "Add a TubeMultiplexer and MuxChannel API for multiple bidirectional logical channels over one tube, with flow control and close propagation.",
+      "display_title": "Add tube multiplexing to pwntools",
+      "environment_dockerfile_sha256": "e0d958523f3baff9fdce82425e3bd208714d2530be142f96e3713d7ae5dfe139",
+      "ext_id": "kh74mb9dzz76a6zgdqmmf5mvk1833cnk",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh74mb9dzz76a6zgdqmmf5mvk1833cnk",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Tube Multiplexer",
+      "prompt_sha256": "27f4f1eed8eb31eea4f5a08a80c68b4c0c9334b29d5170f9c3c60e5fa074b0a1",
+      "repository_url": "https://github.com/Gallopsled/pwntools",
+      "task_id": "pwntools-tube-multiplexing"
+    },
+    "deepswe_returns-validated-error-accumulation": {
+      "base_commit_hash": "41607fae1289de2787523c452d75212206b9c7c0",
+      "category": "feature_request",
+      "display_description": "Add a Validated container that accumulates errors while preserving standard container APIs.",
+      "display_title": "Add an error-accumulating Validated container",
+      "environment_dockerfile_sha256": "3050dc090bb55013cf142a3d928f8450eb0c7d5a5fd455b7761b20a73a7fef17",
+      "ext_id": "kh754n098chwgtm24jakheqsw5833ec6",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh754n098chwgtm24jakheqsw5833ec6",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Implement Error-Accumulating Validated Container with Law-Compliant Interface Hierarchy",
+      "prompt_sha256": "4a1ff83df1e3502f3e15fab4647cc4a607f4affc51db970b5ac1f45359b20f0d",
+      "repository_url": "https://github.com/dry-python/returns",
+      "task_id": "returns-validated-error-accumulation"
+    },
+    "deepswe_sqlite-utils-safe-import-checkpoints": {
+      "base_commit_hash": "8d74ffc93292c604d5827e2b44fffedca0c28c19",
+      "category": "feature_request",
+      "display_description": "Add safe bulk import checkpoints, invariant validation, and rollback-on-failure behavior.",
+      "display_title": "Add safe import checkpoints and invariant validation",
+      "environment_dockerfile_sha256": "36add81221f5ef29c81a40663257f73543c4fcfa5c0637f41550c85d571516ad",
+      "ext_id": "kh73xpqyc0vqx9prf3m106nqe5821dcb",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh73xpqyc0vqx9prf3m106nqe5821dcb",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Safe Bulk Import with Rollback Checkpoints",
+      "prompt_sha256": "c8e09ee12643d8326cba222844dc2da418e47800cba6bc3f3e9252c2bbe269f1",
+      "repository_url": "https://github.com/simonw/sqlite-utils",
+      "task_id": "sqlite-utils-safe-import-checkpoints"
+    },
+    "deepswe_testem-bail-on-test-failure": {
+      "base_commit_hash": "06a1adb7a70e85e7322d8cfae3181508785de95d",
+      "category": "feature_request",
+      "display_description": "Add configurable early bailout on test failures across runners, reporters, and exit codes.",
+      "display_title": "Add bail-on-test-failure handling to Testem",
+      "environment_dockerfile_sha256": "476add33bd4b72a9512e798d0142b7fed723582789e8314c194787e232775a6b",
+      "ext_id": "kh77k18d31qx7jj0c7nyv0xd8s82cznp",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh77k18d31qx7jj0c7nyv0xd8s82cznp",
+      "language": "javascript",
+      "network": "bridge",
+      "original_title": "Add bail_on_test_failure Option",
+      "prompt_sha256": "195f44c76a86098fe76204fb7d23c8309d961a07200df5997f51c8575aee4758",
+      "repository_url": "https://github.com/testem/testem",
+      "task_id": "testem-bail-on-test-failure"
+    },
+    "deepswe_tomlkit-toml-table-converters": {
+      "base_commit_hash": "dd05eebc8ed9e30fc6c223088a5a450cb54c1cab",
+      "category": "feature_request",
+      "display_description": "Add in-place conversion helpers between standard tables, inline tables, dotted keys, and super tables while preserving comments and round-trip integrity.",
+      "display_title": "Add bidirectional TOML table converters",
+      "environment_dockerfile_sha256": "f4473f7112e66ea16e3d75274e744037d2284293b0c24cb61237fc0192044450",
+      "ext_id": "kh7ezsk4ze1jyjta967ypwnxhh83etpm",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh7ezsk4ze1jyjta967ypwnxhh83etpm",
+      "language": "python",
+      "network": "bridge",
+      "original_title": "Table Representation Converter for tomlkit",
+      "prompt_sha256": "594cc9073b0250535d8f07e3e801e5db8160e92b8a462a39d3e4b2e76a916a49",
+      "repository_url": "https://github.com/python-poetry/tomlkit",
+      "task_id": "tomlkit-toml-table-converters"
+    },
+    "deepswe_vitest-duration-sharding": {
+      "base_commit_hash": "647e6ade3b99523e3a0387a65fccfe918c331236",
+      "category": "feature_request",
+      "display_description": "Add duration-aware sharding strategies and duration history handling for Vitest.",
+      "display_title": "Add duration-aware sharding to Vitest",
+      "environment_dockerfile_sha256": "99f4ef074a56867df81ffd57b6d5b4512ceffd2747b5e9367250502ff6534107",
+      "ext_id": "kh788hvxvxaz825205djm3ctth822xms",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh788hvxvxaz825205djm3ctth822xms",
+      "language": "typescript",
+      "network": "bridge",
+      "original_title": "Duration-Aware Sharding for Vitest",
+      "prompt_sha256": "123bfd91416a7bc7deca77160a284458f89f8fa8156ca656a0da72281a30ab0e",
+      "repository_url": "https://github.com/vitest-dev/vitest.git",
+      "task_id": "vitest-duration-sharding"
+    },
+    "deepswe_wazero-multi-module-snapshots": {
+      "base_commit_hash": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "category": "feature_request",
+      "display_description": "Add coordinated capture, restore, diff, and serialization for multi-module memory snapshots.",
+      "display_title": "Add multi-module memory snapshots to wazero",
+      "environment_dockerfile_sha256": "5652b39c520c7cae9b3fad1fdd8fab1f9112bea73b729dec1447a1238c67f389",
+      "ext_id": "kh77sbk25h3f5383rz7xqx98th822fd4",
+      "family": "DeepSWE",
+      "image_reference": "public.ecr.aws/d3j8x8q7/swe-bench-202605:kh77sbk25h3f5383rz7xqx98th822fd4",
+      "language": "go",
+      "network": "bridge",
+      "original_title": "Add Multi-Module Memory Snapshot System",
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repository_url": "https://github.com/wazero/wazero.git",
+      "task_id": "wazero-multi-module-snapshots"
+    },
+    "rf_task-69391d8d1ce51c407be1e531": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "efb25f699ff3109934e92173c4f7996dc9bcbae41f2df9a055829ceaef4e6fd3",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_trufflesecurity_trufflehog_69391d8d1ce51c407be1e531_1.0@sha256:53ded8a7c81c92abf3403686725fff8db21e8ececf626ca594b0cff6ae4ab328",
+      "network": "bridge",
+      "prompt_sha256": "19c82cc4983fa7dd672c61323fcb298a4fb648fb565c148392f298618d300ab7",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-69391d8d1ce51c407be1e533": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "easy",
+      "environment_dockerfile_sha256": "89344e671a567b0f05116647fb9ec293cb14b6a263b7325b677cb44546c80b0b",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_simple-login_app_69391d8d1ce51c407be1e533_1.0@sha256:312f4320950e218babc8cab47a2c3617582d3c0fcc44859e1e95536539a712f5",
+      "network": "bridge",
+      "prompt_sha256": "6ea911c0e2ec1cda8fec7f074dec3f257fba3412d405a604f455d7be968d6419",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Python"
+      ]
+    },
+    "rf_task-694b4b99829f00e24fd11885": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "ad54c30056d5d7c5f8b8f78c31049782f3bf42b540cbea74c43da58f47a86a62",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_trufflesecurity_trufflehog_694b4b99829f00e24fd11885_1.0@sha256:29535eb72b8f6883a83ff50107bf812b5bf1092162ca7a22f7c3d63553f42b5f",
+      "network": "bridge",
+      "prompt_sha256": "2f8f6e79ed50ca9cef1d1d1ad82eeff6313a9870c36cbcfe4b1b2f18a59c968e",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-694b4b99829f00e24fd11889": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "15a8735f2eda9fc8ca3639b1e0444380ef182fd52bdc61043c83652c57f3bc8a",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_trufflesecurity_trufflehog_694b4b99829f00e24fd11889_1.0@sha256:68f800df9360a8b9aac766a3f2345a70899f127fa4d7c0b78961c7ca72ea48f4",
+      "network": "bridge",
+      "prompt_sha256": "160ffc116daf553851fe9f2f8b311cdf43abca35703c0450f194c894cdfadf75",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-694b4b99829f00e24fd11891": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "f5f1a213cbf40bde4b51942b8a435be59fad4ef108cfae819215c6d1ac7c14af",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_Automattic_wp-calypso_694b4b99829f00e24fd11891_1.0@sha256:0dd613c90d6bcfc266fb8f266d350d5e6236872425bf86d022c1847b28a5d6d3",
+      "network": "bridge",
+      "prompt_sha256": "95bbd84f9181ffabdf2a852200e2477f643ea23286efbac3c30092125b626419",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "JavaScript"
+      ]
+    },
+    "rf_task-694b4b99829f00e24fd118a1": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "8a38c65bf9466b8391bd1991ecf40f1aa8a7ea6a5904889adbd5001d9f45d3c5",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_secdev_scapy_694b4b99829f00e24fd118a1_1.0@sha256:63f1a9702fc2eb7ea14c3396b9ee8b51c3b039cb2fe31f6c806c76b7ed15a91f",
+      "network": "bridge",
+      "prompt_sha256": "03fd5bd5cca5d221c9949daa57dd960109d976692d425b371d5cc11776247b5e",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Python"
+      ]
+    },
+    "rf_task-696719205599a51110d4b40c": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "0d1598c3cdaff0d703a44fc5156fa6ad49e2701098f1cab2b3fa804c0a491303",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_trufflesecurity_trufflehog_696719205599a51110d4b40c_1.0@sha256:c6fcd6e39177b9bd30fe550676e838918544f3ba53b02fb488c3f78f29041e1a",
+      "network": "bridge",
+      "prompt_sha256": "0be41473cf1373fb427c05cd8c95de5f1cc88ba096c0177e7c9049fac9fd1232",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b428": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "b38b117f4f8587ddb39b1f180156a261f042bc1554c4bf609b3ad5fb50500e3d",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_Automattic_wp-calypso_696719205599a51110d4b428_1.0@sha256:9eb49e43f425eb3544035b46e3e20911fec86477337602f470d0c7db87b63c4b",
+      "network": "bridge",
+      "prompt_sha256": "cf72c49e4871bf9c3f5f77c0f3274068a80493cf677ec646ff6121f098ef4e9c",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "TypeScript"
+      ]
+    },
+    "rf_task-696719205599a51110d4b434": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "226036a91aa764909e32f8af31170df2cdfb59997c1c3777f86dff8c0c24d6e4",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_Automattic_wp-calypso_696719205599a51110d4b434_1.0@sha256:6b1f28b1fae730c0d00b2acdb6f68a32b270468fbbb4ec4581db62e0d3b0c887",
+      "network": "bridge",
+      "prompt_sha256": "2bb519b4c1393e880392f4762b6eb739f2541ba2f94edcc08d4aa7129efe7277",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "TypeScript"
+      ]
+    },
+    "rf_task-696719205599a51110d4b436": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "31444423532e9b943fa0bf9722081afb4d1c65610b0538315c82da6e7d8f10b9",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b436_1.0@sha256:8a8ff0dfe3c9c5430f3b876fd167a4239e0760e8ceabb3c2525af50d4df0a442",
+      "network": "bridge",
+      "prompt_sha256": "82b6b6be0a48427072c208838d01bbeb2688f827f35d8615bc9ae778df0213a4",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b440": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "721c65a257d450ffaa08a646f6887353a8f925e4af0e307db11c9dd65f8298a1",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b440_1.0@sha256:dcfaf371b974cd5aae002b020364cab0c532facca8874561f064a933f2e5a884",
+      "network": "bridge",
+      "prompt_sha256": "3423c13c51f6a6ed7d89ad8cb709cb5ce73c0e1028d49f4e175ae0c7543c0bd2",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b441": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "8411f1f98d1db61c4fce42111a5d47077c33b31be2fb064987d40cf38c94804a",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b441_1.0@sha256:9da4905045175cce58a722e8e0b4e74f1bdf9beb1d615f0a7cb088aff0b94fbf",
+      "network": "bridge",
+      "prompt_sha256": "65434e048d6e4223fcde87d9e973c194c2679035a839b49e963d47d94cdb4af9",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b446": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "344386b10c0cc1dca616cda876fb2ed4832124dc80139ce468014a408ad9d023",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b446_1.0@sha256:de3821109167af1d24a8ce3207b14a6840ee11aea0909c838c471fd9b2c372b5",
+      "network": "bridge",
+      "prompt_sha256": "9e95b19f932124570a79d78448ae5e8c2585b4cb27fe913917fc3f1e75ea8e94",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b447": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "aeca471cb073da987f86b511ddf8d6e7f9e9f9e1530db14216f4859df8e7a6b8",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b447_1.0@sha256:d96b70a7d83752867ee2107f03661cdf9756e2064cf13de8da92315aa8b55fab",
+      "network": "bridge",
+      "prompt_sha256": "a9bd95ab126a9b4515d4ead0e2abd5f2af6f165c2fc58395a2e86f390dc69939",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b451": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "6725fd39d7c34573ac280ac25fb4bdac36cb093dd2f3eda9cfea4cc82f3e3265",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_k6_696719205599a51110d4b451_1.0@sha256:42e37519e7da73102977e7eb16dc098626e53152496af3a00e1523ba75b2459d",
+      "network": "bridge",
+      "prompt_sha256": "48f7ec03b8d89102f45fe962889bb4973e12c79bfa7b567f4bdd31f617f4cef4",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b455": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "96e175abfda341ca1f866971b7571b5e9a8b2079b0c43f3d4cb253a93ad255f5",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_grafana_696719205599a51110d4b455_1.0@sha256:3fe50147daa3cbe3e56dd7879fa1b7625c129d6f89bca4ab9d07c5040d6ef9c4",
+      "network": "bridge",
+      "prompt_sha256": "330ae3a6143eae9a8816a06bb8b679220d886a3570aa0ab8bc41c2b5923021c0",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b458": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "835ad8ca3ed82835e4c283db8fa11da867f440b6d24428775370bb957bd33320",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_grafana_696719205599a51110d4b458_1.0@sha256:37b680f37a81bbc93d8c300b71ce298e460f3673179097d21253606a53c7d933",
+      "network": "bridge",
+      "prompt_sha256": "c28b9f33d970b84c9950a0b18a53ec9c8f85e8e61e4682820cc18cfdd1e062b5",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Go"
+      ]
+    },
+    "rf_task-696719205599a51110d4b476": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "a664ca17b5284f5b17fe739af44285c052ec867b8f249e9fc1dda95094a4c4f6",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_secdev_scapy_696719205599a51110d4b476_1.0@sha256:2c24cd3859df6183dad56286f8e40068b8abf1fad791631213a2f4266ac0c807",
+      "network": "bridge",
+      "prompt_sha256": "af898e2c35eaeceefb50fdb07a02c2c81d476607478dbd14ce28badabb4d0cba",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Python"
+      ]
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98812f": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "e5dd2f44e319e459f35ed8b853d5584b4843f888d3e59cb628a0b008f0d09853",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_OISF_suricata_69b7c2a04b6f8ff9ed98812f_1.0@sha256:c546c5879339a820bf6ddf165e22fcfa1d146e0115a7b96487961b9c8e0161a3",
+      "network": "bridge",
+      "prompt_sha256": "a293e2bef33dffdb7d327b393b69595fc669ac9cbbda6cc138ed5b95a4944705",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "C"
+      ]
+    },
+    "rf_task-69b7c2a04b6f8ff9ed988137": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "92cde05baeacfaea660b149194469d482f5afe5fe00fff3f3bf45fc6b8858298",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_OISF_suricata_69b7c2a04b6f8ff9ed988137_1.0@sha256:543b0599b340194f6676b07058db8a279ced51c2161d8b6997c0332072fb499e",
+      "network": "bridge",
+      "prompt_sha256": "895d5a87949364424cd017124186db142403aab7f329e4e141ebd42327fcbeb8",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "C"
+      ]
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98813b": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "a43fd673b7239ae2ffbd5a294fbc6caaea6cbb643b81bc8988b8dd0caddbe0f7",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_netdata_netdata_69b7c2a04b6f8ff9ed98813b_1.0@sha256:f0f262c96c031204c1a0f2b313ec74629dce84aa32aa2e1e4fdf068fccf2a0b4",
+      "network": "bridge",
+      "prompt_sha256": "e81b970117176041c5d3d44243754cf40a71b3a8a459c6ac95f71ae3288ec753",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "C"
+      ]
+    },
+    "rf_task-69b7c2a04b6f8ff9ed98813d": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "a3fc989e3ac8f46c13a0394ab1687f1c647c3f2c578d330627ea1b5b223bb848",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_netdata_netdata_69b7c2a04b6f8ff9ed98813d_1.0@sha256:6193ba7e853950a21a0f1335e189973972cad879656d2f42f41192939583b8a9",
+      "network": "bridge",
+      "prompt_sha256": "7fead0d50aa43fb90dd981034db00f4453296c90689d2395d59e5aaea119882d",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "C"
+      ]
+    },
+    "rf_task-69d196f015a150488265afb7": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "a6d9bf3308e8d67e1fd850c08cdc41a8a22400ca260fbb5dda269ea254d063fd",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_secdev_scapy_69d196f015a150488265afb7_1.0@sha256:fbe2d0aef1129b37a45dc6e8ce85e715f150c1c45a0575d30d0364499d5ea6f9",
+      "network": "bridge",
+      "prompt_sha256": "d0c86f4ff225b86a57ce519dbe7da0eb5c4565f577d9c2aff27fa40497f5a988",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "Python"
+      ]
+    },
+    "rf_task-69d196f015a150488265afb9": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "9a85d70ba2320470b778f72f82de8b4a28dda2af3a3055efd10983a5cea28a37",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_grafana_grafana_69d196f015a150488265afb9_1.0@sha256:d3ee2ebe83987d2d1f2036d3bc46df2419e4974ea2aae98ea32c553e74ff1e88",
+      "network": "bridge",
+      "prompt_sha256": "9f841fb25f0ee54dc9346128e6f6ec14be0de91189d467194e2e9c750289ea8e",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "TypeScript"
+      ]
+    },
+    "rf_task-69d196f015a150488265afc1": {
+      "author_email": "unknown",
+      "category": "refactoring",
+      "difficulty": "hard",
+      "environment_dockerfile_sha256": "b71808693c4b351eba1626240d74dca9811d14aec71c5882b24701d4561e0cfe",
+      "family": "SWE Atlas Refactoring",
+      "image_reference": "ghcr.io/scaleapi/swe-atlas:swe_atlas_RF_MariaDB_server_69d196f015a150488265afc1_1.0@sha256:2d91b0ab5cefe39ef357005ee8d7cf526d2d4440dd7c658816ce7f6c3745e3c6",
+      "network": "bridge",
+      "prompt_sha256": "8525f04548449a2dea10ffa6d5762ccdff33b75d105f20baf7fe551d0d0acb99",
+      "tags": [
+        "refactoring",
+        "master-validator",
+        "rubric-graded",
+        "C++"
+      ]
+    },
+    "swebenchpro_instance_ansible__ansible-4c5ce5a1a9e79a845aff4978cfeb72a0d4ecf7d6-v1055803c3a812189a1133297f7f5468579283f86": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "d1dcb127a7993b1c67cfcfa3a82cd32036b32e123bf3cf042b2f7f8e077b2ec3",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "d3f452e8adc7651f597a56b2d422b058017f5d54e60856e870ce4fbeb407ebdc",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_ansible__ansible-c616e54a6e23fa5616a1d56d243f69576164ef9b-v1055803c3a812189a1133297f7f5468579283f86": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "d003aea5f014a07fd601dafc7562f1a80d5e5df8db3aa63cd5ddd0b0ee4b0ee9",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "8839b6ac5b9c3ac28e1740504bff24d24ea9073461e1db00d906998e9da03c31",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_ansible__ansible-e40889e7112ae00a21a2c74312b330e67a766cc0-v1055803c3a812189a1133297f7f5468579283f86": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "c78aaad998263d3801e2e13de32ef6b7cba29ce3019e452aff7d9c3e38232349",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "1fd60930e7fbdf13d230b9c346e167b150ed9f130385b5f135eb22a2c1b8751d",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_element-hq__element-web-d06cf09bf0b3d4a0fbe6bd32e4115caea2083168-vnan": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "216fba3a3a001f96e974e57273eeb62497f14039e9656e07f1a8640316f2518f",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "7ee7cd9077aae6f63c5e91086d0341c516e981fd5425f6c7177beb7eb553adc8",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_element-hq__element-web-fe14847bb9bb07cab1b9c6c54335ff22ca5e516a-vnan": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "b2468cb33aa38f96ff08034a8a26b9de6c0a87b080c8be69d82c14b837f9f6ea",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "d7afa5505eacfdbdb49cdac659b0ed80245a9b736eb4810cf688060487ada152",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_flipt-io__flipt-96820c3ad10b0b2305e8877b6b303f7fafdf815f": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "cd4ec0c0db585645ec53df7c3b74c62c30b4c3677b16dbe26cd9e58fc0dc397c",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "928a170007e7b3865cfb2a6e39422d02d54265dfa16d21aa6e2fa408530e19c6",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_flipt-io__flipt-c1728053367c753688f114ec26e703c8fdeda125": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "3294339164fd2e452be4397a25e55cef7fefa5f478adc546bfa98c91acc4bff9",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "06a07e6a2a072a6cafbf28abf250cca87399ddffdebcc0f8e1e6b8bd6e059a53",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_flipt-io__flipt-e5fe37c379e1eec2dd3492c5737c0be761050b26": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "e4b893a80446ec69c5640a55d147d5fff0ec727254ac4ba2c717c9c67495f175",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "9d16edd4f5c913f735e175c2f874dfdbb34ce7dcababbbb009bfe29293ddc526",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_future-architect__vuls-7eb77f5b5127c847481bcf600b4dca2b7a85cf3e": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "32e14508c3e5547903494f814ac93266cb62826b838a1ec377593d0ec1827f81",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "e5e654e44974df9890547457610dbc3f33565f09af1426f7c8f0b1d048059105",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_gravitational__teleport-d6ffe82aaf2af1057b69c61bf9df777f5ab5635a-vee9b09fb20c43af7e520f57e9239bbcf46b7113d": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "144c5a44689d7fbf351af9b88849e6a4dc0f227b7abe4c6a2c246a1a52771f67",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "3efde84029148ae2f4e79d64d21593e6c4947d8e4441f0f8b9d53834b5bfc947",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_gravitational__teleport-f432a71a13e698b6e1c4672a2e9e9c1f32d35c12": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "13543f2d086dd8a75c9d7ac752f115710497509843e6043b709de25f7d7fa89b",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "4efb4aed65de75132335bd317685922ef9a21d3672406556551d04851564815a",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-0a90f9f0256e4f933523e9842799e39f95ae29ce-v76304ecdb3a5954fcf13feb710e8c40fcf24b73c": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "b3908197a7826c9fba7a03f700162330932d9bda84d286d7800d0fcd0a462eaf",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "e855dad66716975e7cafb45bfa56f5279cf0e54097b20a8a01b7a31b2975c028",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-4b7ea2977be2747496ba792a678940baa985f7ea-v0f5aece3601a5b4419f7ccec1dbda2071be28ee4": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "01200d78990a705ac5740b127f9f55ce71b48b93936f19a9211e3cee3d98dd7b",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "31f2f257dfa9ff5a8748420d0dba70bd0dbf3928acc7e55cc1eb8e0624d0e8cd",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-5de7de19211e71b29b2f2ba3b1dff2fe065d660f-v08d8e8889ec945ab821fb156c04c7d2e2810debb": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "15a0cbb34944fc2861f4b3f4d0e0853f4ab36b33488c1b065f8cc12652cb8de4",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "2fb37e8ffdd23220c7cd84656e1bb55199775920cd0824efe3b603351924cb2c",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-b67138b316b1e9c11df8a4a8391fe5cc8e75ff9f-ve8c8d62a2b60610a3c4631f5f23ed866bada9818": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "422fb4931bb24729748022e53d7796ececc00ef2ef07892d6aecb51fe713cea9",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "9375be86b1ce0a1a83b4aedf5faee2faf862e536719549e0735f4e5d3b84b06e",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_internetarchive__openlibrary-d40ec88713dc95ea791b252f92d2f7b75e107440-v13642507b4fc1f8d234172bf8129942da2c2ca26": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "8c4eed4d85bf200c8bc253be3b3c478af0165f1f98be28da0460ce2f72701e95",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "9434d26998915b1883ffcc94476517a5df8ae7921c2b85c0f741054e5837db2c",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_navidrome__navidrome-3972616585e82305eaf26aa25697b3f5f3082288": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "fbe3d02f414ec9bbfd29fc0ec656ea6da03cf69e6eef27d633f352c597bc42e6",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "41309dab8cffd45059578f084a80d7628ac58f4145ac701b705d29cf849a396e",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_nodebb__nodebb-8168c6c40707478f71b8af60300830fe554c778c-vf2cf3cbd463b7ad942381f1c6d077626485a1e9e": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "f7fce0854006d92f7385bf84cb5044a7527be2dae928fbfca6eed7f9f96ce78b",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "ba9fc92d64b464085f37fe8f82bcf801e16c331f9aeefa0e7cfceb8591a18a86",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_nodebb__nodebb-f083cd559d69c16481376868c8da65172729c0ca-vnan": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "33f84316d008d58382bd17b73c52e4ca31fb6155f5e4a52be6ed7660f2d52015",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "b7b89b9467c3ee7a1f9238c4d9fb4ee5490635503e8540e7d1215df788ba480e",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_protonmail__webclients-e65cc5f33719e02e1c378146fb981d27bc24bdf4": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "81a31718f342f7697cc56302cbdc411d62bf2b6ed6e77d55951b20d6fcfaec58",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "4d68b783b077a4bfeba15f443797cb936a0a9da48d983c77f9f42c1603733339",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-70248f256f93ed9b1984494d0a1a919ddd774892-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "8f14834a8cf958d0329bdd4b5b8c98968637c33ebf85a73a3fc661f1f4915c61",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "8d2b0b55bdb90ac9c4fb0773be27581f516195f4420ee2d2ac768a258eddec77",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-96b997802e942937e81d2b8a32d08f00d3f4bc4e-v5fc38aaf22415ab0b70567368332beee7955b367": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "65f74e7670965f69a8f85ece292d8beca4ec86cf14cb1f740b816d7edf56eae3",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "36b3938ce981669c0440febe7d56f645d26985de06d5578b98ec5a8a790d9077",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-bedc9f7fadf93f83d8dee95feeecb9922b6f063f-v2ef375ac784985212b1805e1d0431dc8f1b3c171": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "ccdfba9e6e44aef385e6b6358e29f9dc554c98202768c6fb0051b4450b70b609",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "2560da05e52d2774469aa218a1651f04a46070edcb829f65d32af712cff2f099",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-deeb15d6f009b3ca0c3bd503a7cef07462bd16b4-v363c8a7e5ccdf6968fc7ab84a2053ac78036691d": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "1e16f17a92e866c26cce0522b8b942ee1eab1d00d86dd4aca98d50653365ac3b",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "659d35a8de652cfed3f794a36e3905a9dd5420216896987c12d127f49380ad64",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    },
+    "swebenchpro_instance_qutebrowser__qutebrowser-fea33d607fde83cf505b228238cf365936437a63-v9f8e9d96c85c85a605e382f1510bd08563afc566": {
+      "author_email": "unknown",
+      "category": "debugging",
+      "difficulty": "medium",
+      "environment_dockerfile_sha256": "d38094dfcf87e1227904157f74539e345c1facf7effdf2678f22a8bdf8d5f67f",
+      "family": "SWE-bench Pro",
+      "image_reference": null,
+      "network": "bridge",
+      "prompt_sha256": "d921d6a31140e7c9f94f80d601b6f0299327504a674dc2396ec545821885a61c",
+      "tags": [
+        "debugging",
+        "swe-bench-pro"
+      ]
+    }
+  }
+}

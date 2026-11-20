@@ -2,6 +2,7 @@
 """Expose one task-owned Linux container as a small stdio MCP terminal."""
 
 import argparse
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import subprocess
@@ -49,9 +50,11 @@ def response(request, container, repository, log):
         if params.get("name") != "run":
             raise ValueError("Unknown tool")
         arguments = params.get("arguments", {})
+        started = datetime.now(timezone.utc).isoformat()
         result = execute(container, repository, arguments.get("command"), arguments.get("timeout_s", 120))
         with log.open("a") as stream:
-            stream.write(json.dumps({"command": arguments["command"], **result}) + "\n")
+            stream.write(json.dumps({"started": started, "ended": datetime.now(timezone.utc).isoformat(),
+                                     "command": arguments["command"], **result}) + "\n")
         return {"content": [{"type": "text", "text": json.dumps(result)}],
                 "isError": result["exit_code"] in (125, 126, 127)}
     raise ValueError(f"Unsupported method: {method}")

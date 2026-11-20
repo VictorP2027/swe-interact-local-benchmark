@@ -68,6 +68,8 @@ class HarnessChecks(unittest.TestCase):
             for allowed, expected in ((True, "bridge"), (False, "none")):
                 (root / "task.toml").write_text(f"[environment]\nallow_internet = {str(allowed).lower()}\n")
                 self.assertEqual(run.task_network(root), expected)
+            (root / "task.toml").write_text("[environment]\n")
+            self.assertEqual(run.task_network(root), "bridge")
 
     def test_verifier_cleanup_on_timeout_and_interrupt(self):
         for error, expected in ((subprocess.TimeoutExpired("docker", 1), run.Blocked),

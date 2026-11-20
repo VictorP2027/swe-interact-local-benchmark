@@ -23,5 +23,6 @@
   "environment_mode": "linux-terminal",
   "image_source": "upstream-prebuilt",
   "catalog_share": 0.1,
-  "require_verifier_validation": true
+  "require_verifier_validation": true,
+  "artifact_policy": "frozen-patch-and-source-tree-v1"
 }

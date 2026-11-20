@@ -22,6 +22,7 @@ import tomllib
 from datetime import datetime, timezone
 
 from codex_continue import asks_question
+from provenance import machine_id
 
 
 ROOT = Path(__file__).resolve().parent
@@ -38,11 +39,7 @@ FAMILIES = {"deepswe": "DeepSWE", "swebenchpro": "SWE-bench Pro", "rf": "SWE Atl
 QUOTA = re.compile(r"usage_limit_reached|usage limit|quota exceeded|insufficient_quota|out of credits", re.I)
 TASK_IMAGE_REPO = "cs224v-swe-interact"
 CYCLE_BUILDER = "cs224v-swe-cycle-" + hashlib.sha256(os.fsencode(ROOT)).hexdigest()[:12]
-REVIEW_TASKS = {
-    "deepswe_bandit-structured-nosec-directives",
-    "deepswe_pwntools-tube-multiplexing",
-    "swebenchpro_instance_future-architect__vuls-7eb77f5b5127c847481bcf600b4dca2b7a85cf3e",
-}
+REVIEW_TASKS = set()
 
 
 class Blocked(Exception):
@@ -267,7 +264,7 @@ def report(out, manifest, destination=None):
         "patch hash and final reply. Every reused attempt already satisfied the continue rule.",
         "The previous Terra pilot and Victor's historical 41/75 single-turn result are separate from this experiment.",
         "The local stock harness serves as the baseline. Historical results are not a third matched arm.",
-        f"{len(REVIEW_TASKS)} tasks are held because they involve security scanning or exploit tooling.",
+        "The Wednesday campaign covers all 75 task IDs; assignments keep both arms on one machine.",
         "", "## Results", "",
         "| Arm | Resolved | Scored | Eligible |", "| --- | ---: | ---: | ---: |",
         *[f"| {arm} | {wins} | {scored} | {len(manifest['tasks']) - len(REVIEW_TASKS)} |"
@@ -398,7 +395,7 @@ def checkpoint(out, attempt, row, manifest, **fields):
 
 
 def source_hashes():
-    names = ("run.py", "codex_continue.py", "task_terminal.py")
+    names = ("run.py", "codex_continue.py", "task_terminal.py", "provenance.py", "campaign.py", "review.py")
     return {name: digest(ROOT / name) for name in names if (ROOT / name).is_file()}
 
 
@@ -480,8 +477,8 @@ def image_for(task_dir, task, config, attempt, cycle=False):
     if cycle:
         guard_cycle_image(tag)
     image_id = override or local_image_id(tag)
-    if not image_id and config.get("image_source") == "upstream-prebuilt":
-        source = tomllib.loads((task_dir / "task.toml").read_text())["environment"]["docker_image"]
+    source = tomllib.loads((task_dir / "task.toml").read_text())["environment"].get("docker_image")
+    if not image_id and config.get("image_source") == "upstream-prebuilt" and source:
         if logged(["docker", "pull", "--platform", config["platform"], source], attempt / "image-pull.log"):
             raise Blocked("Upstream task image pull failed. See image-pull.log.")
         docker("tag", source, tag)
@@ -570,7 +567,8 @@ def agent_command(attempt, config, task, harness, seed, prompt, delegate):
 
 def task_network(task_dir):
     settings = tomllib.loads((task_dir / "task.toml").read_text())
-    return "bridge" if settings["environment"].get("allow_internet", False) else "none"
+    # The pinned tasks use Harbor's legacy schema: omitted means internet allowed.
+    return "bridge" if settings["environment"].get("allow_internet", True) else "none"
 
 
 @contextmanager
@@ -605,6 +603,14 @@ def freeze_container_patch(container, repo, base, attempt):
     with patch.open("wb") as stream:
         subprocess.run(["docker", "exec", "--workdir", repo, container,
                         "bash", "-c", command, "freeze", base], stdout=stream, check=True)
+    tree = docker("exec", "--workdir", repo, container, "bash", "-c",
+                  "GIT_INDEX_FILE=/tmp/cs224v-candidate.index git write-tree")
+    with (attempt / "candidate-source.tar.gz").open("wb") as stream:
+        subprocess.run(["docker", "exec", "--workdir", repo, container,
+                        "git", "archive", "--format=tar.gz", tree], stdout=stream, check=True)
+    save(attempt / "candidate-tree.json", {"git_tree": tree, "base_commit": base,
+         "patch_sha256": digest(patch), "source_sha256": digest(attempt / "candidate-source.tar.gz"),
+         "contents": "Tracked and newly added nonignored project files; dependencies and Git history excluded."})
     return patch
 
 
@@ -778,6 +784,7 @@ def trial(out, manifest, config, task, arm, attempt, row, cycle=False):
     if task.startswith("rf_"):
         row["rubric"] = {key: value for key, value in config.items() if key.startswith("rubric_")}
     checkpoint(out, attempt, row, manifest, image_id=image, upstream_base=base, repository_path=repo)
+    row["registry_digests"] = json.loads(docker("image", "inspect", "--format", "{{json .RepoDigests}}", image))
     prompt = task_dir.joinpath("instruction.md").read_text()
     checkpoint(out, attempt, row, manifest, prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest())
     if config.get("environment_mode") == "linux-terminal":
@@ -789,7 +796,13 @@ def trial(out, manifest, config, task, arm, attempt, row, cycle=False):
                 "The native workspace is only for context data under data_structures/; "
                 "project files written there are not evaluated. Hidden grading tests are unavailable.\n")
             row["actor_prompt_sha256"] = hashlib.sha256(actor_prompt.encode()).hexdigest()
-            run, details = run_agent(attempt, config, task, harness, seed, actor_prompt)
+            try:
+                run, details = run_agent(attempt, config, task, harness, seed, actor_prompt)
+            finally:
+                # Save partial work too, before the coding container is removed.
+                patch = freeze_container_patch(container, repo, base, attempt)
+                checkpoint(out, attempt, row, manifest,
+                           candidate_artifacts=json.loads((attempt / "candidate-tree.json").read_text()))
             if not record_agent(out, manifest, attempt, row, run, details):
                 return
             if not (attempt / "terminal.jsonl").is_file():
@@ -798,7 +811,6 @@ def trial(out, manifest, config, task, arm, attempt, row, cycle=False):
                           if p.name not in {"trace", "data_structures"}]
             if unexpected:
                 raise Blocked("Agent wrote project files outside Linux; candidate is not comparable.")
-            patch = freeze_container_patch(container, repo, base, attempt)
     else:
         seed = prepare_seed(image, repo, base, config["platform"], attempt)
         run, details = run_agent(attempt, config, task, harness, seed, prompt)
@@ -836,6 +848,15 @@ def resume_grading(out, manifest, config, task, parent):
             continue
         if digest(patch) != row["patch_sha256"]:
             raise Blocked("Frozen candidate hash changed. Verify the patch before grading.")
+        if subprocess.run(["docker", "image", "inspect", row["image_id"]],
+                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+            for ref in row.get("registry_digests", []):
+                docker("pull", "--platform", config["platform"], ref)
+                if docker("image", "inspect", "--format", "{{.Id}}", ref) == row["image_id"]:
+                    docker("tag", ref, task_image_tag(task))
+                    break
+            else:
+                raise Blocked("Saved verifier image is unavailable; restore its recorded image ID before grading.")
         checkpoint(out, path.parent, row, manifest, status="grading", grading_resumed=now())
         try:
             reward, code = verify_candidate(task, SINGLE_TURN / task, row["image_id"], row["repository_path"],
@@ -1026,7 +1047,9 @@ def main():
         if args.command == "validate":
             if not args.task or len(args.task) != 1 or not args.known_good_patch:
                 parser.error("validate requires one --task and --known-good-patch")
-            return validate_verifier(out, config, manifest, tasks[0], args.known_good_patch.resolve(), args.cycle_images)
+            with (ROOT / ".image-cycle.lock").open("w") as cycle_lock:
+                fcntl.flock(cycle_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                return validate_verifier(out, config, manifest, tasks[0], args.known_good_patch.resolve(), args.cycle_images)
         if config.get("require_verifier_validation"):
             path = out / "verifier-validation.json"
             validation = json.loads(path.read_text()) if path.is_file() else {}
@@ -1085,6 +1108,8 @@ def run_trials(args, out, config, manifest, tasks, arms):
                    "started": now(), "artifact_path": str(attempt.relative_to(out)),
                    "cycle_images": cycle,
                    "runner_source_sha256": source_hashes()}
+            row.update(machine_id=machine_id(), campaign_owner=os.environ.get("SWE_CAMPAIGN_OWNER"),
+                       campaign_plan_sha256=os.environ.get("SWE_CAMPAIGN_PLAN_SHA256"))
             checkpoint(out, attempt, row, manifest, status="running")
             attempts += 1
             print(f"{task} {arm} attempt {attempt.name}", flush=True)
