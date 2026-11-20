@@ -28,6 +28,18 @@ caffeinate -i python3 run_batch.py --owner victor-c --output output-wednesday-vi
 
 ## Victor P.
 
+Get read access to the original ADAPT release repository from its owner. Set `ADAPT_RELEASE_REPO` to the owner/repository name from the invitation. On an Apple silicon Mac, use your own GitHub and Codex sign-ins to fetch and verify the build pinned for this campaign:
+
+```sh
+adapt_release_dir="$(mktemp -d)"
+gh release download 2026.11.09-166c433f --repo "$ADAPT_RELEASE_REPO" \
+  --pattern 'ours-166c433f-darwin-arm64.tar.gz*' --dir "$adapt_release_dir"
+(cd "$adapt_release_dir" && shasum -a 256 -c ours-166c433f-darwin-arm64.tar.gz.sha256)
+tar -xzf "$adapt_release_dir/ours-166c433f-darwin-arm64.tar.gz" -C "$adapt_release_dir"
+export SWE_ADAPT_RELEASE="$adapt_release_dir/ours-166c433f-darwin-arm64"
+"$SWE_ADAPT_RELEASE/codex/bin/codex" login status
+```
+
 Run the same Vitest smoke pair in a separate calibration output. It checks the second machine and stays outside the primary 75-task comparison; the primary Vitest task belongs to Victor C.
 
 ```sh
