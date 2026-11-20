@@ -1,0 +1,22 @@
+{
+  "assigned_tasks": 38,
+  "attempt_states": {
+    "scored": 2
+  },
+  "binding": {
+    "architecture": "arm64",
+    "calibration": false,
+    "machine_id": "991f9a3ae4a310d80d104187698ad4c602e211aac4bfa92428c0b1a1271f0436",
+    "owner": "victor-c",
+    "plan_sha256": "2c44c020709c2707283136b0a08e3184728cb60f008865c60cb585ead382f8e8",
+    "system": "Darwin"
+  },
+  "completed_pairs": 1,
+  "completed_tasks": [
+    "deepswe_vitest-duration-sharding"
+  ],
+  "wins": {
+    "adapt": 0,
+    "stock": 0
+  }
+}

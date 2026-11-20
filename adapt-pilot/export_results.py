@@ -52,9 +52,9 @@ def export(output, destination, include_handoffs=()):
             row["published_patch"] = str(target.relative_to(destination))
         grading = sorted(artifact.glob("grading*/verifier.log"))
         if grading:
-            lines = grading[-1].read_text(errors="replace").splitlines()
+            lines = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", grading[-1].read_text(errors="replace")).splitlines()
             row["verifier_summary"] = [line for line in lines if re.search(
-                r"^FAILED |^=+ .* (?:passed|failed|error)|\[verifier\] (?:Baseline|New tests) exit code", line)][-12:]
+                r"^FAILED |^\s*FAIL\s|^\s*Tests\s+\d|^=+ .* (?:passed|failed|error)|\[verifier\] (?:Baseline|New tests) exit code", line)][-12:]
     latest = {(r["task"], r["arm"]): r for r in attempts}
     pairs = []
     for task in sorted({r["task"] for r in attempts}):
@@ -64,6 +64,8 @@ def export(output, destination, include_handoffs=()):
         checks = {field: field in stock and stock[field] == adapt.get(field) for field in fields}
         checks["both_scored"] = stock.get("status") == adapt.get("status") == "scored"
         checks["effective_settings"] = all(r.get("effective_settings", {}).get("passed") for r in (stock, adapt))
+        if stock.get("machine_id") or adapt.get("machine_id"):
+            checks["same_machine"] = bool(stock.get("machine_id")) and stock["machine_id"] == adapt.get("machine_id")
         pairs.append({"task": task, "checks": checks, "passed": all(checks.values())})
     bundle = {"format": "cs224v-tuesday-handoff-v1", "exported": run.now(),
               "exporter_sha256": run.digest(Path(__file__)),
@@ -83,6 +85,10 @@ def export(output, destination, include_handoffs=()):
                                       if (output / "harness-regressions.json").exists() else None),
               "analysis_notes": (json.loads((output / "analysis-notes.json").read_text())
                                  if (output / "analysis-notes.json").exists() else []),
+              "campaign": (json.loads((output / "campaign.json").read_text())
+                           if (output / "campaign.json").exists() else None),
+              "readiness_checks": {p.stem: json.loads(p.read_text()) for p in sorted((output / "readiness").glob("*.json"))},
+              "manual_review": [json.loads(p.read_text()) for p in sorted((output / "manual-review").glob("*/review-summary.json"))],
               "architecture": {
                   "controller": "Pinned macOS ADAPT binary, both arms",
                   "coding": "Separate Linux containers from the same upstream image ID",
@@ -97,13 +103,19 @@ def export(output, destination, include_handoffs=()):
                       "Compaction defaults are derived from the exact Codex source commit named in the release license; actual context pressure still requires trace review.",
                       "The smoke task was selected using a previously passing patch and is not an unbiased accuracy estimate.",
                       "Old macOS coding pilot results are a separate experiment.",
+                      "SWE Atlas uses GPT-6 Luna medium as a substitute rubric judge for the upstream Claude default; both arms use the same judge.",
                   ],
               }}
+    plan_path = run.ROOT / "assignments/wednesday.json"
+    if bundle["campaign"] and plan_path.exists():
+        assignment_plan = json.loads(plan_path.read_text())
+        if assignment_plan["plan_sha256"] == bundle["campaign"]["plan_sha256"]:
+            bundle["assignment_plan"] = assignment_plan
     run.save(destination / "handoff.json", bundle)
     run.save(destination / "manifest.json", manifest)
     run.save(destination / "validation.json", validations)
     run.save(destination / "attempts.json", attempts)
-    lines = ["# Tuesday harness validation and smoke test", "",
+    lines = ["# Wednesday paired campaign" if bundle["campaign"] else "# Tuesday harness validation and smoke test", "",
              "This is the shared single-turn SWE-Interact setup for stock Codex versus ADAPT.",
              "Both arms receive the full task specification plus the same Linux execution instructions.",
              "The fixed task-order seed is 224. Model temperature and sampling seed are not exposed.",
@@ -121,6 +133,14 @@ def export(output, destination, include_handoffs=()):
         lines.append(f"| {row['arm']} | {row['status']} | {row.get('reward', 'unscored')} | "
                      f"{row.get('agent_seconds', '')} | {row.get('linux_terminal_calls', 0)} | "
                      f"{row.get('effective_settings', {}).get('passed', False)} |")
+    if bundle["campaign"]:
+        lines += ["", f"Owner: `{bundle['campaign']['owner']}`. "
+                  f"Calibration only: `{bundle['campaign']['calibration']}`. "
+                  f"Plan: `{bundle['campaign']['plan_sha256']}`."]
+    if bundle["readiness_checks"]:
+        lines += ["", "## Readiness checks", "",
+                  "| Check | Passed |", "| --- | --- |",
+                  *[f"| {name} | {value.get('passed', False)} |" for name, value in bundle["readiness_checks"].items()]]
     lines += ["", *[f"Matched setup audit: `{p['task']}` — **{p['passed']}**." for p in pairs]]
     if bundle["prior_experiments"]:
         lines += ["", "## Earlier smoke attempt", "",

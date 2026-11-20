@@ -24,6 +24,8 @@ The code and result records allow inspection of the local work. Raw execution/mo
 
 ## Shared stock/ADAPT harness
 
+Use the [Wednesday run guide](adapt-pilot/WEDNESDAY.md) for the fixed 38/37 task split and machine-bound paired runs. See [the preparation handoff](adapt-pilot/results/wednesday-prep-2026-11-20/HANDOFF.md) for smoke results and saved review evidence.
+
 Use [adapt-pilot](adapt-pilot/README.md) for the pinned single-turn comparison. Both coding arms now work through the same Linux task terminal and grade frozen patches with the supplied tests. See [the Tuesday handoff](adapt-pilot/results/tuesday-2026-11-20/HANDOFF.md) for verifier controls, the paired smoke test, settings audits and the interrupted Kombu attempt. These runs are separate from the 41/75 archive above and the earlier macOS coding pilot.
 
 ## Separate context-loss pilot

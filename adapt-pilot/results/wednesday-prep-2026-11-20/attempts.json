@@ -1,0 +1,221 @@
+[
+  {
+    "actor_prompt_sha256": "6eb5f8d94dd32d2a22187912843529f18949d9996d18b07c4b51b1dc05857ec9",
+    "agent_exit": "completed",
+    "agent_seconds": 267.996,
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 700160,
+      "completed_turns": 1,
+      "input_tokens": 781043,
+      "output_tokens": 11736,
+      "reasoning_output_tokens": 1684,
+      "total_tokens": 792779
+    },
+    "arm": "adapt",
+    "artifact_path": "attempts/deepswe_vitest-duration-sharding/adapt/0001",
+    "attempt": "0001",
+    "campaign_owner": "victor-c",
+    "campaign_plan_sha256": "2c44c020709c2707283136b0a08e3184728cb60f008865c60cb585ead382f8e8",
+    "candidate_artifacts": {
+      "base_commit": "647e6ade3b99523e3a0387a65fccfe918c331236",
+      "contents": "Tracked and newly added nonignored project files; dependencies and Git history excluded.",
+      "git_tree": "9e901c3941ea874cfff968c8247c8f82ed594955",
+      "patch_sha256": "71ea7aa8c6b9c093a9da93b8018408a04e2178fec3d8231d3c8fbf12ca6e5ab9",
+      "source_sha256": "ffc1c0409ac090611e09d593f315a6a3d835a6f36aca2d9b894515e386bbe8ca"
+    },
+    "compaction_source_audit": {
+      "codex_commit": "687a119f0fcaace47e1f1abcc77cec6c813fd6da",
+      "default_auto_compact_token_limit": 43200,
+      "source": "https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535",
+      "usable_input_context": 45600
+    },
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "effective_settings": {
+      "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+      "catalog_share": 0.1,
+      "checks": {
+        "budget": true,
+        "catalog_share": true,
+        "compaction_default": true,
+        "context": true,
+        "effort": true,
+        "model": true,
+        "release": true,
+        "tool_cap": true,
+        "version": true
+      },
+      "config_sha256": "97294f5cbf94cd51ddb158b6640a9b2995cd50e33f0af95fa7b7ef8bae1c1d3c",
+      "context_window": 48000,
+      "mcp_servers": [
+        "task_terminal"
+      ],
+      "model_catalog_sha256": "0874a59f0bca5de9d343ddd140dabe22ba7b94f98d386f2f76136df3ff14d647",
+      "passed": true,
+      "tool_output_limit": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    },
+    "family": "DeepSWE",
+    "image_id": "sha256:7ea5066862dcde784cb49ba556e5989a3b48bbc82c99a492987e71a664d18d8b",
+    "linux_terminal_calls": 25,
+    "linux_terminal_seconds": 7.792,
+    "machine_id": "991f9a3ae4a310d80d104187698ad4c602e211aac4bfa92428c0b1a1271f0436",
+    "patch_sha256": "71ea7aa8c6b9c093a9da93b8018408a04e2178fec3d8231d3c8fbf12ca6e5ab9",
+    "prompt_sha256": "123bfd91416a7bc7deca77160a284458f89f8fa8156ca656a0da72281a30ab0e",
+    "published_patch": "patches/deepswe_vitest-duration-sharding/adapt-0001.patch",
+    "registry_digests": [
+      "public.ecr.aws/d3j8x8q7/swe-bench-202605@sha256:81a852ae3301cbe35183f00976a6c6a53ba7ebc1282fe0347fcc6a26e12ffdf2"
+    ],
+    "repository_path": "/app",
+    "reward": 0.0,
+    "run_path": "attempts/deepswe_vitest-duration-sharding/adapt/0001/runs/deepswe_vitest-duration-sharding-20261120T164030-c430",
+    "runner_source_sha256": {
+      "campaign.py": "76552a092d7829dee47a8de2b62ec2ce4800c904a99d65b89879c8e90de5a09d",
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "provenance.py": "14f0f2853a18bc055bc9d85d34b45249aa4241237b15df574d6fde115ef8c3c8",
+      "review.py": "b4b716ad7dad1848b6ad5132f1465fb414022511c11709aacfce4ab9c7986186",
+      "run.py": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2",
+      "task_terminal.py": "c9b89ef24a3e7465679f1239e0580f10f46a4eeb2ed6d2f8f515cfe5138a0cbf"
+    },
+    "started": "2026-11-20T16:40:30+00:00",
+    "status": "scored",
+    "task": "deepswe_vitest-duration-sharding",
+    "trace": {
+      "calls": 63,
+      "steps": 34,
+      "user_messages": 1
+    },
+    "updated": "2026-11-20T16:48:01+00:00",
+    "upstream_base": "647e6ade3b99523e3a0387a65fccfe918c331236",
+    "verifier_exit_code": 0,
+    "verifier_summary": [
+      "      Tests  8 passed (8)",
+      "[verifier] Baseline exit code: 0",
+      " FAIL  test/shard-balance.test.ts > recordFileDurations > recorded duration is an integer and recordedAt is a recent timestamp",
+      "      Tests  1 failed | 70 passed (71)",
+      "[verifier] New tests exit code: 1"
+    ]
+  },
+  {
+    "actor_prompt_sha256": "6eb5f8d94dd32d2a22187912843529f18949d9996d18b07c4b51b1dc05857ec9",
+    "agent_exit": "completed",
+    "agent_seconds": 47.8,
+    "agent_settings": {
+      "context_window": 48000,
+      "lane": "subscription",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "medium"
+    },
+    "agent_usage": {
+      "cached_input_tokens": 261120,
+      "completed_turns": 1,
+      "input_tokens": 297280,
+      "output_tokens": 1571,
+      "reasoning_output_tokens": 132,
+      "total_tokens": 298851
+    },
+    "arm": "stock",
+    "artifact_path": "attempts/deepswe_vitest-duration-sharding/stock/0001",
+    "attempt": "0001",
+    "campaign_owner": "victor-c",
+    "campaign_plan_sha256": "2c44c020709c2707283136b0a08e3184728cb60f008865c60cb585ead382f8e8",
+    "candidate_artifacts": {
+      "base_commit": "647e6ade3b99523e3a0387a65fccfe918c331236",
+      "contents": "Tracked and newly added nonignored project files; dependencies and Git history excluded.",
+      "git_tree": "82df44ff37a84f98f52ab9efb3a15596829588a8",
+      "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "9214b0c1d5867ffd6d317d50462e35fe50d9cab9764907c3244c85d6cbec0785"
+    },
+    "compaction_source_audit": {
+      "codex_commit": "687a119f0fcaace47e1f1abcc77cec6c813fd6da",
+      "default_auto_compact_token_limit": 43200,
+      "source": "https://github.com/openai/codex/blob/687a119f0fcaace47e1f1abcc77cec6c813fd6da/codex-rs/protocol/src/openai_models.rs#L518-L535",
+      "usable_input_context": 45600
+    },
+    "continuation_limit_reached": false,
+    "continuations": 0,
+    "cycle_images": true,
+    "effective_settings": {
+      "auto_compaction": "Pinned Codex default; no threshold override. Exact trigger is not exposed by the bundle.",
+      "catalog_share": 0.1,
+      "checks": {
+        "budget": true,
+        "catalog_share": true,
+        "compaction_default": true,
+        "context": true,
+        "effort": true,
+        "model": true,
+        "release": true,
+        "tool_cap": true,
+        "version": true
+      },
+      "config_sha256": "7e858b6a77a2eaee0c32b9c219cc70f424c49e33a4fd9d5911682326df6d355f",
+      "context_window": 48000,
+      "mcp_servers": [
+        "task_terminal"
+      ],
+      "model_catalog_sha256": "f48a58c26f49e7535798db2eb54c45b66ae1e2fe6555d50a0aea1739e81f26d5",
+      "passed": true,
+      "tool_output_limit": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    },
+    "family": "DeepSWE",
+    "image_id": "sha256:7ea5066862dcde784cb49ba556e5989a3b48bbc82c99a492987e71a664d18d8b",
+    "linux_terminal_calls": 14,
+    "linux_terminal_seconds": 4.52,
+    "machine_id": "991f9a3ae4a310d80d104187698ad4c602e211aac4bfa92428c0b1a1271f0436",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompt_sha256": "123bfd91416a7bc7deca77160a284458f89f8fa8156ca656a0da72281a30ab0e",
+    "published_patch": "patches/deepswe_vitest-duration-sharding/stock-0001.patch",
+    "registry_digests": [
+      "public.ecr.aws/d3j8x8q7/swe-bench-202605@sha256:81a852ae3301cbe35183f00976a6c6a53ba7ebc1282fe0347fcc6a26e12ffdf2"
+    ],
+    "repository_path": "/app",
+    "reward": 0.0,
+    "run_path": "attempts/deepswe_vitest-duration-sharding/stock/0001/runs/deepswe_vitest-duration-sharding-20261120T163623-6bb5",
+    "runner_source_sha256": {
+      "campaign.py": "76552a092d7829dee47a8de2b62ec2ce4800c904a99d65b89879c8e90de5a09d",
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "provenance.py": "14f0f2853a18bc055bc9d85d34b45249aa4241237b15df574d6fde115ef8c3c8",
+      "review.py": "b4b716ad7dad1848b6ad5132f1465fb414022511c11709aacfce4ab9c7986186",
+      "run.py": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2",
+      "task_terminal.py": "c9b89ef24a3e7465679f1239e0580f10f46a4eeb2ed6d2f8f515cfe5138a0cbf"
+    },
+    "started": "2026-11-20T16:36:22+00:00",
+    "status": "scored",
+    "task": "deepswe_vitest-duration-sharding",
+    "trace": {
+      "calls": 33,
+      "steps": 18,
+      "user_messages": 1
+    },
+    "updated": "2026-11-20T16:40:30+00:00",
+    "upstream_base": "647e6ade3b99523e3a0387a65fccfe918c331236",
+    "verifier_exit_code": 0,
+    "verifier_summary": [
+      " FAIL  test/shard-balance.test.ts > round-robin fallback > round-robin with no history and equal-split fallback",
+      " FAIL  test/shard-balance.test.ts > isolateSlowThreshold: overflow > more isolated files than shards puts extras in last shard",
+      " FAIL  test/shard-balance.test.ts > recordFileDurations: merge and parent dirs > creates parent directories for nested durationHistoryPath",
+      " FAIL  test/shard-balance.test.ts > recordFileDurations: merge and parent dirs > merges with existing history by latest observation",
+      " FAIL  test/shard-balance.test.ts > durationHistoryTTL: recordedAt zero never expires > entries with recordedAt=0 survive TTL filtering",
+      " FAIL  test/shard-balance.test.ts > durationHistoryTTL: missing entry gets duration zero > file absent from history gets duration 0 for LPT ordering",
+      " FAIL  test/shard-balance.test.ts > durationHistoryMaxRuns: retains most recent entries > capping retains N entries with the highest recordedAt values",
+      " FAIL  test/shard-balance.test.ts > durationSmoothing: average rounding > average of odd-fractional observations rounds correctly",
+      " FAIL  test/shard-balance.test.ts > durationSmoothing: median even-count rounding > median of 4 observations uses floor of middle pair, distinguishing from average",
+      " FAIL  test/shard-balance.test.ts > config resolution > all 12 new sequence fields are serialized to worker config",
+      "      Tests  56 failed | 15 passed (71)",
+      "[verifier] New tests exit code: 1"
+    ]
+  }
+]

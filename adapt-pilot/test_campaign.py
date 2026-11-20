@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 import campaign
 import review
+import review_evidence
 import run
 
 
@@ -93,12 +94,22 @@ class CampaignChecks(unittest.TestCase):
             with patch("run.SINGLE_TURN", output / "dataset"), redirect_stdout(io.StringIO()):
                 summary = review.build(output, "task", target)
                 (target / "NOTES.md").write_text("My existing manual notes")
-                review.build(output, "task", target)
+                (target / "stock/trace/result.txt").chmod(0o444)
+                review_evidence.enrich(output, "task", target)
             self.assertEqual(summary["arms"]["stock"]["compaction_markers"], 1)
             self.assertEqual((target / "stock/trace/result.txt").read_text(), "tool evidence")
             self.assertEqual((target / "NOTES.md").read_text(), "My existing manual notes")
             self.assertFalse(list(target.rglob("auth.json")))
             self.assertFalse(list(target.rglob("codex_home")))
+
+    def test_request_views_exclude_http_credentials(self):
+        record = {"request_headers": {"Authorization": "sensitive-request-header"},
+                  "response_headers": {"Set-Cookie": "sensitive-response-header"},
+                  "request": {"input": "the recorded model context"}, "kind": "main"}
+        view = review_evidence.request_view(record)
+        self.assertEqual(view["request"], record["request"])
+        self.assertNotIn("sensitive-request-header", json.dumps(view))
+        self.assertNotIn("sensitive-response-header", json.dumps(view))
 
 
 if __name__ == "__main__":
