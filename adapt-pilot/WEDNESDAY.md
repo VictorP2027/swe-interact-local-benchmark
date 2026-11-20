@@ -14,7 +14,7 @@ The first shared task is Vitest duration sharding, which is also the planned man
 cd adapt-pilot
 python3 campaign.py prepare --owner victor-c --output output-wednesday-victor-c
 python3 campaign.py judge-smoke --owner victor-c --output output-wednesday-victor-c
-python3 campaign.py run --owner victor-c --output output-wednesday-victor-c \
+caffeinate -i python3 run_batch.py --owner victor-c --output output-wednesday-victor-c \
   --task deepswe_vitest-duration-sharding
 python3 review_evidence.py --output output-wednesday-victor-c \
   --task deepswe_vitest-duration-sharding
@@ -23,7 +23,7 @@ python3 review_evidence.py --output output-wednesday-victor-c \
 Resume all remaining assigned pairs with:
 
 ```sh
-python3 campaign.py run --owner victor-c --output output-wednesday-victor-c
+caffeinate -i python3 run_batch.py --owner victor-c --output output-wednesday-victor-c
 ```
 
 ## Victor P.
@@ -34,7 +34,7 @@ Run the same Vitest smoke pair in a separate calibration output. It checks the s
 cd adapt-pilot
 python3 campaign.py prepare --owner victor-p --calibration --output output-wednesday-victor-p-smoke
 python3 campaign.py judge-smoke --owner victor-p --calibration --output output-wednesday-victor-p-smoke
-python3 campaign.py run --owner victor-p --calibration --output output-wednesday-victor-p-smoke
+caffeinate -i python3 run_batch.py --owner victor-p --calibration --output output-wednesday-victor-p-smoke
 python3 review_evidence.py --output output-wednesday-victor-p-smoke
 ```
 
@@ -42,16 +42,18 @@ Prepare a separate primary output, then run the 37 assigned pairs:
 
 ```sh
 python3 campaign.py prepare --owner victor-p --output output-wednesday-victor-p
-python3 campaign.py run --owner victor-p --output output-wednesday-victor-p
+caffeinate -i python3 run_batch.py --owner victor-p --output output-wednesday-victor-p
 ```
 
 The wrapper releases a control-only image when it is not needed for the selected primary task. SWE-bench Pro builds the upstream Dockerfile wrapper around its supplied base image. DeepSWE and SWE Atlas pull the task's prebuilt image. Missing `allow_internet` follows Harbor's legacy default of true; explicit false disables it. See the [Harbor task reference](https://github.com/harbor-framework/skills/blob/main/skills/harbor-task-creator/references/task-toml-reference.md).
 
 ## Checkpoints and handoff
 
-Keep the same output directory when resuming. The wrapper records an opaque machine ID and rejects a different machine, owner, plan or calibration mode. It checks task ownership and always invokes both arms. It uses `caffeinate -i` during Mac runs to prevent idle sleep. Run one campaign at a time per machine.
+Keep the same output directory when resuming. The wrapper records an opaque machine ID and rejects a different machine, owner, plan or calibration mode. It checks ownership and runs both arms on that machine. Launch it with `caffeinate -i` to prevent idle sleep. Run one campaign at a time per machine.
 
-The runner saves each result, frozen patch and tracked source archive before removing its coding container. Partial work is saved on interruption or quota exhaustion and stays unscored. Completed actors can resume grading from their frozen patch; completed scores are skipped. Exit 75 means account quota stopped the run. Resume the same command after quota is available. An unscored setup or grading failure stops the batch for inspection; completed scores stay saved. The controller's account quota is separate from API billing.
+The runner saves each result, frozen patch and tracked source archive before removing its coding container. Partial work stays unscored. The batch skips completed scores and can resume grading from a frozen patch. Exit 75 means account quota stopped the run. Resume the same command after quota is available. The batch records unresolved cases in `batch-status.json` and continues to the remaining tasks.
+
+Both coding arms use the requested task CPU count up to Docker's available capacity. Each attempt records the effective limit. When a grading patch collides with preexisting image files, the adapter verifies the saved candidate tree and rebuilds its diff against the full starting image tree. FastAPI uses its upstream test script's warning policy when the old override names a class absent from the image.
 
 Keep the current image until both arms finish. Upstream prebuilt image digests are recorded so a removed image can be restored for grading. Dockerfile-built images stay cached across an unfinished pair. The one-hour budget covers coding; builds and the upstream verifier have separate time limits.
 

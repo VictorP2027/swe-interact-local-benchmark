@@ -40,7 +40,9 @@ def export(output, destination, include_handoffs=()):
                     - datetime.fromisoformat(details["started"].replace("Z", "+00:00"))).total_seconds(), 3)
         terminal = output / row["artifact_path"] / "terminal.jsonl"
         if terminal.exists():
-            calls = [json.loads(line) for line in terminal.read_text().splitlines()]
+            # An active actor may be appending the final line during a snapshot.
+            calls = [json.loads(line) for line in terminal.read_text().splitlines(keepends=True)
+                     if line.endswith("\n")]
             row["linux_terminal_calls"] = len(calls)
             row["linux_terminal_seconds"] = round(sum(call["elapsed_s"] for call in calls), 3)
         artifact = output / row["artifact_path"]
@@ -68,6 +70,8 @@ def export(output, destination, include_handoffs=()):
         checks["effective_settings"] = all(r.get("effective_settings", {}).get("passed") for r in (stock, adapt))
         if stock.get("machine_id") or adapt.get("machine_id"):
             checks["same_machine"] = bool(stock.get("machine_id")) and stock["machine_id"] == adapt.get("machine_id")
+        if stock.get("actor_cpus") and adapt.get("actor_cpus"):
+            checks["effective_actor_cpus"] = stock["actor_cpus"]["effective"] == adapt["actor_cpus"]["effective"]
         pairs.append({"task": task, "checks": checks, "passed": all(checks.values())})
     bundle = {"format": "cs224v-tuesday-handoff-v1", "exported": run.now(),
               "exporter_sha256": run.digest(Path(__file__)),
@@ -81,6 +85,8 @@ def export(output, destination, include_handoffs=()):
                                           if (output / "linux-environment-audit.json").exists() else None),
               "run_events": (json.loads((output / "run-events.json").read_text())
                              if (output / "run-events.json").exists() else []),
+              "evaluation_protocol": (json.loads((output / "evaluation-protocol.json").read_text())
+                                      if (output / "evaluation-protocol.json").exists() else None),
               "timeout_cleanup_check": (json.loads((output / "timeout-cleanup-check.json").read_text())
                                         if (output / "timeout-cleanup-check.json").exists() else None),
               "harness_regressions": (json.loads((output / "harness-regressions.json").read_text())
@@ -129,16 +135,21 @@ def export(output, destination, include_handoffs=()):
         for name, control in validation["controls"].items():
             lines.append(f"| {validation['task']} | {name} | {control['expected']:g} | {control['reward']:g} | {control['passed']} |")
     lines += ["", "## Saved runs", "",
-              "| Arm | Status | Reward | Patch bytes | Agent seconds | Linux calls | Effective settings |",
-              "| --- | --- | ---: | ---: | ---: | ---: | --- |"]
+              "| Task | Arm | Status | Reward | Patch bytes | Agent seconds | Linux calls | Effective settings |",
+              "| --- | --- | --- | ---: | ---: | ---: | ---: | --- |"]
     for row in attempts:
-        lines.append(f"| {row['arm']} | {row['status']} | {row.get('reward', 'unscored')} | {row.get('patch_bytes', '')} | "
+        lines.append(f"| {row['task']} | {row['arm']} | {row['status']} | {row.get('reward', 'unscored')} | {row.get('patch_bytes', '')} | "
                      f"{row.get('agent_seconds', '')} | {row.get('linux_terminal_calls', 0)} | "
                      f"{row.get('effective_settings', {}).get('passed', False)} |")
     if bundle["campaign"]:
         lines += ["", f"Owner: `{bundle['campaign']['owner']}`. "
                   f"Calibration only: `{bundle['campaign']['calibration']}`. "
                   f"Plan: `{bundle['campaign']['plan_sha256']}`."]
+    if bundle["evaluation_protocol"]:
+        lines += ["", "## Evaluation adjustments", "",
+                  "The FastAPI verifier used its upstream warning policy after the legacy warning class was found missing.",
+                  "The recovered grading patches preserve the original candidate tree and omit files already in the image.",
+                  "When a task requests more CPUs than Docker has, both coding arms use the host capacity. Each affected attempt records its effective limit."]
     if bundle["readiness_checks"]:
         lines += ["", "## Readiness checks", "",
                   "| Check | Passed |", "| --- | --- |",
