@@ -63,6 +63,26 @@ def main():
     supplemental = campaign.read_plan(PLAN_PATH)
     campaign.bind_output(OUTPUT, supplemental, owner)
 
+    previous_extra = [task for task in extra if task != "deepswe_pwntools-tube-multiplexing"]
+    previous_plan = {key: value for key, value in original.items() if key != "plan_sha256"}
+    previous_plan["assignments"] = {
+        owner: [*original["assignments"][owner], *previous_extra],
+        other: [task for task in original["assignments"][other] if task not in previous_extra],
+    }
+    previous_plan["policy"] = "DeepSWE cross-run. The original primary assignments and results are preserved."
+    previous_plan_hash = campaign.checksum(previous_plan)
+    for result_path in (OUTPUT / "attempts").glob("*/*/*/result.json"):
+        row = json.loads(result_path.read_text())
+        if row.get("task") not in previous_extra or row.get("campaign_owner") != owner:
+            continue
+        if row.get("campaign_plan_sha256") == previous_plan_hash:
+            row["previous_campaign_plan_sha256"] = previous_plan_hash
+            row["campaign_plan_sha256"] = supplemental["plan_sha256"]
+            row["campaign_plan_migration"] = "Added the remaining DeepSWE task to the local assignment plan."
+            run.save(result_path, row)
+        elif row.get("campaign_plan_sha256") != supplemental["plan_sha256"]:
+            raise ValueError(f"Unexpected saved plan hash for {row['task']} {row['arm']}")
+
     def checkpoint(state, **details):
         rows = {}
         for directory, selected in [(PRIMARY, assigned), (OUTPUT, extra)]:
