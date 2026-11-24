@@ -22,6 +22,16 @@ Set `SWE_INTERACT_DATASET` if the dataset is elsewhere. Check the existing login
 
 Follow the owner-specific commands in [WEDNESDAY.md](WEDNESDAY.md). Use `campaign.py` for the split run. It checks task ownership, binds the output to one machine, invokes both arms, prevents idle sleep on Mac and preserves completed results on resume. Keep the pinned checkout and plan fixed throughout the batch.
 
+## Full DeepSWE follow-up
+
+Run all 25 DeepSWE tasks on Victor C.'s machine with both stock Codex and ADAPT using:
+
+```sh
+caffeinate -i python3 run_deepswe_crossrun.py
+```
+
+This follow-up resumes the existing `output-wednesday-victor-c` results, then runs the DeepSWE tasks assigned to Victor P. in a separate `output-deepswe-victor-c` directory. It keeps a separate local assignment plan and writes a checkpoint after each pair. It requires the existing output's validated verifier and skips completed scores.
+
 ## Execution and saved evidence
 
 The ADAPT controller runs on macOS. Both arms read, edit and test project code through the same `task_terminal` MCP tool in separate Linux containers. Fresh containers from the same image grade their frozen patches. DeepSWE and SWE Atlas use upstream prebuilt images; SWE-bench Pro builds its upstream Dockerfile wrapper. Missing `allow_internet` follows Harbor's default of true.
