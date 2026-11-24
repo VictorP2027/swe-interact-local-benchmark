@@ -23,10 +23,11 @@
   "fresh_stock_only_repeat": {
     "state": "running",
     "updated_utc": "2026-11-24T21:51:57+00:00",
-    "scored": 1,
-    "passed": 0,
+    "scored": 2,
+    "passed": 1,
     "tasks": 25,
-    "pass_rate_scored": 0.0
+    "pass_rate_scored": 0.5,
+    "note": "Preliminary checkpoint only; not pooled with paired results. FastAPI scored 0; Kombu scored 1."
   },
   "configuration": {
     "model": "gpt-6-luna",
@@ -371,5 +372,17 @@
     "ADAPT resolved 1 of 25 tasks (4.0%); its only pass was kcp-go-multiplexed-kcp-streams.",
     "The stock pass rate is a task-completion result, not proof of a context-management failure. Most stock patches were scored 0 by task tests.",
     "The fresh stock-only rerun is separate from the paired campaign and must not be pooled with it; it is still in progress."
-  ]
+  ],
+  "repeat_run_diagnostic": {
+    "task": "kombu-single-active-consumer-priority",
+    "same_prompt_hash": true,
+    "same_agent_settings": true,
+    "same_task_image": true,
+    "paired_stock_reward": 0,
+    "repeat_stock_reward": 1,
+    "paired_run": "All 94 feature tests passed; 4 baseline test_pidbox tests failed because the received message was None.",
+    "repeat_run": "All 1412 baseline tests and all 94 feature tests passed.",
+    "patch_difference": "The repeat patch also reset shared state in memory, filesystem and Pyro transports.",
+    "interpretation": "Different generated implementation and reward under the same recorded task/model/image setup; evidence of solution-path variability, not proof of verifier flakiness."
+  }
 }
