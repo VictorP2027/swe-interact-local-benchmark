@@ -32,6 +32,14 @@ caffeinate -i python3 run_deepswe_crossrun.py
 
 This follow-up resumes the existing `output-wednesday-victor-c` results, then runs the DeepSWE tasks assigned to Victor P. in a separate `output-deepswe-victor-c` directory. It keeps a separate local assignment plan and writes a checkpoint after each pair. It requires the existing output's validated verifier and skips completed scores.
 
+Run a fresh stock-only repeat for all 25 tasks with:
+
+```sh
+caffeinate -i python3 run_deepswe_stock_repeat.py
+```
+
+This repeat uses a separate output directory, preserves task-by-task checkpoints, and writes `stock-repeat-status.json`. It won't import the earlier stock results.
+
 ## Execution and saved evidence
 
 The ADAPT controller runs on macOS. Both arms read, edit and test project code through the same `task_terminal` MCP tool in separate Linux containers. Fresh containers from the same image grade their frozen patches. DeepSWE and SWE Atlas use upstream prebuilt images; SWE-bench Pro builds its upstream Dockerfile wrapper. Missing `allow_internet` follows Harbor's default of true.
