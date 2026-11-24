@@ -77,21 +77,41 @@ def main():
         SWE_CAMPAIGN_OWNER="victor-c",
         SWE_CAMPAIGN_PLAN_SHA256=plan["plan_sha256"],
     )
+    update_summary("running", 0, tasks)
     for task in tasks:
         rows = [row for row in run.records(OUTPUT)
                 if row["task"] == task and row["arm"] == "stock"]
-        if any(row["status"] == "scored" for row in rows):
-            continue
+        if rows:
+            latest = rows[-1]
+            if latest["status"] == "scored":
+                continue
+            if latest["status"] == "blocked":
+                tag = run.task_image_tag(task)
+                image_id = run.local_image_id(tag)
+                if image_id:
+                    run.docker("image", "rm", tag)
+                continue
         command = [
             sys.executable, str(ROOT / "run.py"), "run", "--output", str(OUTPUT),
             "--arm", "stock", "--cycle-images", "--local-rubric", "--task", task,
         ]
         code = subprocess.run(command, env=environment).returncode
+        row = next((row for row in reversed(run.records(OUTPUT))
+                    if row["task"] == task and row["arm"] == "stock"), None)
+        if row and row["status"] != "running":
+            tag = run.task_image_tag(task)
+            image_id = run.local_image_id(tag)
+            if image_id:
+                run.docker("image", "rm", tag)
+        update_summary("running", code, tasks)
         if code in (75, 130):
             update_summary("quota" if code == 75 else "paused", code, tasks)
             return code
     summary = update_summary("finished", 0, tasks)
-    return 0 if summary["scored"] == len(tasks) else 2
+    if summary["scored"] == len(tasks):
+        return 0
+    update_summary("incomplete", summary["exit_code"], tasks)
+    return 2
 
 
 if __name__ == "__main__":
