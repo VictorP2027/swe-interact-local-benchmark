@@ -27,7 +27,7 @@ def copy_validation():
         run.save(destination, json.loads(source.read_text()))
 
 
-def update_summary(code, tasks):
+def update_summary(state, code, tasks):
     rows = [row for row in run.records(OUTPUT) if row["task"] in tasks and row["arm"] == "stock"]
     latest = {}
     for row in rows:
@@ -36,7 +36,7 @@ def update_summary(code, tasks):
             latest[row["task"]] = row
     scored = [row for row in latest.values() if row["status"] == "scored"]
     summary = {
-        "state": "quota" if code == 75 else "finished" if len(scored) == len(tasks) else "incomplete",
+        "state": state,
         "updated": run.now(),
         "tasks": len(tasks),
         "scored": len(scored),
@@ -55,6 +55,7 @@ def update_summary(code, tasks):
     }
     run.save(OUTPUT / "stock-repeat-status.json", summary)
     print(json.dumps(summary, indent=2), flush=True)
+    return summary
 
 
 def main():
@@ -76,22 +77,21 @@ def main():
         SWE_CAMPAIGN_OWNER="victor-c",
         SWE_CAMPAIGN_PLAN_SHA256=plan["plan_sha256"],
     )
-    command = [
-        sys.executable,
-        str(ROOT / "run.py"),
-        "run",
-        "--output",
-        str(OUTPUT),
-        "--arm",
-        "stock",
-        "--cycle-images",
-        "--local-rubric",
-    ]
     for task in tasks:
-        command.extend(("--task", task))
-    code = subprocess.run(command, env=environment).returncode
-    update_summary(code, tasks)
-    return code
+        rows = [row for row in run.records(OUTPUT)
+                if row["task"] == task and row["arm"] == "stock"]
+        if any(row["status"] == "scored" for row in rows):
+            continue
+        command = [
+            sys.executable, str(ROOT / "run.py"), "run", "--output", str(OUTPUT),
+            "--arm", "stock", "--cycle-images", "--local-rubric", "--task", task,
+        ]
+        code = subprocess.run(command, env=environment).returncode
+        if code in (75, 130):
+            update_summary("quota" if code == 75 else "paused", code, tasks)
+            return code
+    summary = update_summary("finished", 0, tasks)
+    return 0 if summary["scored"] == len(tasks) else 2
 
 
 if __name__ == "__main__":
