@@ -1,0 +1,287 @@
+{
+  "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+  "finished": "2026-11-24T23:16:40+00:00",
+  "platform": "linux/amd64",
+  "source": "Frozen candidate and verifier controls. Replays are independent of the paired agent pass rates.",
+  "started": "2026-11-24T22:59:05+00:00",
+  "tasks": {
+    "deepswe_fastapi-deprecation-response-headers": {
+      "base_commit": "11614be9021aa4ac078d4d0693a8b5250a1010d8",
+      "effective_pytest_addopts": "",
+      "evaluation_adjustments": [
+        {
+          "effective": "",
+          "reason": "The legacy warning class does not exist in this supplied image; use the upstream test script's warning policy.",
+          "requested": "-W ignore::starlette.exceptions.StarletteDeprecationWarning",
+          "setting": "PYTEST_ADDOPTS"
+        }
+      ],
+      "grades": [
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "2"
+          ],
+          "finished": "2026-11-24T23:14:49+00:00",
+          "label": "untouched",
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "prior_reward_or_control_expectation": 0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:13:53+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "b1ae8316564023e1dfb5424c095d675610f3810386a696d256e80bfebf3c60e4"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:15:45+00:00",
+          "label": "known-good",
+          "patch_sha256": "e8b2366d562c6a9a026bdc0c352058437c55fc9b09bb8460b4303c6e632980ea",
+          "prior_reward_or_control_expectation": 1,
+          "reward": 1.0,
+          "started": "2026-11-24T23:14:49+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "eced855dbe300b27f912b6db643f805d3525a0ba0b0aac5852440818d86db8d6"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "1"
+          ],
+          "finished": "2026-11-24T23:16:40+00:00",
+          "label": "stock-repeat",
+          "patch_sha256": "e0821292c6b52214fb4a404165a0c865be764d138a1dab9b78b2ecba63c2cc34",
+          "prior_reward_or_control_expectation": 0.0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:15:45+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "099623c974de84b6d5df6162fb387fa3d4aadfa8dd8f2aeebdf2f76c79cf3665"
+        }
+      ],
+      "image_id": "sha256:3a79f985a3697a4515232823cb017a788d5f55a63b66c3c33d35457c6979fa41",
+      "registry_digest": "public.ecr.aws/d3j8x8q7/swe-bench-202605@sha256:fd8cb7e6853760c98c21d2f448541bed8c100513b56c70d3198d34174978deec",
+      "tests_sha256": {
+        "tests/test.patch": "029972f1d78ec9c9e9e38f9abe4c3bcc9801b73a9e1aa83d4d1dfd2e79ecc35e",
+        "tests/test.sh": "e38576fd054e20df2931727acc399a8b27d645a68d5f0a9edb228e18268a8c64"
+      }
+    },
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "effective_pytest_addopts": "",
+      "evaluation_adjustments": [],
+      "grades": [
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "1"
+          ],
+          "finished": "2026-11-24T23:06:28+00:00",
+          "label": "untouched",
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "prior_reward_or_control_expectation": 0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:05:52+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "70bf8feba61710b8de0b4a9fa3a4fe0200569666ed04dd4eb577518042482771"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:07:11+00:00",
+          "label": "known-good",
+          "patch_sha256": "3cbdf470a26d8cd83495c8f6674ce99cd84e4706cfd55f7b16e4a8944fe8200c",
+          "prior_reward_or_control_expectation": 1,
+          "reward": 1.0,
+          "started": "2026-11-24T23:06:28+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "30767fec109921b2251ee755e37986aa1ce06980f63c26f15bdb21320ab3cfd1"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "1"
+          ],
+          "finished": "2026-11-24T23:09:50+00:00",
+          "label": "stock",
+          "patch_sha256": "660394ba5e3c5d656d02d3cdd80a3112f0843bb44cdc22c72fbbf49d0f93f65e",
+          "prior_reward_or_control_expectation": 0.0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:07:11+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "e4fca8de036b303930952c39a4ff13305e119eef0c1cbb173d14c07ea33e9e23"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:10:32+00:00",
+          "label": "adapt",
+          "patch_sha256": "06ff00fa1d1047dc7ff8cc50de5e46c23045e693c454f9bdb3db05dc18448c82",
+          "prior_reward_or_control_expectation": 1.0,
+          "reward": 1.0,
+          "started": "2026-11-24T23:09:50+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "d42b2f81f983df746a3d6a88f4b8fb44e989a93b441b150c8cdbe5d4147d0fa8"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:11:15+00:00",
+          "label": "adapt",
+          "patch_sha256": "06ff00fa1d1047dc7ff8cc50de5e46c23045e693c454f9bdb3db05dc18448c82",
+          "prior_reward_or_control_expectation": 1.0,
+          "reward": 1.0,
+          "started": "2026-11-24T23:10:32+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "9aaf098481f32046bf9b0c1f17f7a6905fd45957a2a5963c5741002579687b50"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "1"
+          ],
+          "finished": "2026-11-24T23:13:53+00:00",
+          "label": "stock",
+          "patch_sha256": "660394ba5e3c5d656d02d3cdd80a3112f0843bb44cdc22c72fbbf49d0f93f65e",
+          "prior_reward_or_control_expectation": 0.0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:11:15+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "041088de8acd58dd1e6943f09876a1539338af7d0b216f2e2d637315f6fe0696"
+        }
+      ],
+      "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+      "registry_digest": "public.ecr.aws/d3j8x8q7/swe-bench-202605@sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "tests_sha256": {
+        "tests/test.patch": "e4be4bdfe70ff9f309735561e4a68f73217cefffe5bd4cae1fac0999f13af97b",
+        "tests/test.sh": "8d6c147d8634542c6e5a6eb2419748db157862f04640813875696539a6446e33"
+      }
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "effective_pytest_addopts": "",
+      "evaluation_adjustments": [],
+      "grades": [
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "1"
+          ],
+          "finished": "2026-11-24T22:59:52+00:00",
+          "label": "untouched",
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "prior_reward_or_control_expectation": 0,
+          "reward": 0.0,
+          "started": "2026-11-24T22:59:06+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "7342216daf28b554063570d2308021af446f38340ecff1fb3d2a0ee78ef24488"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:00:33+00:00",
+          "label": "known-good",
+          "patch_sha256": "580ac4ba40472e7656038878caa52bf9ad623b32f032ab3f50ae53834e0628aa",
+          "prior_reward_or_control_expectation": 1,
+          "reward": 1.0,
+          "started": "2026-11-24T22:59:52+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "322982bad89911c5f6a9d16a4bbf7e311e7d939282bb58f218a4ebefa9a8040a"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "1",
+            "0"
+          ],
+          "finished": "2026-11-24T23:01:12+00:00",
+          "label": "stock-original",
+          "patch_sha256": "c8a5f7e5d4a0c8299d98956408b43e789eba5b5300c08e2a34b074f701a56005",
+          "prior_reward_or_control_expectation": 0.0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:00:33+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "d91c94d4fee5e51e6cc56c399da3475f9802613fadd0f771f1907fbf061c0707"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:01:54+00:00",
+          "label": "stock-repeat",
+          "patch_sha256": "088dac9e675e12e114d2bf506217cc41520e2bb71e1e532e45903df159a62402",
+          "prior_reward_or_control_expectation": 1.0,
+          "reward": 1.0,
+          "started": "2026-11-24T23:01:12+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "0874ade73f8d8ef6728b1087a86ce17bc6dab9c10dbc42991967f33e8fcd3328"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "0",
+            "0"
+          ],
+          "finished": "2026-11-24T23:02:33+00:00",
+          "label": "stock-repeat",
+          "patch_sha256": "088dac9e675e12e114d2bf506217cc41520e2bb71e1e532e45903df159a62402",
+          "prior_reward_or_control_expectation": 1.0,
+          "reward": 1.0,
+          "started": "2026-11-24T23:01:54+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "d8e69d3ebc82ee3cfeadaa60b9ce987f5ec74082e46b4c758c62d7c2bf2e468e"
+        },
+        {
+          "baseline_and_feature_exit_codes": [
+            "1",
+            "0"
+          ],
+          "finished": "2026-11-24T23:03:12+00:00",
+          "label": "stock-original",
+          "patch_sha256": "c8a5f7e5d4a0c8299d98956408b43e789eba5b5300c08e2a34b074f701a56005",
+          "prior_reward_or_control_expectation": 0.0,
+          "reward": 0.0,
+          "started": "2026-11-24T23:02:33+00:00",
+          "status": "scored",
+          "verifier_exit_code": 0,
+          "verifier_log_sha256": "c437041c35d4ca8d1d50f038fa8184826ff9a754896ddbf6e5697c8ba8f30db6"
+        }
+      ],
+      "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+      "registry_digest": "public.ecr.aws/d3j8x8q7/swe-bench-202605@sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "tests_sha256": {
+        "tests/test.patch": "d1b4ae8f13799d4d7590f70707482e5d76a18712a9c332ff15e933de089edae7",
+        "tests/test.sh": "b53a7435766b5149d1fd355bfcee189301059f0053540643267d9119bc677f02"
+      }
+    }
+  },
+  "tests": {
+    "baseline_and_feature_exit_codes_order": [
+      "existing",
+      "feature"
+    ]
+  },
+  "verifier_runner_sha256": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2"
+}
