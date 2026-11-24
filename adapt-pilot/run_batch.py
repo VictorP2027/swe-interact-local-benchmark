@@ -117,7 +117,8 @@ def execute(args):
             if quota_in_logs(attempt):
                 run.checkpoint(output, attempt, row, manifest, status="quota", detail="Account quota reached; candidate saved.")
                 return 75
-            if row.get("patch_sha256") and row.get("agent_exit") == "completed":
+            verifier_timed_out = any(attempt.glob("grading*/timeout.json"))
+            if row.get("patch_sha256") and row.get("agent_exit") == "completed" and not verifier_timed_out:
                 print(f"Recovering saved verifier candidate: {task} {arm}", flush=True)
                 try:
                     with (output / ".lock").open("w") as lock:
