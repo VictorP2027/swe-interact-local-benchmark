@@ -40,6 +40,8 @@ caffeinate -i python3 run_deepswe_stock_repeat.py
 
 This repeat uses a separate output directory, preserves task-by-task checkpoints, and writes `stock-repeat-status.json`. It won't import the earlier stock results.
 
+See the [DeepSWE results snapshot](results/deepswe-2026-11-24.md) for the paired pass rates and task-level outcomes. The machine-readable summary is in the same folder.
+
 ## Execution and saved evidence
 
 The ADAPT controller runs on macOS. Both arms read, edit and test project code through the same `task_terminal` MCP tool in separate Linux containers. Fresh containers from the same image grade their frozen patches. DeepSWE and SWE Atlas use upstream prebuilt images; SWE-bench Pro builds its upstream Dockerfile wrapper. Missing `allow_internet` follows Harbor's default of true.

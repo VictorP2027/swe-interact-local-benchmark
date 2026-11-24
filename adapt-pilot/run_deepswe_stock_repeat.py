@@ -90,7 +90,9 @@ def main():
                 image_id = run.local_image_id(tag)
                 if image_id:
                     run.docker("image", "rm", tag)
-                continue
+                # A blocked attempt did not produce a score. Retry it; this is
+                # especially important when an earlier stale image blocked the
+                # remainder of the campaign.
         command = [
             sys.executable, str(ROOT / "run.py"), "run", "--output", str(OUTPUT),
             "--arm", "stock", "--cycle-images", "--local-rubric", "--task", task,

@@ -1,0 +1,375 @@
+{
+  "benchmark": "SWE-Interact single-turn DeepSWE",
+  "generated_date": "2026-11-24",
+  "primary_paired_results": {
+    "task_count": 25,
+    "stock": {
+      "scored": 24,
+      "passed": 0,
+      "pass_rate_scored": 0.0,
+      "unscored": 1
+    },
+    "adapt": {
+      "scored": 25,
+      "passed": 1,
+      "pass_rate_scored": 0.04,
+      "unscored": 0
+    },
+    "fully_scored_matched_pairs": 24,
+    "stock_passes_in_matched_pairs": 0,
+    "adapt_passes_in_matched_pairs": 1,
+    "adapt_pass_task": "kcp-go-multiplexed-kcp-streams"
+  },
+  "fresh_stock_only_repeat": {
+    "state": "running",
+    "updated_utc": "2026-11-24T21:51:57+00:00",
+    "scored": 1,
+    "passed": 0,
+    "tasks": 25,
+    "pass_rate_scored": 0.0
+  },
+  "configuration": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "medium",
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "protocol": "singleturn-with-conditional-continue",
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349"
+  },
+  "task_results": [
+    {
+      "task_id": "fastapi-deprecation-response-headers",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "kombu-single-active-consumer-priority",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "awilix-async-container-initialization",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "wazero-multi-module-snapshots",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "cattrs-partial-structuring-recovery",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "tomlkit-toml-table-converters",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "sqlite-utils-safe-import-checkpoints",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "etree-xml-diff-patch",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "arcane-drift-detection-baselines",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "testem-bail-on-test-failure",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "httpx-streaming-json-iteration",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "mobly-grouped-test-barriers",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "bandit-structured-nosec-directives",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "pwntools-tube-multiplexing",
+      "stock": {
+        "status": "blocked",
+        "reward": null,
+        "verifier_exit_code": null
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "clack-async-autocomplete-options",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "httpx-deterministic-cookie-store",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "returns-validated-error-accumulation",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "vitest-duration-sharding",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "drizzle-orm-window-function-builders",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "ofetch-per-origin-circuit-breaker",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "boa-hierarchical-evaluation-cancellation",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "participle-grammar-conflict-analysis",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "kcp-go-multiplexed-kcp-streams",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 1.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "helm-array-merge-strategies",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    },
+    {
+      "task_id": "fastapi-implicit-head-options",
+      "stock": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      },
+      "adapt": {
+        "status": "scored",
+        "reward": 0.0,
+        "verifier_exit_code": 0
+      }
+    }
+  ],
+  "interpretation": [
+    "Stock resolved 0 of 24 scored task attempts; the 25th stock attempt (pwntools) was unscored after the verifier timed out during shutdown.",
+    "ADAPT resolved 1 of 25 tasks (4.0%); its only pass was kcp-go-multiplexed-kcp-streams.",
+    "The stock pass rate is a task-completion result, not proof of a context-management failure. Most stock patches were scored 0 by task tests.",
+    "The fresh stock-only rerun is separate from the paired campaign and must not be pooled with it; it is still in progress."
+  ]
+}
