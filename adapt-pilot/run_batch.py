@@ -102,6 +102,13 @@ def execute(args):
             row = latest(output, task, arm)
             if row and row["status"] == "scored":
                 continue
+            if row and row.get("artifact_path"):
+                attempt = output / row["artifact_path"]
+                if any(attempt.glob("grading*/timeout.json")):
+                    deferred.append({"task": task, "arm": arm, "status": "blocked",
+                                     "detail": "The frozen candidate already reached the verifier time limit."})
+                    print(f"Skipping repeat after verifier timeout: {task} {arm}", flush=True)
+                    continue
             restore_image(output, row)
             code = invoke_arm(output, task, arm, binding)
             row = latest(output, task, arm)
