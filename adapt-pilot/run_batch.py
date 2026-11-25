@@ -97,8 +97,9 @@ def execute(args):
                           "--filter", f"reference={run.TASK_IMAGE_REPO}:*").splitlines())
     tasks.sort(key=lambda task: run.task_image_tag(task) not in tags)
     deferred = []
+    arm_order = tuple(reversed(run.ARMS)) if getattr(args, "adapt_first", False) else tuple(run.ARMS)
     for task in tasks:
-        for arm in run.ARMS:
+        for arm in arm_order:
             row = latest(output, task, arm)
             if row and row["status"] == "scored":
                 continue
@@ -158,6 +159,7 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--task", action="append")
     parser.add_argument("--calibration", action="store_true")
+    parser.add_argument("--adapt-first", action="store_true", help="Run ADAPT before stock for each requested pair.")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     with (args.output / ".campaign.lock").open("w") as lock:

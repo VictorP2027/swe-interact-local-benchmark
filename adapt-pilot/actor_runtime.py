@@ -2,6 +2,7 @@
 """Start the pinned actor runner with a recorded, host-compatible CPU limit."""
 
 from functools import wraps
+import os
 import sys
 import tomllib
 
@@ -37,6 +38,8 @@ def main():
 
     run.docker = host_docker
     run.trial = recorded_trial
+    if os.environ.get("SWE_FRESH_REPETITIONS") == "1":
+        run.import_stock = lambda output, config: None
     return run.main()
 
 

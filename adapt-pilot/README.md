@@ -42,6 +42,20 @@ This repeat uses a separate output directory, preserves task-by-task checkpoints
 
 See the [DeepSWE results snapshot](results/deepswe-2026-11-24.md) for the paired pass rates and task-level outcomes. The machine-readable summary is in the same folder.
 
+## Wazero, KCP, and Kombu repetitions
+
+Run three fresh stock/ADAPT pairs per task using the current paired harness. Use the same pinned release, dataset, and setup above. Each participant runs both arms on their own machine.
+
+```sh
+caffeinate -i python3 -u run_deepswe_repetitions.py --owner victor-c
+# Use --owner victor-p on Victor P.'s machine.
+python3 run_deepswe_repetitions.py --owner victor-c --status
+```
+
+The command pins the image digests from the paired experiment and checks the untouched and supplied solution controls for each task. It alternates which arm starts and saves each pair under its own repetition directory. Run the same command again to resume an interrupted campaign. It skips scored slots, preserves interrupted attempts, and grades saved candidates when recovery is possible.
+
+Share the status JSON and the individual frozen patches and verifier logs needed for comparison. The campaign writes them under `output-deepswe-three-repeats-<owner>`.
+
 ## Execution and saved evidence
 
 The ADAPT controller runs on macOS. Both arms read, edit and test project code through the same `task_terminal` MCP tool in separate Linux containers. Fresh containers from the same image grade their frozen patches. DeepSWE and SWE Atlas use upstream prebuilt images; SWE-bench Pro builds its upstream Dockerfile wrapper. Missing `allow_internet` follows Harbor's default of true.
