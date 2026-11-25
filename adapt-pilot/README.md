@@ -56,6 +56,8 @@ The command pins the image digests from the paired experiment and checks the unt
 
 Share the status JSON and the individual frozen patches and verifier logs needed for comparison. The campaign writes them under `output-deepswe-three-repeats-<owner>`.
 
+See [Victor C.'s completed repetitions](results/deepswe-repetitions-2026-11-24.md) for all nine pairs.
+
 ## Execution and saved evidence
 
 The ADAPT controller runs on macOS. Both arms read, edit and test project code through the same `task_terminal` MCP tool in separate Linux containers. Fresh containers from the same image grade their frozen patches. DeepSWE and SWE Atlas use upstream prebuilt images; SWE-bench Pro builds its upstream Dockerfile wrapper. Missing `allow_internet` follows Harbor's default of true.

@@ -1,0 +1,859 @@
+{
+  "comparison": "Victor C. machine. Three fresh pairs per selected task.",
+  "configuration": {
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "artifact_policy": "frozen-patch-and-source-tree-v1",
+    "catalog_share": 0.1,
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "environment_mode": "linux-terminal",
+    "first_task": "deepswe_fastapi-deprecation-response-headers",
+    "image_overrides": {},
+    "image_source": "upstream-prebuilt",
+    "lane": "subscription",
+    "max_continuations": 8,
+    "model": "gpt-6-luna",
+    "model_seed": null,
+    "platform": "linux/amd64",
+    "protocol": "singleturn-with-conditional-continue",
+    "reasoning_effort": "medium",
+    "require_verifier_validation": true,
+    "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+    "rubric_model": "gpt-6-luna",
+    "rubric_reasoning_effort": "medium",
+    "rubric_transport": "local-codex-cli",
+    "task_order_seed": 224,
+    "temperature": null,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "verifier_pytest_addopts": {
+      "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+    }
+  },
+  "controls": {
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "controls": {
+        "known-good": {
+          "exit_code": 0,
+          "expected": 1.0,
+          "passed": true,
+          "patch_sha256": "3cbdf470a26d8cd83495c8f6674ce99cd84e4706cfd55f7b16e4a8944fe8200c",
+          "reward": 1.0
+        },
+        "untouched": {
+          "exit_code": 0,
+          "expected": 0.0,
+          "passed": true,
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reward": 0.0
+        }
+      },
+      "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+      "tests_sha256": {
+        "tests/test.patch": "e4be4bdfe70ff9f309735561e4a68f73217cefffe5bd4cae1fac0999f13af97b",
+        "tests/test.sh": "8d6c147d8634542c6e5a6eb2419748db157862f04640813875696539a6446e33"
+      }
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "controls": {
+        "known-good": {
+          "exit_code": 0,
+          "expected": 1.0,
+          "passed": true,
+          "patch_sha256": "580ac4ba40472e7656038878caa52bf9ad623b32f032ab3f50ae53834e0628aa",
+          "reward": 1.0
+        },
+        "untouched": {
+          "exit_code": 0,
+          "expected": 0.0,
+          "passed": true,
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reward": 0.0
+        }
+      },
+      "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+      "tests_sha256": {
+        "tests/test.patch": "d1b4ae8f13799d4d7590f70707482e5d76a18712a9c332ff15e933de089edae7",
+        "tests/test.sh": "b53a7435766b5149d1fd355bfcee189301059f0053540643267d9119bc677f02"
+      }
+    },
+    "deepswe_wazero-multi-module-snapshots": {
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "controls": {
+        "known-good": {
+          "exit_code": 0,
+          "expected": 1.0,
+          "passed": true,
+          "patch_sha256": "9e7303c52380aab0260f97bffac2e003299d7b5403cbd57c7448bb30f15a8f6b",
+          "reward": 1.0
+        },
+        "untouched": {
+          "exit_code": 0,
+          "expected": 0.0,
+          "passed": true,
+          "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reward": 0.0
+        }
+      },
+      "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+      "tests_sha256": {
+        "tests/test.patch": "ca9656498ee6c78134e03dffb514110054597072eb52169fe73e7740b9def142",
+        "tests/test.sh": "5b13a7ea5b25a5c3b532d4789cc0b6396f4c25f7572dc1ae3327de681f5657e6"
+      }
+    }
+  },
+  "paired_runner_commit": "feeaf20",
+  "pairs": [
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 257024,
+          "completed_turns": 1,
+          "input_tokens": 299260,
+          "output_tokens": 6010,
+          "reasoning_output_tokens": 1057,
+          "total_tokens": 305270
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestCoordinator_RestoreSnapshot_InsufficientMemory",
+          "TestCoordinator_RestoreSnapshot_MemorySizeMismatch"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "b6a5c0fe95462a09041a9efddd1c7bcdacddfd3f40d034c747c81115e921d0a9",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:40:19+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "stock",
+      "rep": 1,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 270848,
+          "completed_turns": 1,
+          "input_tokens": 295014,
+          "output_tokens": 3768,
+          "reasoning_output_tokens": 197,
+          "total_tokens": 298782
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "dc6ce7d97ee023e95d60034e12d6b86943f1f9482f660b5b42f341ab105aaaa0",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:35:38+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 567808,
+          "completed_turns": 1,
+          "input_tokens": 622037,
+          "output_tokens": 7485,
+          "reasoning_output_tokens": 1770,
+          "total_tokens": 629522
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestCoordinator_CaptureIncremental_FromIncrementalBaseline",
+          "TestCoordinator_RestoreSnapshot_IdentityBeforePositional",
+          "TestCoordinator_RestoreSnapshot_InsufficientMemory",
+          "TestCoordinator_RestoreSnapshot_MemorySizeMismatch",
+          "TestCoordinator_RestoreSnapshot_ReorderedModuleList",
+          "TestCoordinator_RestoreSnapshot_SelectiveModules"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "deb508c18d1a0edcaf498ccbdd202cf55d15ae88fd4b10b714359f2d5ca9a24f",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:45:38+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "adapt",
+      "rep": 2,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 172672,
+          "completed_turns": 1,
+          "input_tokens": 206397,
+          "output_tokens": 3667,
+          "reasoning_output_tokens": 404,
+          "total_tokens": 210064
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline",
+          "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+          "TestCoordinator_CaptureIncremental_MultiModule"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "419a6c17b4ee85108fa70c76e17899e9a051a332408938b93050d12b11e24c63",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:49:17+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 195456,
+          "completed_turns": 1,
+          "input_tokens": 261174,
+          "output_tokens": 4805,
+          "reasoning_output_tokens": 806,
+          "total_tokens": 265979
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [],
+        "feature_exit_code": 0,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "3db1cd65747746f9a8bfdf265879d8eaeb41b929bc570536097cb5f97eacdc54",
+        "reward": 1.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:57:24+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "stock",
+      "rep": 3,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 178048,
+          "completed_turns": 1,
+          "input_tokens": 224960,
+          "output_tokens": 4500,
+          "reasoning_output_tokens": 726,
+          "total_tokens": 229460
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestCoordinator_RestoreSnapshot_InsufficientMemory",
+          "TestCoordinator_RestoreSnapshot_MemorySizeMismatch"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:95d33baf0f33e75232442896a661a7d2d7b3dab1277ac7eea1c33e61f36eeeeb",
+        "patch_sha256": "1a98a6c0d3321946867a15e83c31b46b174325a4f520ec0e9085f9d3def16905",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T01:53:07+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 356736,
+          "completed_turns": 1,
+          "input_tokens": 411555,
+          "output_tokens": 6818,
+          "reasoning_output_tokens": 1370,
+          "total_tokens": 418373
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [],
+        "feature_exit_code": 0,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "3573ad9df503564dab057ee9842b200984caaab4025aad44dfa6e5c8d61ae3f2",
+        "reward": 1.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:05:37+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "adapt",
+      "rep": 1,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 114432,
+          "completed_turns": 1,
+          "input_tokens": 160062,
+          "output_tokens": 3454,
+          "reasoning_output_tokens": 151,
+          "total_tokens": 163516
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestMuxBidirectionalTransfer",
+          "TestMuxBlockedStreamDoesNotStallOthers",
+          "TestMuxConcurrentStreams",
+          "TestMuxFlowControlCreditCycling",
+          "TestMuxLargeTransfer",
+          "TestMuxMultiplePrioritiesCoexist",
+          "TestMuxNumStreamsDecreasesAfterClose",
+          "TestMuxOpenAcceptAndEcho",
+          "TestMuxSNMPCountersIncremented",
+          "TestMuxSNMPResetClearsMuxFields",
+          "TestMuxServerInitiatedStream",
+          "TestMuxSessionCloseUnblocksReader",
+          "TestMuxStreamNotRemovedUntilBothClosed",
+          "TestMuxStreamRetainedUntilDataDrained",
+          "TestMuxWriteReturnsFullCount"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "42ec5782e1c63b5312d424d8ec1c0ea919bf76c125b8e45a336081dcf6bbe6db",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:09:52+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 274048,
+          "completed_turns": 1,
+          "input_tokens": 320990,
+          "output_tokens": 4252,
+          "reasoning_output_tokens": 65,
+          "total_tokens": 325242
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [],
+        "feature_exit_code": 1,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "28b36cbfa1d6a7aa4049967db3348ea5d4e7be60474b9b21cbd154c71ae121e2",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:24:24+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "stock",
+      "rep": 2,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 254464,
+          "completed_turns": 1,
+          "input_tokens": 300614,
+          "output_tokens": 6091,
+          "reasoning_output_tokens": 1157,
+          "total_tokens": 306705
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestMuxSNMPCountersIncremented"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "605c559c8fab8e4038a390a08f13229d9fe566e39bc18ece5069e6b1f1a33d86",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:16:21+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 427776,
+          "completed_turns": 1,
+          "input_tokens": 473645,
+          "output_tokens": 8277,
+          "reasoning_output_tokens": 1367,
+          "total_tokens": 481922
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "TestMuxSNMPCountersIncremented"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "f9eb606737452e78715c80d530f49cc85d531f1af151fa1f833d9827192fa4c3",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:29:43+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "adapt",
+      "rep": 3,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 279808,
+          "completed_turns": 1,
+          "input_tokens": 325361,
+          "output_tokens": 5165,
+          "reasoning_output_tokens": 528,
+          "total_tokens": 330526
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [],
+        "feature_exit_code": 0,
+        "image_id": "sha256:09314933bf2f4a8e74f889a9e34f4d1a3bfe0501cc32e5411eee044bce85ab8f",
+        "patch_sha256": "f79bc02a067d6790238274c6d850fc5fbe5fe48696873f5c950a3b1302c3966d",
+        "reward": 1.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:36:34+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 421760,
+          "completed_turns": 1,
+          "input_tokens": 460957,
+          "output_tokens": 6765,
+          "reasoning_output_tokens": 1120,
+          "total_tokens": 467722
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 0,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/transport/virtual/test_sac_priority.py::test_promote_consumer::test_promote_fires_on_cancel_for_demoted\n========================="
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "66d24ecd4ecbe339d26922f1e12fddeeca6591639208099a37f8155461f7e395",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:44:26+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "stock",
+      "rep": 1,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 387712,
+          "completed_turns": 1,
+          "input_tokens": 452015,
+          "output_tokens": 6206,
+          "reasoning_output_tokens": 304,
+          "total_tokens": 458221
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 1,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/test_pidbox.py::test_Mailbox::test_abcast",
+          "t/unit/test_pidbox.py::test_Mailbox::test_call",
+          "t/unit/test_pidbox.py::test_Mailbox::test_cast",
+          "t/unit/test_pidbox.py::test_Mailbox::test_multi_call",
+          "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues\n========="
+        ],
+        "feature_exit_code": 0,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "dabef8f81e780f824cd7a0a20b87be2952739f3ed0e0f6efccd861dfd52387c2",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:41:06+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 561024,
+          "completed_turns": 1,
+          "input_tokens": 624472,
+          "output_tokens": 9160,
+          "reasoning_output_tokens": 1668,
+          "total_tokens": 633632
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 1,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues\n=========",
+          "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_cancel_high_priority_falls_through_to_next\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_highest_priority_standby_promoted\n========================="
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "a4ae6980ca1f4c28b3557182c2fecc3c1e2ff83a4406740bb981824219877e32",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:49:04+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "adapt",
+      "rep": 2,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 266496,
+          "completed_turns": 1,
+          "input_tokens": 308495,
+          "output_tokens": 5957,
+          "reasoning_output_tokens": 527,
+          "total_tokens": 314452
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 1,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/test_messaging.py::test_Consumer::test_accept__content_disallowed\nFAILED",
+          "t/unit/test_pidbox.py::test_Mailbox::test_reply__collect",
+          "t/unit/test_simple.py::test_SimpleBuffer::test_get_accept",
+          "t/unit/test_simple.py::test_SimpleBuffer::test_produce__consume",
+          "t/unit/test_simple.py::test_SimpleQueue::test_get_accept",
+          "t/unit/test_simple.py::test_SimpleQueue::test_produce__consume",
+          "t/unit/transport/SQS/test_SQS.py::test_Channel::test_get_from_sqs",
+          "t/unit/transport/test_filesystem.py::test_FilesystemFanout::test_produce_consume\nFAILED",
+          "t/unit/transport/test_filesystem.py::test_FilesystemTransport::test_produce_consume_noack\nFAILED",
+          "t/unit/transport/test_memory.py::test_MemoryTransport::test_produce_consume\nFAILED",
+          "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues\n=========",
+          "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_equal_priority_first_registered_wins\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_higher_priority_consumer_gets_message\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_single_consumer_no_priority\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_multi_channel_sac_delivery::test_second_channel_skipped_during_drain\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_qos_priority_fallback::test_fallback_to_lower_priority_when_prefetch_full\n========================",
+          "t/unit/transport/virtual/test_sac_priority.py::test_queue_sac_properties::test_with_consumer_priority_classmethod_delivers\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_sac_with_consumer_class::test_sac_consumer_receives_messages\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_sac_queue_non_sac_queue_independent\nFAILED",
+          "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_standby_promoted_on_cancel\nFAILED"
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "f931ea7cc8dddf8008141657f1f7131e4acd797122fe853557751b2f7214a96c",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:52:05+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "adapt": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 397312,
+          "completed_turns": 1,
+          "input_tokens": 463731,
+          "output_tokens": 6840,
+          "reasoning_output_tokens": 1455,
+          "total_tokens": 470571
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 1,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues\n========="
+        ],
+        "feature_exit_code": 0,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "05aa7554be0d3e12354041961886b76c793201c8336e19c65419f08c1fe0254d",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:58:18+00:00",
+        "verifier_exit_code": 0
+      },
+      "first": "stock",
+      "rep": 3,
+      "stock": {
+        "actor_cpus": {
+          "effective": 2,
+          "requested": 2,
+          "runtime_adapter_sha256": "2b09e7727e22bd2cb71ee05d4bcf6c316f22c55b402483935e08ad589e1632eb"
+        },
+        "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+        "agent_exit": "completed",
+        "agent_settings": {
+          "context_window": 48000,
+          "lane": "subscription",
+          "model": "gpt-6-luna",
+          "reasoning_effort": "medium"
+        },
+        "agent_usage": {
+          "cached_input_tokens": 305280,
+          "completed_turns": 1,
+          "input_tokens": 355415,
+          "output_tokens": 4944,
+          "reasoning_output_tokens": 453,
+          "total_tokens": 360359
+        },
+        "attempt": "0001",
+        "baseline_exit_code": 1,
+        "continuations": 0,
+        "failed_checks": [
+          "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues\n=========",
+          "t/unit/transport/virtual/test_sac_priority.py::test_registry_snapshot::test_snapshot_structure\n========================="
+        ],
+        "feature_exit_code": 1,
+        "image_id": "sha256:f4158875f866062831172c5c4b24f8fc042fa8d13feec31d390f6751139cf44d",
+        "patch_sha256": "5ac92b576b187b80e9413b528a83d4b435e2624ed22977ff7f9e664e5dfdf881",
+        "reward": 0.0,
+        "status": "scored",
+        "updated": "2026-11-25T02:54:49+00:00",
+        "verifier_exit_code": 0
+      },
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    }
+  ],
+  "scored_pairs": 9,
+  "state": "finished",
+  "target_pairs": 9,
+  "totals": {
+    "adapt": {
+      "passed": 2,
+      "scored": 9
+    },
+    "stock": {
+      "passed": 1,
+      "scored": 9
+    }
+  },
+  "updated": "2026-11-25T02:58:19+00:00"
+}
