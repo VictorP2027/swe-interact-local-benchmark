@@ -1,0 +1,7 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "manifest.json": "850fbb3a50f54f9763b52eff7fce7c8703c03517d091141dcaf5ff039312b660",
+    "status.json": "f052b692e1561723ecb3bdfdc08afc96a907ce2318b26d3518e7387a7a316364"
+  }
+}

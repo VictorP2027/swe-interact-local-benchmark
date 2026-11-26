@@ -1,0 +1,228 @@
+{
+  "actors_with_observed_compaction": 0,
+  "audit_passed": true,
+  "benchmark": "SWE-Interact",
+  "completed_coding_draws": 18,
+  "draw_results_available": true,
+  "excluded_generation_attempts": [
+    {
+      "arm": "adapt",
+      "generation_attempt": "0001",
+      "included_in_scored_denominator": false,
+      "repeat": 3,
+      "reward": null,
+      "status": "quota",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    }
+  ],
+  "excluded_quota_attempt_count": 1,
+  "failed_draws": 16,
+  "format": "swe-interact-repeated-subset-status-v1",
+  "manifest_file": "manifest.json",
+  "manifest_sha256": "850fbb3a50f54f9763b52eff7fce7c8703c03517d091141dcaf5ff039312b660",
+  "model": "gpt-6-luna",
+  "owner": {
+    "id": "victor-p",
+    "name": "Victor Phisitkul"
+  },
+  "passed_draws": 2,
+  "pending_draws": 0,
+  "planned_draws": 18,
+  "planned_tasks": 3,
+  "primary_campaign": false,
+  "reasoning_effort": "medium",
+  "reference": {
+    "by_arm": {
+      "adapt": {
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9
+      },
+      "stock": {
+        "pass_rate_percent": 11.11111111111111,
+        "passed": 1,
+        "scored": 9
+      }
+    },
+    "by_task": [
+      {
+        "adapt": {
+          "passed": 1,
+          "scored": 3
+        },
+        "label": "Wazero",
+        "stock": {
+          "passed": 0,
+          "scored": 3
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "adapt": {
+          "passed": 1,
+          "scored": 3
+        },
+        "label": "KCP",
+        "stock": {
+          "passed": 1,
+          "scored": 3
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "adapt": {
+          "passed": 0,
+          "scored": 3
+        },
+        "label": "Kombu",
+        "stock": {
+          "passed": 0,
+          "scored": 3
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ],
+    "configuration_match_verified": false,
+    "evidence_level": "reported_aggregate_counts",
+    "note": "Reference totals only. Victor C original task-level records and settings are needed to verify a matched replication.",
+    "original_manifest_available": false,
+    "per_draw_results_available": false,
+    "source_kind": "user_provided_screenshot",
+    "source_owner_verified": false
+  },
+  "repeats_per_task_per_arm": 3,
+  "reported_reference_difference": {
+    "adapt_passes": 0,
+    "settings_match": "not_verified",
+    "stock_passes": -1
+  },
+  "reports": {
+    "heuristic_analysis": "SUCCESS-ANALYSIS.md",
+    "results": "FINAL_RESULTS.md"
+  },
+  "results": {
+    "by_arm": {
+      "adapt": {
+        "failed": 7,
+        "pass_rate": 0.2222222222222222,
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 9,
+        "pass_rate": 0.0,
+        "pass_rate_percent": 0.0,
+        "passed": 0,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ]
+  },
+  "run_id": "victor-p-threecase-repeat-20261124",
+  "scope": "Independent repeated single-turn DeepSWE subset; separate from the primary 75-task campaign and earlier 25-task batch.",
+  "scored_draws": 18,
+  "split": "singleturn",
+  "status": "complete",
+  "unscored_draws": 0,
+  "updated_utc": "2026-11-26T03:20:39.330001+00:00"
+}

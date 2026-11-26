@@ -1,0 +1,1725 @@
+{
+  "arms": {
+    "adapt": "codex",
+    "stock": "codex-shipped"
+  },
+  "audit": {
+    "completed_scored_draws": 18,
+    "historical_actor_results_reused": 0,
+    "matched_task_repeat_pairs": 9,
+    "older_25_and_75_task_ledgers_unchanged": true,
+    "passed": true,
+    "previous_13_scored_records_unchanged": true
+  },
+  "benchmark": "SWE-Interact",
+  "comparison_guidance": "Match task IDs, model/effort, context/tool limits, execution policy, images and prompts before comparing rates. Do not merge this subset with the primary campaign.",
+  "comparison_keys": [
+    "task",
+    "repeat",
+    "arm",
+    "image_id",
+    "base_commit",
+    "prompt_sha256",
+    "actor_prompt_sha256",
+    "agent_settings"
+  ],
+  "comparison_reference": {
+    "by_arm": {
+      "adapt": {
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9
+      },
+      "stock": {
+        "pass_rate_percent": 11.11111111111111,
+        "passed": 1,
+        "scored": 9
+      }
+    },
+    "by_task": [
+      {
+        "adapt": {
+          "passed": 1,
+          "scored": 3
+        },
+        "label": "Wazero",
+        "stock": {
+          "passed": 0,
+          "scored": 3
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "adapt": {
+          "passed": 1,
+          "scored": 3
+        },
+        "label": "KCP",
+        "stock": {
+          "passed": 1,
+          "scored": 3
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "adapt": {
+          "passed": 0,
+          "scored": 3
+        },
+        "label": "Kombu",
+        "stock": {
+          "passed": 0,
+          "scored": 3
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ],
+    "configuration_match_verified": false,
+    "evidence_level": "reported_aggregate_counts",
+    "note": "Reference totals only. Victor C original task-level records and settings are needed to verify a matched replication.",
+    "original_manifest_available": false,
+    "per_draw_results_available": false,
+    "source_kind": "user_provided_screenshot",
+    "source_owner_verified": false
+  },
+  "configuration": {
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "artifact_policy": "frozen-patch-and-source-tree-v1",
+    "catalog_share": 0.1,
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "environment_mode": "linux-terminal",
+    "first_task": "deepswe_fastapi-deprecation-response-headers",
+    "image_overrides": {},
+    "image_source": "upstream-prebuilt",
+    "lane": "subscription",
+    "max_continuations": 8,
+    "model": "gpt-6-luna",
+    "model_seed": null,
+    "platform": "linux/amd64",
+    "protocol": "singleturn-with-conditional-continue",
+    "reasoning_effort": "medium",
+    "require_verifier_validation": true,
+    "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+    "rubric_model": "gpt-6-luna",
+    "rubric_reasoning_effort": "medium",
+    "rubric_transport": "local-codex-cli",
+    "task_order_seed": 224,
+    "temperature": null,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "verifier_pytest_addopts": {
+      "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+    }
+  },
+  "context": {
+    "actors_with_observed_compaction": 0,
+    "compaction_policy": "Pinned bundled default; no threshold override.",
+    "native_usable_input_tokens": 45600,
+    "tool_output_limit_tokens": 10000,
+    "working_context_tokens": 48000
+  },
+  "draws": [
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 211328,
+        "completed_turns": 1,
+        "input_tokens": 233315,
+        "output_tokens": 2847,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 236162
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T04:16:17+00:00",
+      "attempt_started_utc": "2026-11-25T04:12:46+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "4696a6308408e5c0d885adcd60f2fca9b40d28e00792a67db12eb1d91b0fadb4",
+        "candidate_tree": "7c32036fff4aa2fc940096d54e50e1cd4ee46e05",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "cad039a73f7ed70825891bacdaff9d5737ff8d28932b03feb10051a9140470c0",
+        "result_sha256": "d2ccb68d4d15e0192681b59d69d143abc57480bccce853acf705639e587bd7e2",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+              "TestCoordinator_CaptureIncremental_MultiModule",
+              "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "4ff4cd9d902a8513dc136fb1b4643ca4450a9883cb0021413a2587b2c33384cd"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 19223,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 1,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 159488,
+        "completed_turns": 1,
+        "input_tokens": 200015,
+        "output_tokens": 3708,
+        "reasoning_output_tokens": 439,
+        "total_tokens": 203723
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T04:19:43+00:00",
+      "attempt_started_utc": "2026-11-25T04:16:18+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "5714ae98e87e1317c120c3b0946c1168f31a1f6442bf9a739717bf6e4dc3a4ce",
+        "candidate_tree": "644f8832855f001a75fa9addf3b15189bcb4b928",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "86b944a98231d7b4f1a93d7c7ffadd00cd7818c42f7cfd5defa0ba1bb3220c8c",
+        "result_sha256": "bf6e05e3d80bbc24bb0848f6abb48ba0ee1c968fcbcaec3adeac1054f8c2c9a1",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+              "TestCoordinator_RestoreSnapshot_MemorySizeMismatch",
+              "TestCoordinator_RestoreSnapshot_InsufficientMemory",
+              "TestCoordinator_CaptureIncremental_MultiModule",
+              "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "8489e70c4c312b73fb194e87c0e2d00f4725632e81944935c29d90fea32cdb7a"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 19736,
+        "token_events": 14,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 1,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 148736,
+        "completed_turns": 1,
+        "input_tokens": 191494,
+        "output_tokens": 3462,
+        "reasoning_output_tokens": 330,
+        "total_tokens": 194956
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T04:25:43+00:00",
+      "attempt_started_utc": "2026-11-25T04:19:44+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "c03df4ae74c77ec75e8bc2b41503edf08128b4de6dd9d0d11e5c2464aaa2f888",
+        "candidate_tree": "6c9a63361a68f68ad53a15b8a1e945acf418c67d",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "1fcba1f1feb50de7c1cc7399c255716ce6e1070ea5ea52b843d14f807820ed76",
+        "result_sha256": "4792a2046b4ef26dc9d7553990a0ddd3a513e6b0bc08e91dbb803ee2e66c2a64",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxSessionCloseUnblocksReader",
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxSNMPCountersIncremented"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "91760dc636fa52bd643506425e0d5761a550f97e0bf7899161ab5035ba2024b3"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22796,
+        "token_events": 13,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 1,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 373376,
+        "completed_turns": 1,
+        "input_tokens": 410172,
+        "output_tokens": 8241,
+        "reasoning_output_tokens": 1954,
+        "total_tokens": 418413
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T04:32:30+00:00",
+      "attempt_started_utc": "2026-11-25T04:25:43+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "424055f9853ee9f638c1308e46ec9799d22d8dcf296070828e09c3306dcc3d04",
+        "candidate_tree": "f30867ad8230a3fb1bb8a94eef2d579934a1aaed",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "8320f6119212c9980f0f54e66d6563318e2f3a9a8655de95a8c9b18a833a7854",
+        "result_sha256": "4195d82dfacd523c91d6a7d4e1ed81ca5e0efc2351485d9f3972f70504962f8b",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "9b5bf6457b9746cec25e0f3194173e9becfdcaa3fc91f9aafaa81b0c4f38f4a7"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 33221,
+        "token_events": 21,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 1,
+      "reward": 1.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 648960,
+        "completed_turns": 1,
+        "input_tokens": 688265,
+        "output_tokens": 5373,
+        "reasoning_output_tokens": 435,
+        "total_tokens": 693638
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T04:35:34+00:00",
+      "attempt_started_utc": "2026-11-25T04:32:31+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "b8bc80403b221473c9ecac2094e264a7a4d06cf44f936c592be5594d26ae9811",
+        "candidate_tree": "40fa1d177a024d2a593c6769f2b340d01a3e723e",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "02a50c594c98ac31114005ee4f9d66de11261713018f60eb34f86b6ff524762d",
+        "result_sha256": "c35037408a8f2e5c5bd1fcd7c03bb1b75650795176ec50d01622bc4c31e0d31e",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "1761c1cb1db2d90cf6f40b7989c9b32758a22c266e27cd682c193b4b5d495a29"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 34703,
+        "token_events": 28,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 1,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 584192,
+        "completed_turns": 1,
+        "input_tokens": 628583,
+        "output_tokens": 7042,
+        "reasoning_output_tokens": 1177,
+        "total_tokens": 635625
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T04:39:03+00:00",
+      "attempt_started_utc": "2026-11-25T04:35:35+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "437e3f789390f210d42de6ffcc26ac61d84217eabcbed2b8990103b4b8aa95e7",
+        "candidate_tree": "42c7b7847a85a960d44b00f501b5f98f1ccc4671",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "3c1c3b0eadf8add21c3bcc4911ed1704735946cfae91faa00b30b42a2d789126",
+        "result_sha256": "21e14e95dc32b3b71e7b488b8de82a67c8eacf9c399e79a43281551868b50f32",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "6d08e459cd5df07351ef80f8f45fcf1fddd62dacc720a0f45040c65ca8886a1f"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 40228,
+        "token_events": 23,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 1,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 141952,
+        "completed_turns": 1,
+        "input_tokens": 183863,
+        "output_tokens": 4027,
+        "reasoning_output_tokens": 611,
+        "total_tokens": 187890
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T04:42:39+00:00",
+      "attempt_started_utc": "2026-11-25T04:39:06+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "bbdee3806c8781c89a6808853346e1443526f73b0247c5b8fe17f7decfca809f",
+        "candidate_tree": "b243ab95039609cc6d9c26f9f6b207756093b96c",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "5ec2b0047a2f0ea729784ae906177f2313ebd40a82d6d921258874b4dc186661",
+        "result_sha256": "36cd31ea0f05751c4f39299b8dc41e9b25554ad2e14741ed8d710bcb9e97bb6f",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_RestoreSnapshot_MemorySizeMismatch",
+              "TestCoordinator_RestoreSnapshot_InsufficientMemory",
+              "TestCoordinator_RestoreSnapshot_ReorderedModuleList",
+              "TestCoordinator_RestoreSnapshot_IdentityBeforePositional"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "310c9b2653370965bd737ccd634358e01fcd7a4918a28f089b195e324daf2a87"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 21712,
+        "token_events": 13,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 244096,
+        "completed_turns": 1,
+        "input_tokens": 266028,
+        "output_tokens": 3656,
+        "reasoning_output_tokens": 211,
+        "total_tokens": 269684
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T04:45:57+00:00",
+      "attempt_started_utc": "2026-11-25T04:42:40+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "d15516ada72743887f6c302f3bb8df3787e8426518b001f0bf9c3941af040505",
+        "candidate_tree": "a94e9e97144c3cd6124a69fcc629571ab73732ea",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "9599cab03e44e68d00a302888f24be1d63ad25856b6f09b6fe3da41590552477",
+        "result_sha256": "28c9abee76db6b0876de4a0819cdd6ea1bc19fc96966d374149e73d38f51e9cc",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_RestoreSnapshot_ReorderedModuleList",
+              "TestCoordinator_RestoreSnapshot_IdentityBeforePositional"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "3f19cf48da8b7933641f0647336f57df33dc5afbb30ce303f5977216ba78bf1b"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 18808,
+        "token_events": 19,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 257280,
+        "completed_turns": 1,
+        "input_tokens": 302411,
+        "output_tokens": 4772,
+        "reasoning_output_tokens": 275,
+        "total_tokens": 307183
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T04:52:06+00:00",
+      "attempt_started_utc": "2026-11-25T04:45:57+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "abe90705989b9e1d62f2af27d6447c9f7246df4755e976d3697419f94d36a86d",
+        "candidate_tree": "218df125e8f59fd780d62289b79cb95fb8ef9d4d",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "9a7a9f18ee99616529f5f978a095fbf6a109865c8361d7933e591548933eb277",
+        "result_sha256": "afe1e58ed114670545a769a020f03b052f7bad9fe41bf766c46be4165193213e",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxFlowControlPartialReadCredit",
+              "TestMuxStreamNotRemovedUntilBothClosed",
+              "TestMuxStreamRetainedUntilDataDrained"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "d10d06a99ade1bce381327b6e80de706d6a9ab9d997d7c517f32ef6d91d8077b"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22190,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 320640,
+        "completed_turns": 1,
+        "input_tokens": 349389,
+        "output_tokens": 5624,
+        "reasoning_output_tokens": 530,
+        "total_tokens": 355013
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T04:58:52+00:00",
+      "attempt_started_utc": "2026-11-25T04:52:07+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "d573821e0be880a61b9df9f6654ffdbde1ec9b26cae39cb3f305237cd3ebbc6e",
+        "candidate_tree": "c1772f96060d1f6423a8c0522e7944287b799e5a",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "0c27ec70467f72c5128bcf8d9f69524ade65bccf604f3246a4fae864566cd430",
+        "result_sha256": "94c48e136ba00c59ab2ccac5c42c6c34a068463d97798376046740c84e9a7baa",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxSNMPCountersIncremented",
+              "TestMuxStreamNotRemovedUntilBothClosed",
+              "TestMuxStreamRetainedUntilDataDrained"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "36591aaf9632200b6ef8caa369e6dad7012d327afc8395a45a4586ac0ad0d72f"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 25707,
+        "token_events": 19,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 608128,
+        "completed_turns": 1,
+        "input_tokens": 677087,
+        "output_tokens": 5590,
+        "reasoning_output_tokens": 255,
+        "total_tokens": 682677
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T05:01:58+00:00",
+      "attempt_started_utc": "2026-11-25T04:58:53+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "6ebca9085d1335248caa5ead502bdd622b6bc7f689ee7933f85eece88cc46002",
+        "candidate_tree": "18979a82a03263bb24ead9480111dc6ac93dccc1",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "a7c3f88b5046b9a318260bc9b3ddf0319644ed135ba7dfc1f543b84762b3682a",
+        "result_sha256": "71f285306bd8e8b8a549c8c193b5e33d7f5300fd07d76a6cd824ae3864ad5e43",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "d450be499e60a05c6f0caa80dcbacee4d56cc1018c58b2c21ba97c657d98fcab"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 32684,
+        "token_events": 29,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 318720,
+        "completed_turns": 1,
+        "input_tokens": 374200,
+        "output_tokens": 5496,
+        "reasoning_output_tokens": 485,
+        "total_tokens": 379696
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T05:04:58+00:00",
+      "attempt_started_utc": "2026-11-25T05:01:59+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "9eefbc8516eb8f6d415630f68a63ce5c944b999f43aa9565621787e1d88f5566",
+        "candidate_tree": "042c205c2164e38f30cb0e1e673bdbd7fc0ecf1e",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "03fe2b20feabd93c85c1e3c0894d07941c34a3d71f279109ea5b121bb36567e8",
+        "result_sha256": "33f7a6631dde01e2f66a6025c5bf62548d3ce55cb9389170b7985740feb202d0",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "9c71391fd23e69cf43bea8bdd9677b2d78201ef52a376b23de566937a1eb2c8a"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 33045,
+        "token_events": 17,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 2,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 177664,
+        "completed_turns": 1,
+        "input_tokens": 199676,
+        "output_tokens": 3509,
+        "reasoning_output_tokens": 467,
+        "total_tokens": 203185
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T05:08:20+00:00",
+      "attempt_started_utc": "2026-11-25T05:04:59+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "a9caf1494ab4501e22797b9753ed6650adb0651cd493056f3cd3a01ea3c7691f",
+        "candidate_tree": "563680b65e9950c2f39a1206df3fc3fd24d14e21",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "c86392642de08623037f05035fb403ab67cc1da3eedb1edb7fec46f67408eb9d",
+        "result_sha256": "7fa964bdd7f626f96bfca09c8316a3377d353ddd6cfd911857027e3441b82ede",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+              "TestCoordinator_CaptureIncremental_MultiModule",
+              "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "0ef3f3cfdee4a880a1afa6a52f6077bab03ccfaaf719561259a333f3fa03d542"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 19317,
+        "token_events": 15,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 3,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 205696,
+        "completed_turns": 1,
+        "input_tokens": 231008,
+        "output_tokens": 4946,
+        "reasoning_output_tokens": 959,
+        "total_tokens": 235954
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T05:39:33+00:00",
+      "attempt_started_utc": "2026-11-25T05:35:24+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "63aac95c1e1ff37a1afea08a1017e55465b32d5736b8bb88f90a637fc989368f",
+        "candidate_tree": "bd1ddc61cb67287eb7f6f59a9d66f09c29df85da",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0002",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "d64f1e714eaa2b9117ef4758ffb98d870bac368d4a3c41bad1a1d1a4e509c4da",
+        "result_sha256": "2cfefbde06412a58d68d627738cc517f35be5895d58f0c1868e20da606b0061c",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "e8d8f8ca757c7d8cb8dce46c5a7f6334fba2179095d85ed56ed41aa4ede1f84c"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0002",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22943,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 3,
+      "reward": 1.0,
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 227072,
+        "completed_turns": 1,
+        "input_tokens": 293812,
+        "output_tokens": 5161,
+        "reasoning_output_tokens": 595,
+        "total_tokens": 298973
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T05:47:38+00:00",
+      "attempt_started_utc": "2026-11-25T05:39:34+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "4c2de917c14f486db08e3d3f819d70d8ca5583feeb2c8c9ea64e65c8d7decccd",
+        "candidate_tree": "fe9297843815acb0239b80dd26c55af9335cfe61",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "5be932498332da8a63921c7652cf30bfd54c417e892dbbff17573b15aa749564",
+        "result_sha256": "058815ab68b8027d4c2834b79c89642e12091b21af28008dcafe33d0994e5e4c",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "dfebd587074327e87eb3d7e2f2c468b0b80861390d053811d8343cb489d05d6d"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 21936,
+        "token_events": 17,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 3,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 377984,
+        "completed_turns": 1,
+        "input_tokens": 404483,
+        "output_tokens": 5878,
+        "reasoning_output_tokens": 1054,
+        "total_tokens": 410361
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T05:56:52+00:00",
+      "attempt_started_utc": "2026-11-25T05:47:39+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "9e55c8a8b1b031ef94d9d23d9f6b553c650c6cbbd8985095639521f04e94df44",
+        "candidate_tree": "0df54504a22004d9df9213eaa320fc49e227ee10",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "3930f906e2ed0abbb6047a8dc1f0caf15dc17af3a4ac46777957b7b14237e8ec",
+        "result_sha256": "09f4b6e7f68d50faf072270327d562b9d548591e118f4bddaf8dd58134c6cc4c",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "3a0cca620a2234015fab2fed314b6c488ae3dca7cedc1e5c38e040b0792d97c9"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22719,
+        "token_events": 23,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 3,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 390144,
+        "completed_turns": 1,
+        "input_tokens": 441870,
+        "output_tokens": 5667,
+        "reasoning_output_tokens": 880,
+        "total_tokens": 447537
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-25T05:59:48+00:00",
+      "attempt_started_utc": "2026-11-25T05:56:54+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "e1d756d23f0f33bc3900f22c6d5d6586ef068cb21668fd9ff7f6766b179b371c",
+        "candidate_tree": "10000e87a66aace98ae46e4b9d760c55127f06e7",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "b20f1748482a4d4b0ffb789aaf925b5f3a503d873ecc250f113e71ecbd964675",
+        "result_sha256": "4b1b57af9d036aa7bc588915a99b8b2737666a6f05b0e8987afd7c369223d656",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "f74db22ca8838f773ab188f52cb623488615e6d4b88fa3ae94826fe3d1f46e23"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 35182,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 3,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 615680,
+        "completed_turns": 1,
+        "input_tokens": 659933,
+        "output_tokens": 7080,
+        "reasoning_output_tokens": 522,
+        "total_tokens": 667013
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-25T06:03:42+00:00",
+      "attempt_started_utc": "2026-11-25T05:59:49+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "a9db32dc2387e5ad06daa26d76ff022cd580616691f6b904b20d1e36dd780437",
+        "candidate_tree": "43b76a68dafbfae2f4d03bec8e716f74165470f9",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "9b7f67ad7b97df8aa1cbc39621b15e654ad80a023f2d25cb2529abc86b772de1",
+        "result_sha256": "651d2c923e52bc5ee428c044de6fa164fb25207890892e126bda31a266c7535b",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "264356ff77419252fa198e049034f4828cbce6f7ed99165d506183a6427a6cf9"
+          }
+        ]
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 39768,
+        "token_events": 25,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 3,
+      "reward": 0.0,
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    }
+  ],
+  "environment": {
+    "controller": "darwin/arm64",
+    "docker_engine": "Docker Desktop",
+    "emulation_backend": "unconfirmed",
+    "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+    "project_and_verifier": "linux/amd64 Docker",
+    "recorded_docker_server_version": "29.5.3"
+  },
+  "excluded_generation_attempts": [
+    {
+      "arm": "adapt",
+      "generation_attempt": "0001",
+      "included_in_scored_denominator": false,
+      "repeat": 3,
+      "reward": null,
+      "status": "quota",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    }
+  ],
+  "execution_order": "repeat, then Wazero/KCP/Kombu, then stock/ADAPT",
+  "execution_policy": {
+    "adaptive_maintainer": false,
+    "coding_allowance_seconds_per_draw": 3600,
+    "conditional_continue": "Final questions only; up to eight continuations within the same coding allowance.",
+    "full_specification_at_start": true,
+    "hidden_feature_tests_available_during_coding": false,
+    "testing_instruction": "Do not add or run tests unless the user asks you to test or verify implementation.",
+    "verifier": "Supplied project test scripts; no LLM judge used for these tasks."
+  },
+  "family": "DeepSWE",
+  "format": "swe-interact-repeated-subset-manifest-v1",
+  "limitations": [
+    "Three draws per task/arm; sampling seed and temperature unavailable.",
+    "All cases were previously studied by the host; earlier implementations and feedback were not supplied to fresh actors.",
+    "Data-structure pytest validation is skipped by the supplied build on macOS.",
+    "The screenshot reference has no original configuration or per-draw records.",
+    "No compaction occurred; these results do not establish a context-retention benefit."
+  ],
+  "model_seed": null,
+  "owner": {
+    "id": "victor-p",
+    "name": "Victor Phisitkul"
+  },
+  "planned_draws": 18,
+  "primary_campaign": false,
+  "privacy": "Portable export contains metadata, scores and hashes; no auth files, raw request bodies, private binaries or absolute host paths.",
+  "provenance": {
+    "codex_version": "0.159.0",
+    "compiled_runner_sha256": "96fb6d40ce455c428280639ca82e426f3f6a34454acd55bc30f360e516464373",
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "endpoint_adapter_sha256": "d498628215b340c7c3c297b9393682cf9b14c93c6f0e413c79a9c9310dbf44b7",
+    "harness_sources": {
+      "campaign.py": "76552a092d7829dee47a8de2b62ec2ce4800c904a99d65b89879c8e90de5a09d",
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "provenance.py": "14f0f2853a18bc055bc9d85d34b45249aa4241237b15df574d6fde115ef8c3c8",
+      "review.py": "b4b716ad7dad1848b6ad5132f1465fb414022511c11709aacfce4ab9c7986186",
+      "run.py": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2",
+      "task_terminal.py": "c9b89ef24a3e7465679f1239e0580f10f46a4eeb2ed6d2f8f515cfe5138a0cbf"
+    },
+    "model_catalog_sha256": "a5e25107506f0934cb62144c093c72bf8c7fa5de1436f4aa02fe54769d789618",
+    "native_manifests": [
+      {
+        "path": "repeat-1/manifest.json",
+        "repeat": 1,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      },
+      {
+        "path": "repeat-2/manifest.json",
+        "repeat": 2,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      },
+      {
+        "path": "repeat-3/manifest.json",
+        "repeat": 3,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      }
+    ],
+    "release_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "runner_commit": "6f7ffd2b207de83f12e07b23a049532a15308539",
+    "source_audit_sha256": "25163b0373bddf8b1ceb54c1d7870db820ddee2f4d84345a6501028b43cee317",
+    "source_plan_sha256": "0f2abedb4bdc90c7eff005bbc94c5d5671053ff094676cea981bdf582f2e196b"
+  },
+  "repeats_per_task_per_arm": 3,
+  "results": {
+    "by_arm": {
+      "adapt": {
+        "failed": 7,
+        "pass_rate": 0.2222222222222222,
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 9,
+        "pass_rate": 0.0,
+        "pass_rate_percent": 0.0,
+        "passed": 0,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ]
+  },
+  "run_id": "victor-p-threecase-repeat-20261124",
+  "scope": "Independent repeated single-turn DeepSWE subset; separate from the primary 75-task campaign and earlier 25-task batch.",
+  "split": "singleturn",
+  "status": "complete",
+  "task_order": [
+    "deepswe_wazero-multi-module-snapshots",
+    "deepswe_kcp-go-multiplexed-kcp-streams",
+    "deepswe_kombu-single-active-consumer-priority"
+  ],
+  "tasks": {
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "definition_sha256": {
+        "multiturn": "2c94fa7120b35f9f80644cb52cdeca3c794e7fec191d0ca7061a81149972f68c",
+        "singleturn": "51d7c77f3ec12e1a6acf484b56014dc0c2931c2a65f7b995f8f678a337daffb7"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2"
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "definition_sha256": {
+        "multiturn": "c69587c7b134861f8c9ffe450f5a680d0073d6e5633f628ef62de73c1c5ad2de",
+        "singleturn": "9adb5dba1f5781be2a376d0282d96b40a098fa07134e93d34261d266fcf446e5"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc"
+    },
+    "deepswe_wazero-multi-module-snapshots": {
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "definition_sha256": {
+        "multiturn": "ed9b13500af126a369d18a634b44180c00c5f36663b1810351acb10d783b7893",
+        "singleturn": "b0c66b4dffb612ed3d79c20c391684807b6dd74446698721a368f347a44de155"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93"
+    }
+  },
+  "temperature": null,
+  "updated_utc": "2026-11-26T03:20:39.330001+00:00",
+  "verifier_controls": {
+    "fresh_controls_passed": true,
+    "known_good_expected_reward": 1,
+    "positive_control_source": "Earlier frozen Wazero stock patch, isolated from all new actor contexts.",
+    "untouched_expected_reward": 0
+  }
+}

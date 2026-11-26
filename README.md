@@ -14,6 +14,7 @@ The assessment includes documented native-runtime fallbacks, recovered artifacts
 
 ## Contents
 
+- [Three-case stock/ADAPT repeats](adapt-pilot/results/threecase-repeat-2026-11-24-victor-p/README.md): **18 scored outcomes; stock 0/9, ADAPT 2/9**. This is a separate experiment. [Status](adapt-pilot/results/threecase-repeat-2026-11-24-victor-p/status.json) · [Manifest](adapt-pilot/results/threecase-repeat-2026-11-24-victor-p/manifest.json).
 - [All 75 task outcomes](results/README.md) and [machine-readable summary](results/summary.json).
 - [First-attempt implementation patches](patches/): all 75, including Arcane reconstructed from its recorded commits.
 - [Sanitized per-task result records](results/tasks/), [provenance and hashes](results/provenance.json).
