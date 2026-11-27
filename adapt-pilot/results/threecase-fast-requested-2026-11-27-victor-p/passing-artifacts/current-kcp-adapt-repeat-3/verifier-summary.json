@@ -1,0 +1,59 @@
+{
+  "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+  "actual_stock_tier_known": false,
+  "agent_exit": "completed",
+  "arm": "adapt",
+  "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+  "baseline": {
+    "count_note": "Individual named Go test counts were not emitted; package and Pytest totals are preserved when reported.",
+    "exit_code": 0,
+    "failed_named_tests": [],
+    "named_tests_reported": false,
+    "package_summary": [
+      "ok  \tgithub.com/xtaci/kcp-go/v5\t0.138s"
+    ],
+    "passed_named_test_count": null,
+    "passed_named_tests": [],
+    "pytest_summary_counts": {}
+  },
+  "effective_settings_passed": true,
+  "feature": {
+    "count_note": "Individual named Go test counts were not emitted; package and Pytest totals are preserved when reported.",
+    "exit_code": 0,
+    "failed_named_tests": [],
+    "named_tests_reported": false,
+    "package_summary": [
+      "ok  \tgithub.com/xtaci/kcp-go/v5\t4.343s"
+    ],
+    "passed_named_test_count": null,
+    "passed_named_tests": [],
+    "pytest_summary_counts": {}
+  },
+  "format": "swe-interact-passing-verifier-summary-v1",
+  "frozen_result_record_sha256": "95d04220b3b7aba4780aebcd073dd7282dcc0b4716d7f73e127ade0e9eefd6ee",
+  "generation_attempt": "0001",
+  "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+  "included_in_current_18_draws": true,
+  "label": "current-kcp-adapt-repeat-3",
+  "model": "gpt-6-luna",
+  "note": "Current-batch passing draw.",
+  "original_verifier_exit_code": 0,
+  "patch_file": "implementation.patch",
+  "patch_sha256": "3a66a7b91109a7988034905c5646dd61be2d56a3214791be82cb45762bf75ded",
+  "raw_verifier_log_exported": false,
+  "reasoning_effort": "medium",
+  "repeat": 3,
+  "requested_service_tier": "fast",
+  "reward": 1,
+  "scope": "current_repeat_batch",
+  "service_tier": [
+    "default"
+  ],
+  "source_archive_sha256": "37b8a05476cbc2581020a249246afc4dd2bd5b0c57675fc5296b64077d8097af",
+  "source_experiment": "swe-threecase-fast-20261127",
+  "status": "scored",
+  "task": "deepswe_kcp-go-multiplexed-kcp-streams",
+  "verification": "Previously recorded canonical Linux verifier results. No new generation, edits, tests or regrading were performed for this export.",
+  "verifier_log_sha256": "af7709ad5def9de35019a12fddef8a4b51af81370362fed7df85f9b403164e3d",
+  "working_context_tokens": 48000
+}

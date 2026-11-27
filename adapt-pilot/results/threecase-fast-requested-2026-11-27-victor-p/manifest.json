@@ -1,0 +1,2221 @@
+{
+  "arms": {
+    "adapt": "codex",
+    "stock": "codex-shipped"
+  },
+  "audit": {
+    "completed_scored_draws": 18,
+    "historical_actor_results_reused": 0,
+    "matched_task_repeat_pairs": 9,
+    "older_18_25_and_75_task_ledgers_unchanged": true,
+    "passed": true
+  },
+  "batch_wall_clock": {
+    "finished_utc": "2026-11-27T23:30:37.845022+00:00",
+    "includes": "Preflight, fresh controls, coding and grading; excludes smoke checks and publication.",
+    "seconds": 3988.802672,
+    "started_utc": "2026-11-27T22:24:09.042350+00:00"
+  },
+  "benchmark": "SWE-Interact",
+  "comparison_guidance": "Match task IDs, model/effort, context/tool limits, execution policy, images and prompts before comparing rates. Do not merge this subset with the primary campaign.",
+  "comparison_keys": [
+    "task",
+    "repeat",
+    "arm",
+    "image_id",
+    "base_commit",
+    "prompt_sha256",
+    "actor_prompt_sha256",
+    "agent_settings"
+  ],
+  "comparison_reference": {
+    "by_arm": {
+      "adapt": {
+        "failed": 7,
+        "pass_rate": 0.2222222222222222,
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 9,
+        "pass_rate": 0.0,
+        "pass_rate_percent": 0.0,
+        "passed": 0,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ],
+    "distinction": "New draws explicitly request Fast; prior cohort had no explicit Fast override. Neither cohort establishes actual priority service for stock.",
+    "evidence_level": "18 verified individual draws, separate cohort",
+    "matched_model_context_task_policy": true,
+    "prior_status_sha256": "f489e36a9a4bf1069e99c360c9c1107614c56f3cf239a806318699dd2781fe10",
+    "run_id": "victor-p-threecase-repeat-20261124",
+    "source_kind": "verified_prior_local_cohort"
+  },
+  "configuration": {
+    "adapt_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "artifact_policy": "frozen-patch-and-source-tree-v1",
+    "catalog_share": 0.1,
+    "codex_version": "0.159.0",
+    "context_window": 48000,
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "environment_mode": "linux-terminal",
+    "first_task": "deepswe_fastapi-deprecation-response-headers",
+    "image_overrides": {},
+    "image_source": "upstream-prebuilt",
+    "lane": "subscription",
+    "max_continuations": 8,
+    "model": "gpt-6-luna",
+    "model_seed": null,
+    "platform": "linux/amd64",
+    "protocol": "singleturn-with-conditional-continue",
+    "reasoning_effort": "medium",
+    "require_verifier_validation": true,
+    "rubric_bridge_sha256": "1ce49aa69da1fbd6ae69b057f1d5ba2853be96c01adb151af6bfaffab9e64b36",
+    "rubric_model": "gpt-6-luna",
+    "rubric_reasoning_effort": "medium",
+    "rubric_transport": "local-codex-cli",
+    "task_order_seed": 224,
+    "temperature": null,
+    "tool_output_limit": 10000,
+    "trial_wall_clock_s": 3600,
+    "verifier_pytest_addopts": {
+      "deepswe_fastapi-deprecation-response-headers": "-W ignore::starlette.exceptions.StarletteDeprecationWarning"
+    }
+  },
+  "context": {
+    "actors_with_observed_compaction": 0,
+    "compaction_policy": "Pinned bundled default; no threshold override.",
+    "native_usable_input_tokens": 45600,
+    "tool_output_limit_tokens": 10000,
+    "working_context_tokens": 48000
+  },
+  "draws": [
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 167552,
+        "completed_turns": 1,
+        "input_tokens": 188137,
+        "output_tokens": 3074,
+        "reasoning_output_tokens": 124,
+        "total_tokens": 191211
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T22:28:03+00:00",
+      "attempt_started_utc": "2026-11-27T22:25:24+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "770665288558c348c569ab0734d659fdf07b8ae0d5f88e196f5df58d13030322",
+        "candidate_tree": "18d46915d6a07d525c6630e67e46c74bb798eecb",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "64ecbbf3f8a2d7d6634f9041ca8d69d7132c3ef5acf03dcf583dd02632f9b95d",
+        "result_sha256": "5a8fb6d7d7f90fa5a76384bd3d70facaf8aa454b43cc2a75d1062e8cc282719c",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+              "TestCoordinator_RestoreSnapshot_SelectiveModules"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "4702de8d4df410e1ad3ce03ba75babe1480aef22468e7c61eb293a939130a0e0",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "2e38155f5a0bf07fd46c3773287d6e3d099e15a12597c1cfed12a46c2aa06fff",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 18203,
+        "token_events": 14,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 1,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 173312,
+        "completed_turns": 1,
+        "input_tokens": 193577,
+        "output_tokens": 2637,
+        "reasoning_output_tokens": 123,
+        "total_tokens": 196214
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T22:30:36+00:00",
+      "attempt_started_utc": "2026-11-27T22:28:04+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "57370ffdb2b1beb5d5360403f94d71a4ef84a617c19045f04a59075ac8dd175b",
+        "candidate_tree": "7007b4c77aee94be91f71074df604ac9a65cae62",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "dbbccc7c958873b883f6b120c8a623fd3e984d9037d25692eeb04359545c3caf",
+        "result_sha256": "e2baae5bd2445e1c1ecf53626ba397971698708642083dc6a375a27e91847649",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": true,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "8d513806340a1358a06b2b02eee0f6e74c2fb87a1143d24844f3f87fbd30f1a3",
+            "undefined_symbols": [
+              "snapshot.ErrorCode"
+            ]
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "15e0b14de70cda78c05699c713bc78846300403d5526965e88ae23596c9c9206",
+        "cli_override_record_sha256": "907c3fcbfa73464ca320a4503ac5f2f367f569918ac34fc82370803ceab9faec",
+        "request_archive_sha256": "f864385ff6f2f65051b6aaeb8040cc79d489c49e978e969d97d3db6baf3d2a8b"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 18157,
+        "token_events": 14,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 1,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 14,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 14
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 150144,
+        "completed_turns": 1,
+        "input_tokens": 170481,
+        "output_tokens": 4025,
+        "reasoning_output_tokens": 0,
+        "total_tokens": 174506
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T22:34:30+00:00",
+      "attempt_started_utc": "2026-11-27T22:30:37+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "c61f2c83aca628cf6d9e116713cecde6597577e0afa133b47ca2995b03e92931",
+        "candidate_tree": "785bdfef869a37f208c4204aa6d7d89fe4727f3d",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "1deb71675f455db427aa37b030a216368ffee71d4449fd76ee47b0bce6bddd02",
+        "result_sha256": "b3299731fcd95aa1f39714031d59b6286c8d33b28c45e759a13087787e7f0214",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxSNMPCountersIncremented",
+              "TestMuxStreamNotRemovedUntilBothClosed",
+              "TestMuxStreamRetainedUntilDataDrained"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "42258dee2125aac60a4582c561c55f98e05d3b9f00d2f74ac769418fdc6c6192",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "d43f0dc8185347ddfd0d41ba133091e5729e6163bfd710becf1da841ee134d28",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 18133,
+        "token_events": 12,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 1,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 385024,
+        "completed_turns": 1,
+        "input_tokens": 431507,
+        "output_tokens": 6550,
+        "reasoning_output_tokens": 1194,
+        "total_tokens": 438057
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T22:40:25+00:00",
+      "attempt_started_utc": "2026-11-27T22:34:30+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "54f6bc85882b75e4353639683a96ff6f1e9e9def00f637109d52ca28cb436ae4",
+        "candidate_tree": "c4a34f6b04c6effd3871502f74c41a5e5568fbe0",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "74dfcc03f5ab6caae70f1321f362fe905c2f0d8db768f93ee043158d355a36cd",
+        "published_patch": "passing-artifacts/current-kcp-adapt-repeat-1/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-kcp-adapt-repeat-1/verifier-summary.json",
+        "result_sha256": "59d96a37861770421102152f881d92833e9a16574ffbefd1813974b17890d183",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "d4ff9788440138eedb7c6250cb6028a90e74433f486bb497a9182ead6f8c44d6",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "7bdc74cecf9c4ee7006cee959fada9f0eb37174f72f9d6cebaf9397061ee6828",
+        "cli_override_record_sha256": "aed2b41f8c8367f87fe4349543b504563cc940d532cd16c41050a2429900bad9",
+        "request_archive_sha256": "a16444561cc516a2e5b18e2936a74d4b2cea592864cc40d965722f58a59128f2"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 27255,
+        "token_events": 22,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 1,
+      "reward": 1.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 22,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 22
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 428288,
+        "completed_turns": 1,
+        "input_tokens": 461109,
+        "output_tokens": 4615,
+        "reasoning_output_tokens": 208,
+        "total_tokens": 465724
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T22:42:38+00:00",
+      "attempt_started_utc": "2026-11-27T22:40:26+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "4a27371d0f6cd8c20ebddbcfedbb562b630c7d1dd0978558e3ed3927ca0d0063",
+        "candidate_tree": "54d5e12f6d999cd05b2609551b684e3ddf7e0349",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "f46db1ad51268191a176efa1b0f3f20bdd3ab61b4992a05f6a339d69d2a401c7",
+        "result_sha256": "fe8e196523d86a16967735d6049bc1cd88faa5fd6f095eaf3e3e950a133511ef",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_cancel_notify_callbacks::test_cancel_notify_fires_on_queue_delete",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_cancel_notify_callbacks::test_multiple_cancel_notify_callbacks"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "f20ad258b4b935c70686fa07fd33ebedf7526ae7eb67ba2512fb00550654f9d2",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "1967a5e48a62e17bb6a4e2ab39619c05d9d7418f6adc691d6fe4e5c333c6ce1d",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 29001,
+        "token_events": 22,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 1,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 488448,
+        "completed_turns": 1,
+        "input_tokens": 525187,
+        "output_tokens": 5596,
+        "reasoning_output_tokens": 702,
+        "total_tokens": 530783
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T22:45:01+00:00",
+      "attempt_started_utc": "2026-11-27T22:42:39+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-1/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "d4621ce8c5629139e3a2c1ec70bf27f1c86e8ab9de9a0b0618d27ad70ad11bda",
+        "candidate_tree": "34a2dd215b21b6fc79fbe2e4f5cba6b9465a5363",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-1",
+        "patch_sha256": "98468233813246e7c06aab33794d331571f78d8394e4635315bac6703bed60f5",
+        "result_sha256": "58c02cf296f518393e109cecd6fc628aa0a0cd2d379811d14220f8558101c070",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/test_pidbox.py::test_Mailbox::test_cast - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_abcast - TypeError: 'NoneTyp...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_call - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_multi_call - TypeError: 'Non...",
+              "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_cancel_high_priority_falls_through_to_next",
+              "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_standby_promoted_on_cancel",
+              "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_highest_priority_standby_promoted",
+              "t/unit/transport/virtual/test_sac_priority.py::test_promote_consumer::test_promote_fires_on_cancel_for_demoted"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "73ebdb0e14c7b4e996633b99179271bc01dec837793fbcc3fd75334867077521",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "16de6ff828c9017069c576768a8a137863cf779b6edb4e252d4101de5880f2d8",
+        "cli_override_record_sha256": "133034021e52a7f6fd61971fdb2fbe22c8729c813617756cabc25e2d1de01c2c",
+        "request_archive_sha256": "c62ea44841882daad1c67641afae4e52a699bff2ae189bdb0e4ad6eb5b88d92e"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 32642,
+        "token_events": 24,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 1,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 24,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 24
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 282112,
+        "completed_turns": 1,
+        "input_tokens": 307923,
+        "output_tokens": 4721,
+        "reasoning_output_tokens": 882,
+        "total_tokens": 312644
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T22:48:20+00:00",
+      "attempt_started_utc": "2026-11-27T22:45:02+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "05c8c005abfe6752067607830cef74ef12e3a2cbbe75af1caf4e811cb143ef2e",
+        "candidate_tree": "dc36e12995fc8ebf19ecf03b4d6cbeef199c33a0",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "9ebaeffbe04f3fb1777e6f36da503a34fb47fe9c11b3b2508801def816f25c7c",
+        "published_patch": "passing-artifacts/current-wazero-stock-repeat-2/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-wazero-stock-repeat-2/verifier-summary.json",
+        "result_sha256": "779251826db179d928642c5979c231caa837fe263a49ed6fcf0bc4d9ff27aee0",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "ea98115aedca0971623f72b2baedf0bb6a8c804e21e92a7325470f0581e796a0",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "f1896c20994271ef9bb06cdfc09f1b52962d2d0c01f52ed4ca47895df8ac3abe",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22591,
+        "token_events": 19,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 2,
+      "reward": 1.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 207616,
+        "completed_turns": 1,
+        "input_tokens": 231135,
+        "output_tokens": 4567,
+        "reasoning_output_tokens": 745,
+        "total_tokens": 235702
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T22:51:36+00:00",
+      "attempt_started_utc": "2026-11-27T22:48:20+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "eb26b55f2afbc284aefa7d7ccec3204611ff83166a6f2bbf383f7b5d9453a0c6",
+        "candidate_tree": "e34d2401c79251db514146fcc7544cc0ec116a33",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "2e021dea4e4bc777cf8492452706143d2778e7acbfe794cec017b9f10cad3b38",
+        "published_patch": "passing-artifacts/current-wazero-adapt-repeat-2/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-wazero-adapt-repeat-2/verifier-summary.json",
+        "result_sha256": "59bf042871f6c1948512a561e3c124b3c0a8888584063ce151e4e666b43b9656",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "07a793a398887deefd106279fe2a5fa5858c3482e009203480af0c4c5407f597",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "fef2b6e6bbc0f4a52973ab281098b1190edf2b5e4749ab0b84b20abd97fdbce5",
+        "cli_override_record_sha256": "8e8fdb1f038498b526a715c5fcebf6aa9a9d32dca2ad5ab731b0a3fc34d17136",
+        "request_archive_sha256": "708f44d74e731fec461513c83ac24edfb1c815ea2eb7526aea640b8948102d64"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 20848,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 2,
+      "reward": 1.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 16,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 16
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 202624,
+        "completed_turns": 1,
+        "input_tokens": 242469,
+        "output_tokens": 3891,
+        "reasoning_output_tokens": 151,
+        "total_tokens": 246360
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T22:58:59+00:00",
+      "attempt_started_utc": "2026-11-27T22:51:37+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "3e05fe3f394deb9b2674f3a9a55e9e541d5adb2ded94330ccac69fdb6af3630a",
+        "candidate_tree": "5dbf7b3d3eb4a8c60d1f8d2ea899c87ae7ec0b8c",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "70e563e5b30f89674da06e7ee0c8b9f8134f7e35008f6e575d460374dec538fd",
+        "result_sha256": "8d6da7b0e4f5e0920dff2e386e071626ec5c90c3464f832b8e448ea2ee732ec6",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxSessionCloseUnblocksReader",
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxSNMPCountersIncremented"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "1f9df0184a72617a641cb7a340387e0af921967e47565e0f2a79470f2cb416c0",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "fb12d8585772a888fc355434f37bf48e18de0fb7937edb4b03fcdb51494975ae",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 19104,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 2,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 273664,
+        "completed_turns": 1,
+        "input_tokens": 298709,
+        "output_tokens": 3415,
+        "reasoning_output_tokens": 32,
+        "total_tokens": 302124
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T23:04:20+00:00",
+      "attempt_started_utc": "2026-11-27T22:59:00+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "fcbb2064a2e42dbecc8c4a9a7a58471edc1f68631c17e229bfe39b718010d438",
+        "candidate_tree": "274983da6d7ffeeba07e836bc73fe351a86e67db",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "8991cb7d8e5dbf3371d80c564a4236d3a93c825643a238dcdd0af33e3f2df007",
+        "result_sha256": "0071eba39d6cc049a4950f91257c641513512fd2b0ad1d876d42cf0a4be300a4",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxOpenAcceptAndEcho",
+              "TestMuxFlowControlBlocksAndReleases",
+              "TestMuxBlockedStreamDoesNotStallOthers",
+              "TestMuxSessionCloseUnblocksReader",
+              "TestMuxNumStreamsDecreasesAfterClose",
+              "TestMuxSNMPCountersIncremented",
+              "TestMuxSNMPResetClearsMuxFields",
+              "TestMuxLargeTransfer",
+              "TestMuxConcurrentStreams",
+              "TestMuxBidirectionalTransfer",
+              "TestMuxMultiplePrioritiesCoexist",
+              "TestMuxServerInitiatedStream",
+              "TestMuxWriteReturnsFullCount",
+              "TestMuxFlowControlPartialReadCredit",
+              "TestMuxFlowControlCreditCycling",
+              "TestMuxStreamNotRemovedUntilBothClosed",
+              "TestMuxStreamRetainedUntilDataDrained"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "f37a32db05e98251dad741024337cca5e7c912de4d004600b950adde9e76698e",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "decc5ee4b2c9ba2fe288ba66f5557eaf38b576daed78793c6f036c7c295d9352",
+        "cli_override_record_sha256": "1ddbe95b1681f4d342eb49997e876337759c8c58aed5511e59a93a48b7946d7c",
+        "request_archive_sha256": "e596adebf8323e9703c4dce3620999b53067d4d629363290ef04f3e0fc9a0b0b"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 22317,
+        "token_events": 17,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 2,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 17,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 17
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 358144,
+        "completed_turns": 1,
+        "input_tokens": 392082,
+        "output_tokens": 5345,
+        "reasoning_output_tokens": 592,
+        "total_tokens": 397427
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T23:06:31+00:00",
+      "attempt_started_utc": "2026-11-27T23:04:22+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "254404d0d35888036eae1481fe5b62ebe5c0490bbc8db1500d8aa00667f01262",
+        "candidate_tree": "ff087b4d7b36d571bb498efc2b1271b52c479d48",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "2b7c64981cc026db01c3698938203710d094778df6e34a4c95895e5e60d0ebc3",
+        "result_sha256": "62bdffb4ac7f6bb8ac7d5b58ef35828c5b514526f0124b70682d5cd3d6f59a24",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/test_pidbox.py::test_Mailbox::test_cast - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_abcast - TypeError: 'NoneTyp...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_call - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_multi_call - TypeError: 'Non...",
+              "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues",
+              "t/unit/transport/virtual/test_sac_priority.py::test_basic_consumer_priority::test_cancel_high_priority_falls_through_to_next",
+              "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_standby_promoted_on_cancel",
+              "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_highest_priority_standby_promoted"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "70a8e3ab2a2e4384aee3a541151f1b9485c58cd07a2c72c98f1233f78f494b5c",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "c6a3ea0e0b4659aeef24501bea42e5dc6d9ae1fc666b22fa85c57a90e7a8737f",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 31146,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 2,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 380288,
+        "completed_turns": 1,
+        "input_tokens": 419431,
+        "output_tokens": 6249,
+        "reasoning_output_tokens": 803,
+        "total_tokens": 425680
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T23:08:56+00:00",
+      "attempt_started_utc": "2026-11-27T23:06:32+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-2/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "1fe0192a62056e82a81afc58836e4acc44e103209dae80debb06e0998cceb5ca",
+        "candidate_tree": "6a33b205e8b18e36266887053d0e5acdf210410b",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-2",
+        "patch_sha256": "741e3a6a328fea758dae53ae2e561a8a1f40f2ed0eca85e104d21153097d6388",
+        "result_sha256": "ae8357923dc5d4b6363e4e81330db51662e95daef9b644ed3bb90b63eac9a803",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/test_pidbox.py::test_Mailbox::test_cast - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_abcast - TypeError: 'NoneTyp...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_call - TypeError: 'NoneType'...",
+              "t/unit/test_pidbox.py::test_Mailbox::test_multi_call - TypeError: 'Non...",
+              "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "608d9af1c70f30852ecb94c40f91a09a79978d66bb8a66e95370258f0839b10e",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "922a3cc72430f3a2319f6d501d440916570d934ff26366fed349c963c35f86e8",
+        "cli_override_record_sha256": "2115d5dab8dc2efb66c675e703776930c450a4c02ceb616fd3459bfd748f115a",
+        "request_archive_sha256": "5ce9ee4bd4ffb7d938f2de16de97bb5ca7e5696d5c30f7f57766374fc9054f81"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 36122,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 2,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 18,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 18
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 180608,
+        "completed_turns": 1,
+        "input_tokens": 209720,
+        "output_tokens": 2814,
+        "reasoning_output_tokens": 145,
+        "total_tokens": 212534
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T23:11:35+00:00",
+      "attempt_started_utc": "2026-11-27T23:08:58+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_wazero-multi-module-snapshots/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "ea57dd305a12567adfd2da5fee9653921fc11e914d2258b746feb91935a137ed",
+        "candidate_tree": "324e0d54fd3ddbd0c9ee46f41604f9a585b128d3",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "6bfd12e6058b431586c370b92929b8698c66901164730396f361fab16d866b27",
+        "result_sha256": "63e32c47259954afe22accdc00a777d27f78356ddcd441f91312c8b91fb44f3a",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestCoordinator_CaptureIncremental_FullMemoryReconstruction",
+              "TestCoordinator_CaptureIncremental_MultiModule",
+              "TestCoordinator_CaptureIncremental_CompressedSmallerThanBaseline"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "282f32376bac0ec9182f5a1590b7e537888ee1d3868b2da5d2a9fd66d1add015",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "6bf90ba70df0ae82695952d785eb84b2dee2c325728c17f2d305366a99908efe",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 17162,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 3,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 291200,
+        "completed_turns": 1,
+        "input_tokens": 335817,
+        "output_tokens": 5724,
+        "reasoning_output_tokens": 1319,
+        "total_tokens": 341541
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T23:15:18+00:00",
+      "attempt_started_utc": "2026-11-27T23:11:36+00:00",
+      "base_commit": "3ec1e028c8cbda984a71bf72321008723ebdcb51",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_wazero-multi-module-snapshots/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "56f631f846df6884e5547f0341def8e46e5d5bb4ebf520384452bd59382ddb09",
+        "candidate_tree": "9e5ae76296aea3445d8cc61fc9b31b514d7fb480",
+        "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "2f6fee08bb3edc7deb6d1a3b0619496dcc8d2c7c1f795a534810187b1b042937",
+        "published_patch": "passing-artifacts/current-wazero-adapt-repeat-3/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-wazero-adapt-repeat-3/verifier-summary.json",
+        "result_sha256": "5415bf3deaf3ea9a63ad740a7b4a3fc97720bcb09bf87aa6937996e9f965478c",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "7b725c270af4d694d76882bcaa4582c9526b8b6295162db4991133ac9586af9f",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "662d039aa047ec3c4757edb5319b6854488398167d95b941d6326375a8ca2ff5",
+        "cli_override_record_sha256": "486406a363d2031059a3c21100749532a15fb63d6aa80a245230b85f9a4767f8",
+        "request_archive_sha256": "d21e5aeb104d8c4aabb5774fc0dff02221f73d1864a3eb82189275ba9d50ac22"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 27050,
+        "token_events": 20,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93",
+      "repeat": 3,
+      "reward": 1.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 20,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 20
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_wazero-multi-module-snapshots"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 208640,
+        "completed_turns": 1,
+        "input_tokens": 238978,
+        "output_tokens": 3734,
+        "reasoning_output_tokens": 91,
+        "total_tokens": 242712
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T23:20:50+00:00",
+      "attempt_started_utc": "2026-11-27T23:15:19+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kcp-go-multiplexed-kcp-streams/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "e30557663257e0e09315b4cf7d3b127b36152e0573b0fc7e317de77eda799efa",
+        "candidate_tree": "10607d433d684f049136e11d272da5abfa8bb278",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "f1a3c7b1baa37a85c8f94d6cc8073efcb2515fbf5bd82d8363e36c1cd2887f12",
+        "result_sha256": "9ecdb5d75b1610c226f57b673bf528692c47ebe92666e1585489d18dfc49fed4",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [
+              "TestMuxSNMPCountersIncremented"
+            ],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "d9b4752f5ae0fa1c4fee2646bfcfb9b6a32715a0438850c1aca71899a49ef53a",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "137666352c1c5577689731748ecd73f4b351ea91dac06937b81b4aa2512c500a",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 18841,
+        "token_events": 16,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 3,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 292096,
+        "completed_turns": 1,
+        "input_tokens": 310889,
+        "output_tokens": 4698,
+        "reasoning_output_tokens": 336,
+        "total_tokens": 315587
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T23:26:13+00:00",
+      "attempt_started_utc": "2026-11-27T23:20:51+00:00",
+      "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kcp-go-multiplexed-kcp-streams/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "37b8a05476cbc2581020a249246afc4dd2bd5b0c57675fc5296b64077d8097af",
+        "candidate_tree": "102f65c5262429789ecf721ee69b7160efba7126",
+        "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "3a66a7b91109a7988034905c5646dd61be2d56a3214791be82cb45762bf75ded",
+        "published_patch": "passing-artifacts/current-kcp-adapt-repeat-3/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-kcp-adapt-repeat-3/verifier-summary.json",
+        "result_sha256": "95d04220b3b7aba4780aebcd073dd7282dcc0b4716d7f73e127ade0e9eefd6ee",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [],
+            "relative_path": "grading/verifier.log",
+            "sha256": "af7709ad5def9de35019a12fddef8a4b51af81370362fed7df85f9b403164e3d",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "922a3cc72430f3a2319f6d501d440916570d934ff26366fed349c963c35f86e8",
+        "cli_override_record_sha256": "0275c4ce5371d626567307098319b61884563b8282db361610b69977f74f5d71",
+        "request_archive_sha256": "5bc54160d4d2e0019e340902cc3bedac7cb1365ee7c68d9c59293fead1e78fc7"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 21994,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2",
+      "repeat": 3,
+      "reward": 1.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 18,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 18
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 282368,
+        "completed_turns": 1,
+        "input_tokens": 318301,
+        "output_tokens": 4552,
+        "reasoning_output_tokens": 359,
+        "total_tokens": 322853
+      },
+      "arm": "stock",
+      "attempt_finished_utc": "2026-11-27T23:28:13+00:00",
+      "attempt_started_utc": "2026-11-27T23:26:13+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kombu-single-active-consumer-priority/stock",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "e50ed0425e60aa40a84ba9637741e0b316bdbcf3164eb5376844290bb5c508b2",
+        "candidate_tree": "b349b598aa75030e7f6900ce208482767e598f9d",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/stock/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "f2e652605a2abf3c142a7f1b62c0c9b147009b31346e11d050c1cd2e2fff7c9d",
+        "result_sha256": "2e1fb4cdd9a88d007c360eb208077c5ef26521356cefbefcc41138e74b8a8672",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              0
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              1
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/transport/virtual/test_sac_priority.py::test_single_active_consumer::test_idempotent_redeclare_keeps_sac",
+              "t/unit/transport/virtual/test_sac_priority.py::test_sac_status::test_sac_status_returns_dict",
+              "t/unit/transport/virtual/test_sac_priority.py::test_sac_status::test_sac_status_after_promotion",
+              "t/unit/transport/virtual/test_sac_priority.py::test_sac_demotion_notification::test_higher_priority_consumer_demotes_active",
+              "t/unit/transport/virtual/test_sac_priority.py::test_standby_consumers::test_standby_on_sac_queue",
+              "t/unit/transport/virtual/test_sac_priority.py::test_promote_consumer::test_promote_switches_active",
+              "t/unit/transport/virtual/test_sac_priority.py::test_promote_consumer::test_promote_fires_on_cancel_for_demoted",
+              "t/unit/transport/virtual/test_sac_priority.py::test_promote_consumer::test_promote_delivers_to_new_active",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_sac_methods::test_consuming_from_sac",
+              "t/unit/transport/virtual/test_sac_priority.py::test_is_single_active_consumer_channel::test_true_for_sac_queue",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_management::test_is_sac_queue",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_management::test_active_consumer_on_sac",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_events::test_sac_demotion_events_logged",
+              "t/unit/transport/virtual/test_sac_priority.py::test_consumer_events::test_sac_promotion_event_logged"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "c849b4a7583d6835245f10ea64db6bf717c86786a1edd0e0a0faeeb11cea0485",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "0a8e9dc7eb896d1402b55d94bb8f80efe7b3bcec0fec8a822505e88b9af7c0a8",
+        "cli_override_record_sha256": "d49530c0ebc3fec5525d19cca1fa3cb3024412595fc7825537ea1b03e6a5717e",
+        "request_archive_sha256": "5e279df5ef8ae93634431672b8ff5917ad53ecad62f493635a8963f04dafc291"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 33676,
+        "token_events": 14,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 3,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": false,
+        "captured_request_count": 0,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [],
+        "requested_config": "fast",
+        "response_tier_counts": {},
+        "stock_wire_capture_available": false
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    },
+    {
+      "actor_cpus": {
+        "effective": 2,
+        "requested": 2,
+        "runtime_adapter_sha256": "e142c7952e108b6ba300db96a7b1cb0b92a8b00954d950929c7000c3283fba93"
+      },
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "agent_settings": {
+        "context_window": 48000,
+        "lane": "subscription",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "medium"
+      },
+      "agent_usage": {
+        "cached_input_tokens": 363008,
+        "completed_turns": 1,
+        "input_tokens": 402003,
+        "output_tokens": 6410,
+        "reasoning_output_tokens": 1215,
+        "total_tokens": 408413
+      },
+      "arm": "adapt",
+      "attempt_finished_utc": "2026-11-27T23:30:37+00:00",
+      "attempt_started_utc": "2026-11-27T23:28:14+00:00",
+      "base_commit": "3c5c1bd86376ee73d52a4cc770bdaeab15bbc2f3",
+      "continuations": 0,
+      "draw_id": "repeat-3/deepswe_kombu-single-active-consumer-priority/adapt",
+      "effective_settings_passed": true,
+      "evidence": {
+        "candidate_source_sha256": "358b2faf38bebc5e08b85b4e29fefa5f33226e15b17770d8d1c205ae18e59df6",
+        "candidate_tree": "ffdf2f38ca32b8c036702658adfc35f690f87cc2",
+        "native_artifact_path": "attempts/deepswe_kombu-single-active-consumer-priority/adapt/0001",
+        "native_repeat": "repeat-3",
+        "patch_sha256": "aa60d8cb554089ea972569bf0bd7efaf19d6ab85d30b4939e3160dfee8236633",
+        "result_sha256": "d5b770ec39af9ac7b56a93fdaad8cd27e052f9f1b7667bbb0e58e99008f9892d",
+        "verifier_logs": [
+          {
+            "baseline_exit_codes": [
+              1
+            ],
+            "build_failed": false,
+            "feature_exit_codes": [
+              0
+            ],
+            "named_go_test_failures": [],
+            "pytest_failed_tests": [
+              "t/unit/transport/virtual/test_base.py::test_Channel::test_basic_cancel_not_in_active_queues"
+            ],
+            "relative_path": "grading/verifier.log",
+            "sha256": "6c5edc6eea192985530e109a063a0a7e74c4a20d8a166ab97e5da8068643aa36",
+            "undefined_symbols": []
+          }
+        ]
+      },
+      "fast_evidence": {
+        "adapter_record_sha256": "922a3cc72430f3a2319f6d501d440916570d934ff26366fed349c963c35f86e8",
+        "cli_override_record_sha256": "7ce7f2eef2cdbee383a951dcf54b6fcda9ec0bcdd31293e68ec7cb6bb2f90de1",
+        "request_archive_sha256": "1b2d90af563263fc3e72b3e93e787a69b497ec7cfe16e0ac3192b1a5a68bd19e"
+      },
+      "fresh_actor": true,
+      "generation_attempt": "0001",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+      "native_context": {
+        "compaction_markers": 0,
+        "efforts": [
+          "medium"
+        ],
+        "models": [
+          "gpt-6-luna"
+        ],
+        "peak_recorded_input_tokens": 35846,
+        "token_events": 18,
+        "usable_input_windows": [
+          45600
+        ]
+      },
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc",
+      "repeat": 3,
+      "reward": 0.0,
+      "service_tier": {
+        "actual_tier_known_for_every_request": true,
+        "captured_request_count": 18,
+        "expected_wire": "priority",
+        "native_cli_override_count": 1,
+        "reported_response_tiers": [
+          "default"
+        ],
+        "requested_config": "fast",
+        "response_tier_counts": {
+          "default": 18
+        },
+        "stock_wire_capture_available": true
+      },
+      "status": "scored",
+      "task": "deepswe_kombu-single-active-consumer-priority"
+    }
+  ],
+  "environment": {
+    "controller": "darwin/arm64",
+    "docker_engine": "Docker Desktop",
+    "emulation_backend": "unconfirmed",
+    "machine_id": "942a54372ed0022477ea0681f575a14a202673f6ef8aa009fc8cf53a0f4acdfe",
+    "project_and_verifier": "linux/amd64 Docker",
+    "recorded_docker_server_version": "29.5.3"
+  },
+  "excluded_generation_attempts": [],
+  "execution_order": "repeat, then Wazero/KCP/Kombu, then stock/ADAPT",
+  "execution_policy": {
+    "adaptive_maintainer": false,
+    "coding_allowance_seconds_per_draw": 3600,
+    "conditional_continue": "Final questions only; up to eight continuations within the same coding allowance.",
+    "full_specification_at_start": true,
+    "hidden_feature_tests_available_during_coding": false,
+    "testing_instruction": "Do not add or run tests unless the user asks you to test or verify implementation.",
+    "verifier": "Supplied project test scripts; no LLM judge used for these tasks."
+  },
+  "family": "DeepSWE",
+  "format": "swe-interact-repeated-subset-manifest-v1",
+  "limitations": [
+    "Three draws per task/arm; sampling seed and temperature unavailable.",
+    "All cases were previously studied by the host; earlier implementations and feedback were not supplied to fresh actors.",
+    "Data-structure pytest validation is skipped by the supplied build on macOS.",
+    "Fast may be served at the default tier; stock response-tier capture is unavailable.",
+    "Three fresh draws per task do not isolate causal mechanisms or establish context-retention benefit."
+  ],
+  "model_seed": null,
+  "owner": {
+    "id": "victor-p",
+    "name": "Victor Phisitkul"
+  },
+  "passing_artifacts": {
+    "current_batch_passes": 5,
+    "index_file": "passing-artifacts/index.json",
+    "index_sha256": "9ca385b599e05388fca7dd49fd211aac93e217b8bda496affa6470ceb46a5de0",
+    "previous_run_passes": 0
+  },
+  "planned_draws": 18,
+  "primary_campaign": false,
+  "privacy": "Portable export contains metadata, scores and hashes; no auth files, raw request bodies, private binaries or absolute host paths.",
+  "provenance": {
+    "codex_version": "0.159.0",
+    "compiled_runner_sha256": "96fb6d40ce455c428280639ca82e426f3f6a34454acd55bc30f360e516464373",
+    "dataset_commit": "b32f98c3b8f76ca65e84341d1f30e5af7135f85d",
+    "endpoint_adapter_sha256": "d498628215b340c7c3c297b9393682cf9b14c93c6f0e413c79a9c9310dbf44b7",
+    "fast_delegate_sha256": "be12044c682ac071ca105f178514bc0a170984d350f78844bf4623e70519ef5a",
+    "fast_endpoint_sha256": "8722a49c72fc4eee405ec3a98e0a1b411f0ea7d15f3f2cd4e495bb6b691e0dfd",
+    "harness_sources": {
+      "campaign.py": "76552a092d7829dee47a8de2b62ec2ce4800c904a99d65b89879c8e90de5a09d",
+      "codex_continue.py": "ddbbbc256dd7d4c25e6c1478dc7b4e902ca380f905197176f8e2075977a9d723",
+      "provenance.py": "14f0f2853a18bc055bc9d85d34b45249aa4241237b15df574d6fde115ef8c3c8",
+      "review.py": "b4b716ad7dad1848b6ad5132f1465fb414022511c11709aacfce4ab9c7986186",
+      "run.py": "ffd37cfd233212fc856cf73bdc09db0b8dcb3b86e541b43b20f2918b644417d2",
+      "task_terminal.py": "c9b89ef24a3e7465679f1239e0580f10f46a4eeb2ed6d2f8f515cfe5138a0cbf"
+    },
+    "model_catalog_sha256": "a5e25107506f0934cb62144c093c72bf8c7fa5de1436f4aa02fe54769d789618",
+    "native_manifests": [
+      {
+        "path": "repeat-1/manifest.json",
+        "repeat": 1,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      },
+      {
+        "path": "repeat-2/manifest.json",
+        "repeat": 2,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      },
+      {
+        "path": "repeat-3/manifest.json",
+        "repeat": 3,
+        "sha256": "854c3ea60806ca42b4ee0fdf28acc778d15a030efcdfcb2264e652e4570e22f7"
+      }
+    ],
+    "release_commit": "166c433f79dd667f76d093898a39aa795f3e3349",
+    "runner_commit": "6f7ffd2b207de83f12e07b23a049532a15308539",
+    "source_audit_sha256": "f011034d1c8ff303915d4f6d4040566149f5792fff0712233328b9b30edd15f3",
+    "source_plan_sha256": "f6674fca6f76760626734a9751cce3f6d3e1916489e6ebb6d8d987c9d0b77032",
+    "tier_metadata_parser_sha256": "24689b5d06e971005078d2273c642df13eedaf984534a48ad57fe6a23ceb6a21"
+  },
+  "repeats_per_task_per_arm": 3,
+  "results": {
+    "by_arm": {
+      "adapt": {
+        "failed": 5,
+        "pass_rate": 0.4444444444444444,
+        "pass_rate_percent": 44.44444444444444,
+        "passed": 4,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 8,
+        "pass_rate": 0.1111111111111111,
+        "pass_rate_percent": 11.11111111111111,
+        "passed": 1,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 1,
+            "pass_rate": 0.6666666666666666,
+            "pass_rate_percent": 66.66666666666667,
+            "passed": 2,
+            "rewards_by_repeat": [
+              0.0,
+              1.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 1,
+            "pass_rate": 0.6666666666666666,
+            "pass_rate_percent": 66.66666666666667,
+            "passed": 2,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ]
+  },
+  "run_id": "victor-p-threecase-fast-requested-20261127",
+  "scope": "Independent repeated single-turn DeepSWE subset; separate from the primary 75-task campaign and earlier 25-task batch.",
+  "service_tier": {
+    "adapt_actual_response_tiers": [
+      "default"
+    ],
+    "expected_wire": "priority",
+    "note": "Fast requested explicitly. Response-reported tiers are preserved; priority service is not assumed.",
+    "requested_config": "fast",
+    "speedup_measured": false,
+    "stock_actual_served_tier": "unknown: shipped harness has no HTTP body capture"
+  },
+  "split": "singleturn",
+  "status": "complete",
+  "task_order": [
+    "deepswe_wazero-multi-module-snapshots",
+    "deepswe_kcp-go-multiplexed-kcp-streams",
+    "deepswe_kombu-single-active-consumer-priority"
+  ],
+  "tasks": {
+    "deepswe_kcp-go-multiplexed-kcp-streams": {
+      "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+      "definition_sha256": {
+        "multiturn": "2c94fa7120b35f9f80644cb52cdeca3c794e7fec191d0ca7061a81149972f68c",
+        "singleturn": "51d7c77f3ec12e1a6acf484b56014dc0c2931c2a65f7b995f8f678a337daffb7"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+      "prompt_sha256": "4a6ca517cf7bf7ad349e492a116997e404bd28a7114b6f409afbc965793beea2"
+    },
+    "deepswe_kombu-single-active-consumer-priority": {
+      "actor_prompt_sha256": "c2cfe7cb454b9937c39f0ced0f655dd5c97b687a36ea859ec863127aa316a7bb",
+      "definition_sha256": {
+        "multiturn": "c69587c7b134861f8c9ffe450f5a680d0073d6e5633f628ef62de73c1c5ad2de",
+        "singleturn": "9adb5dba1f5781be2a376d0282d96b40a098fa07134e93d34261d266fcf446e5"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:532b2458f9a85e47354912fda4c36ce47d1d1232f43a0ef6f35827e82a131a9e",
+      "prompt_sha256": "b5b29541383998df2dcc73e96536ee4a1100b1d346ba1d56b6633042455563bc"
+    },
+    "deepswe_wazero-multi-module-snapshots": {
+      "actor_prompt_sha256": "07b132985b5788d2240a088c1c77a2bc08956f6d84912072565923ab83a20e0e",
+      "definition_sha256": {
+        "multiturn": "ed9b13500af126a369d18a634b44180c00c5f36663b1810351acb10d783b7893",
+        "singleturn": "b0c66b4dffb612ed3d79c20c391684807b6dd74446698721a368f347a44de155"
+      },
+      "family": "DeepSWE",
+      "image_id": "sha256:d9296c52cefa4a91df82d4c283475605822923855a488ef8433bd919a6fe0c68",
+      "prompt_sha256": "af7bf8e8a26d855a499d1ead903d2c2805bb83178699a4119a74f1023026cd93"
+    }
+  },
+  "temperature": null,
+  "updated_utc": "2026-11-27T23:32:00.456546+00:00",
+  "verifier_controls": {
+    "fresh_controls_passed": true,
+    "known_good_expected_reward": 1,
+    "positive_control_source": "Earlier frozen Wazero stock patch, isolated from all new actor contexts.",
+    "untouched_expected_reward": 0
+  }
+}

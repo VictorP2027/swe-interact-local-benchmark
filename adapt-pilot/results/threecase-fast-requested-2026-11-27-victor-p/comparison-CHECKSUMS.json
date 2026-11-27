@@ -1,0 +1,22 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "CASE_STUDY.md": "c6f90c557b480c0dede56838ff9b50310033ba0d9afdbbe502b608f767af902e",
+    "README.md": "3de70ca433dc83a2ca20d12ded7054df53db434ed29b0933ec61a6fadd014276",
+    "manifest.json": "bdbcc9582133fd92719b47728ac136fd54892cc770c08f5a99c4c11ee01f07cc",
+    "passing-artifacts/CHECKSUMS.json": "f62d5d63370d49a19a3baf3f4859d78d77435da02bd32147ba301476593ff360",
+    "passing-artifacts/README.md": "8ec9c374058ecbcdfb34d4b1fb9aa7641232add1a3854348b529a49a84d901a3",
+    "passing-artifacts/current-kcp-adapt-repeat-1/implementation.patch": "74dfcc03f5ab6caae70f1321f362fe905c2f0d8db768f93ee043158d355a36cd",
+    "passing-artifacts/current-kcp-adapt-repeat-1/verifier-summary.json": "e62ad96c86e7c656844f2a657e11de3f4ae4cd568b16daebdf1c74f3004f5b87",
+    "passing-artifacts/current-kcp-adapt-repeat-3/implementation.patch": "3a66a7b91109a7988034905c5646dd61be2d56a3214791be82cb45762bf75ded",
+    "passing-artifacts/current-kcp-adapt-repeat-3/verifier-summary.json": "f6c2bb0a6e75641643da2df4495331b04c64721b03bcd4f9208abedca6563b85",
+    "passing-artifacts/current-wazero-adapt-repeat-2/implementation.patch": "2e021dea4e4bc777cf8492452706143d2778e7acbfe794cec017b9f10cad3b38",
+    "passing-artifacts/current-wazero-adapt-repeat-2/verifier-summary.json": "31cd2a1d6e8794b401e9dd293c9d6f9cd4b7baa24ac7ddcabd21d3fad75c61dd",
+    "passing-artifacts/current-wazero-adapt-repeat-3/implementation.patch": "2f6fee08bb3edc7deb6d1a3b0619496dcc8d2c7c1f795a534810187b1b042937",
+    "passing-artifacts/current-wazero-adapt-repeat-3/verifier-summary.json": "575d7f7ac66c1603ccaa470241aaf9da36afc157acfa410fc5ffc9d056a9398d",
+    "passing-artifacts/current-wazero-stock-repeat-2/implementation.patch": "9ebaeffbe04f3fb1777e6f36da503a34fb47fe9c11b3b2508801def816f25c7c",
+    "passing-artifacts/current-wazero-stock-repeat-2/verifier-summary.json": "b89a25f319a2bb90210f270c3ee52de88204aba6c98a109ac803c5b8b4c4d92c",
+    "passing-artifacts/index.json": "9ca385b599e05388fca7dd49fd211aac93e217b8bda496affa6470ceb46a5de0",
+    "status.json": "d64bf8fef582fea8f81cb8c27b367354880f8a2ec5f6e2534bea5485bb4af7db"
+  }
+}

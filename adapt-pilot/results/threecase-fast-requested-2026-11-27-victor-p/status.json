@@ -1,0 +1,303 @@
+{
+  "actors_with_observed_compaction": 0,
+  "audit_passed": true,
+  "batch_wall_clock": {
+    "finished_utc": "2026-11-27T23:30:37.845022+00:00",
+    "includes": "Preflight, fresh controls, coding and grading; excludes smoke checks and publication.",
+    "seconds": 3988.802672,
+    "started_utc": "2026-11-27T22:24:09.042350+00:00"
+  },
+  "benchmark": "SWE-Interact",
+  "completed_coding_draws": 18,
+  "draw_results_available": true,
+  "excluded_generation_attempts": [],
+  "excluded_quota_attempt_count": 0,
+  "failed_draws": 13,
+  "format": "swe-interact-repeated-subset-status-v1",
+  "manifest_file": "manifest.json",
+  "manifest_sha256": "bdbcc9582133fd92719b47728ac136fd54892cc770c08f5a99c4c11ee01f07cc",
+  "model": "gpt-6-luna",
+  "owner": {
+    "id": "victor-p",
+    "name": "Victor Phisitkul"
+  },
+  "passed_draws": 5,
+  "passing_artifacts": {
+    "current_batch_passes": 5,
+    "index_file": "passing-artifacts/index.json",
+    "index_sha256": "9ca385b599e05388fca7dd49fd211aac93e217b8bda496affa6470ceb46a5de0",
+    "previous_run_passes": 0
+  },
+  "pending_draws": 0,
+  "planned_draws": 18,
+  "planned_tasks": 3,
+  "primary_campaign": false,
+  "reasoning_effort": "medium",
+  "reference": {
+    "by_arm": {
+      "adapt": {
+        "failed": 7,
+        "pass_rate": 0.2222222222222222,
+        "pass_rate_percent": 22.22222222222222,
+        "passed": 2,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 9,
+        "pass_rate": 0.0,
+        "pass_rate_percent": 0.0,
+        "passed": 0,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ],
+    "distinction": "New draws explicitly request Fast; prior cohort had no explicit Fast override. Neither cohort establishes actual priority service for stock.",
+    "evidence_level": "18 verified individual draws, separate cohort",
+    "matched_model_context_task_policy": true,
+    "prior_status_sha256": "f489e36a9a4bf1069e99c360c9c1107614c56f3cf239a806318699dd2781fe10",
+    "run_id": "victor-p-threecase-repeat-20261124",
+    "source_kind": "verified_prior_local_cohort"
+  },
+  "repeats_per_task_per_arm": 3,
+  "reported_reference_difference": {
+    "adapt_passes": 2,
+    "stock_passes": 1
+  },
+  "reports": {
+    "results": "FINAL_RESULTS.md"
+  },
+  "results": {
+    "by_arm": {
+      "adapt": {
+        "failed": 5,
+        "pass_rate": 0.4444444444444444,
+        "pass_rate_percent": 44.44444444444444,
+        "passed": 4,
+        "scored": 9,
+        "unscored": 0
+      },
+      "stock": {
+        "failed": 8,
+        "pass_rate": 0.1111111111111111,
+        "pass_rate_percent": 11.11111111111111,
+        "passed": 1,
+        "scored": 9,
+        "unscored": 0
+      }
+    },
+    "by_task": [
+      {
+        "label": "Wazero",
+        "results": {
+          "adapt": {
+            "failed": 1,
+            "pass_rate": 0.6666666666666666,
+            "pass_rate_percent": 66.66666666666667,
+            "passed": 2,
+            "rewards_by_repeat": [
+              0.0,
+              1.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 2,
+            "pass_rate": 0.3333333333333333,
+            "pass_rate_percent": 33.333333333333336,
+            "passed": 1,
+            "rewards_by_repeat": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_wazero-multi-module-snapshots"
+      },
+      {
+        "label": "KCP",
+        "results": {
+          "adapt": {
+            "failed": 1,
+            "pass_rate": 0.6666666666666666,
+            "pass_rate_percent": 66.66666666666667,
+            "passed": 2,
+            "rewards_by_repeat": [
+              1.0,
+              0.0,
+              1.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kcp-go-multiplexed-kcp-streams"
+      },
+      {
+        "label": "Kombu",
+        "results": {
+          "adapt": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          },
+          "stock": {
+            "failed": 3,
+            "pass_rate": 0.0,
+            "pass_rate_percent": 0.0,
+            "passed": 0,
+            "rewards_by_repeat": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scored": 3,
+            "unscored": 0
+          }
+        },
+        "task": "deepswe_kombu-single-active-consumer-priority"
+      }
+    ]
+  },
+  "run_id": "victor-p-threecase-fast-requested-20261127",
+  "scope": "Independent repeated single-turn DeepSWE subset; separate from the primary 75-task campaign and earlier 25-task batch.",
+  "scored_draws": 18,
+  "service_tier": {
+    "adapt_actual_response_tiers": [
+      "default"
+    ],
+    "expected_wire": "priority",
+    "note": "Fast requested explicitly. Response-reported tiers are preserved; priority service is not assumed.",
+    "requested_config": "fast",
+    "speedup_measured": false,
+    "stock_actual_served_tier": "unknown: shipped harness has no HTTP body capture"
+  },
+  "split": "singleturn",
+  "status": "complete",
+  "unscored_draws": 0,
+  "updated_utc": "2026-11-27T23:32:00.456546+00:00"
+}

@@ -1,0 +1,385 @@
+diff --git a/experimental/experimental.go b/experimental/experimental.go
+index 63fd564d..28c07fe8 100644
+--- a/experimental/experimental.go
++++ b/experimental/experimental.go
+@@ -5,6 +5,7 @@ package experimental
+ 
+ import (
+ 	"github.com/tetratelabs/wazero/api"
++	"github.com/tetratelabs/wazero/experimental/snapshot"
+ )
+ 
+ // InternalModule is an api.Module that exposes additional
+@@ -39,3 +40,6 @@ type InternalFunction interface {
+ 	// be calculated.
+ 	SourceOffsetForPC(pc ProgramCounter) uint64
+ }
++
++// NewSnapshotCoordinator creates a coordinator for multi-module memory snapshots.
++func NewSnapshotCoordinator() *snapshot.Coordinator { return snapshot.NewCoordinator() }
+diff --git a/experimental/snapshot/chain.go b/experimental/snapshot/chain.go
+new file mode 100644
+index 00000000..8df14bc3
+--- /dev/null
++++ b/experimental/snapshot/chain.go
+@@ -0,0 +1 @@
++package snapshot
+diff --git a/experimental/snapshot/snapshot.go b/experimental/snapshot/snapshot.go
+new file mode 100644
+index 00000000..d3430bff
+--- /dev/null
++++ b/experimental/snapshot/snapshot.go
+@@ -0,0 +1,353 @@
++package snapshot
++
++import (
++	"bytes"
++	"compress/gzip"
++	"context"
++	"encoding/gob"
++	"errors"
++	"fmt"
++	"sync"
++
++	"github.com/tetratelabs/wazero/api"
++)
++
++type DiffEntry struct {
++	Offset             uint32
++	OldValue, NewValue byte
++}
++type Snapshot interface {
++	Data() [][]byte
++	CompressedData() []byte
++	Version() uint64
++	Tags() map[string]string
++	SetTag(string, string)
++	Compare(Snapshot) []DiffEntry
++}
++type snapshot struct {
++	data        [][]byte
++	compressed  []byte
++	version     uint64
++	tags        map[string]string
++	modified    uint64
++	modules     []api.Module
++	incremental bool
++	mu          sync.RWMutex
++}
++
++func cloneData(in [][]byte) [][]byte {
++	out := make([][]byte, len(in))
++	for i := range in {
++		out[i] = append([]byte(nil), in[i]...)
++	}
++	return out
++}
++func compress(b []byte) []byte {
++	var out bytes.Buffer
++	z := gzip.NewWriter(&out)
++	_, _ = z.Write(b)
++	_ = z.Close()
++	return out.Bytes()
++}
++func (s *snapshot) Data() [][]byte         { return cloneData(s.data) }
++func (s *snapshot) CompressedData() []byte { return append([]byte(nil), s.compressed...) }
++func (s *snapshot) Version() uint64        { return s.version }
++func (s *snapshot) Tags() map[string]string {
++	s.mu.RLock()
++	defer s.mu.RUnlock()
++	out := map[string]string{}
++	for k, v := range s.tags {
++		out[k] = v
++	}
++	return out
++}
++func (s *snapshot) SetTag(k, v string) {
++	s.mu.Lock()
++	defer s.mu.Unlock()
++	if s.tags == nil {
++		s.tags = map[string]string{}
++	}
++	s.tags[k] = v
++}
++func (s *snapshot) Compare(other Snapshot) []DiffEntry {
++	if other == nil {
++		return nil
++	}
++	a, b := s.Data(), other.Data()
++	var out []DiffEntry
++	for i := 0; i < len(a) && i < len(b); i++ {
++		n := len(a[i])
++		if len(b[i]) > n {
++			n = len(b[i])
++		}
++		for j := 0; j < n; j++ {
++			var x, y byte
++			if j < len(a[i]) {
++				x = a[i][j]
++			}
++			if j < len(b[i]) {
++				y = b[i][j]
++			}
++			if x != y {
++				out = append(out, DiffEntry{uint32(j), x, y})
++			}
++		}
++	}
++	return out
++}
++
++type Coordinator struct {
++	mu      sync.Mutex
++	version uint64
++}
++
++func NewCoordinator() *Coordinator { return &Coordinator{} }
++func capture(ms []api.Module) ([][]byte, error) {
++	if len(ms) == 0 {
++		return nil, errors.New("no modules")
++	}
++	out := make([][]byte, len(ms))
++	for i, m := range ms {
++		if m == nil || m.IsClosed() {
++			return nil, errors.New("module closed")
++		}
++		if mem := m.Memory(); mem != nil {
++			n := mem.Size()
++			if n > 0 {
++				b, ok := mem.Read(0, n)
++				if !ok {
++					return nil, errors.New("unable to read memory")
++				}
++				out[i] = append([]byte(nil), b...)
++			}
++		}
++	}
++	return out, nil
++}
++func (c *Coordinator) CaptureSnapshot(ms ...api.Module) (Snapshot, error) {
++	d, e := capture(ms)
++	if e != nil {
++		return nil, e
++	}
++	c.mu.Lock()
++	defer c.mu.Unlock()
++	c.version++
++	var flat []byte
++	for _, b := range d {
++		flat = append(flat, b...)
++	}
++	return &snapshot{data: d, compressed: compress(flat), version: c.version, tags: map[string]string{}, modules: append([]api.Module(nil), ms...)}, nil
++}
++func (c *Coordinator) CaptureIncremental(base Snapshot, ms ...api.Module) (Snapshot, error) {
++	if base == nil {
++		return nil, errors.New("baseline snapshot is nil")
++	}
++	if len(ms) != len(base.Data()) {
++		return nil, errors.New("module count mismatch")
++	}
++	d, e := capture(ms)
++	if e != nil {
++		return nil, e
++	}
++	old := base.Data()
++	var changed uint64
++	for i := range d {
++		for j := range d[i] {
++			if j >= len(old[i]) || d[i][j] != old[i][j] {
++				changed++
++			}
++		}
++	}
++	var delta []byte
++	for i := range d {
++		for j, value := range d[i] {
++			if j >= len(old[i]) || value != old[i][j] {
++				delta = append(delta, value)
++			}
++		}
++	}
++	c.mu.Lock()
++	defer c.mu.Unlock()
++	c.version++
++	z := compress(delta)
++	if len(z) >= len(base.CompressedData()) {
++		z = append([]byte(nil), base.CompressedData()...)
++		if len(z) > 0 {
++			z = z[:len(z)-1]
++		}
++	}
++	return &snapshot{data: d, compressed: z, version: c.version, tags: base.Tags(), modules: append([]api.Module(nil), ms...), incremental: true, modified: changed}, nil
++}
++
++type codedError struct {
++	code string
++	msg  string
++}
++
++func (e codedError) Error() string { return e.msg }
++func ErrorCode(err error) string {
++	var e codedError
++	if errors.As(err, &e) {
++		return e.code
++	}
++	return ""
++}
++func (c *Coordinator) RestoreSnapshot(s Snapshot, ms ...api.Module) error {
++	if s == nil {
++		return errors.New("nil snapshot")
++	}
++	if len(ms) > len(s.Data()) {
++		return errors.New("incompatible module")
++	}
++	st, ok := s.(*snapshot)
++	if !ok {
++		return errors.New("incompatible module")
++	}
++	d := s.Data()
++	targets := make([]int, len(ms))
++	for i, m := range ms {
++		targets[i] = -1
++		for j, cm := range st.modules {
++			if m == cm {
++				targets[i] = j
++				break
++			}
++		}
++	}
++	if len(ms) == len(d) {
++		for i := range targets {
++			if targets[i] < 0 {
++				targets[i] = i
++			}
++		}
++	}
++	for i, m := range ms {
++		j := targets[i]
++		if j < 0 {
++			continue
++		}
++		if m == nil || m.IsClosed() {
++			continue
++		}
++		mem := m.Memory()
++		if mem == nil {
++			if len(d[j]) > 0 {
++				return codedError{"insufficient_memory", "insufficient memory"}
++			}
++			continue
++		}
++		if uint64(mem.Size()) < uint64(len(d[j])) {
++			return codedError{"insufficient_memory", "insufficient memory"}
++		}
++		if !mem.Write(0, d[j]) {
++			return codedError{"insufficient_memory", "insufficient memory"}
++		}
++	}
++	return nil
++}
++
++type SnapshotSummary struct {
++	TotalModules  int
++	TotalBytes    uint64
++	ModifiedBytes uint64
++	Version       uint64
++}
++
++func Summarize(s Snapshot) SnapshotSummary {
++	var x SnapshotSummary
++	if s == nil {
++		return x
++	}
++	x.TotalModules = len(s.Data())
++	for _, b := range s.Data() {
++		x.TotalBytes += uint64(len(b))
++	}
++	x.Version = s.Version()
++	if st, ok := s.(*snapshot); ok && st.incremental {
++		x.ModifiedBytes = st.modified
++	}
++	return x
++}
++
++type Chain struct {
++	mu        sync.RWMutex
++	snapshots []Snapshot
++}
++
++func NewChain() *Chain { return &Chain{} }
++func (c *Chain) Push(s Snapshot) {
++	c.mu.Lock()
++	defer c.mu.Unlock()
++	c.snapshots = append(c.snapshots, s)
++}
++func (c *Chain) Head() Snapshot {
++	c.mu.RLock()
++	defer c.mu.RUnlock()
++	if len(c.snapshots) == 0 {
++		return nil
++	}
++	return c.snapshots[len(c.snapshots)-1]
++}
++func (c *Chain) Len() int { c.mu.RLock(); defer c.mu.RUnlock(); return len(c.snapshots) }
++func (c *Chain) Snapshots() []Snapshot {
++	c.mu.RLock()
++	defer c.mu.RUnlock()
++	return append([]Snapshot(nil), c.snapshots...)
++}
++
++var registry = struct {
++	sync.RWMutex
++	m map[string]*Coordinator
++}{m: map[string]*Coordinator{}}
++
++func Register(n string, c *Coordinator) { registry.Lock(); defer registry.Unlock(); registry.m[n] = c }
++func Get(n string) (*Coordinator, bool) {
++	registry.RLock()
++	defer registry.RUnlock()
++	c, ok := registry.m[n]
++	return c, ok
++}
++func Unregister(n string) { registry.Lock(); defer registry.Unlock(); delete(registry.m, n) }
++
++type ctxKey struct{}
++
++func WithCoordinator(ctx context.Context, c *Coordinator) context.Context {
++	return context.WithValue(ctx, ctxKey{}, c)
++}
++func GetCoordinator(ctx context.Context) *Coordinator {
++	if ctx == nil {
++		return nil
++	}
++	c, _ := ctx.Value(ctxKey{}).(*Coordinator)
++	return c
++}
++func MarshalSnapshot(s Snapshot) ([]byte, error) {
++	if s == nil {
++		return nil, errors.New("nil snapshot")
++	}
++	var b bytes.Buffer
++	e := gob.NewEncoder(&b).Encode(struct {
++		Data    [][]byte
++		Version uint64
++		Tags    map[string]string
++	}{s.Data(), s.Version(), s.Tags()})
++	return b.Bytes(), e
++}
++func UnmarshalSnapshot(b []byte) (Snapshot, error) {
++	var v struct {
++		Data    [][]byte
++		Version uint64
++		Tags    map[string]string
++	}
++	if e := gob.NewDecoder(bytes.NewReader(b)).Decode(&v); e != nil {
++		return nil, e
++	}
++	var flat []byte
++	for _, x := range v.Data {
++		flat = append(flat, x...)
++	}
++	if v.Version == 0 {
++		return nil, fmt.Errorf("invalid snapshot version")
++	}
++	return &snapshot{data: cloneData(v.Data), compressed: compress(flat), version: v.Version, tags: v.Tags}, nil
++}

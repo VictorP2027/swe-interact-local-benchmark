@@ -1,0 +1,17 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "README.md": "8ec9c374058ecbcdfb34d4b1fb9aa7641232add1a3854348b529a49a84d901a3",
+    "current-kcp-adapt-repeat-1/implementation.patch": "74dfcc03f5ab6caae70f1321f362fe905c2f0d8db768f93ee043158d355a36cd",
+    "current-kcp-adapt-repeat-1/verifier-summary.json": "e62ad96c86e7c656844f2a657e11de3f4ae4cd568b16daebdf1c74f3004f5b87",
+    "current-kcp-adapt-repeat-3/implementation.patch": "3a66a7b91109a7988034905c5646dd61be2d56a3214791be82cb45762bf75ded",
+    "current-kcp-adapt-repeat-3/verifier-summary.json": "f6c2bb0a6e75641643da2df4495331b04c64721b03bcd4f9208abedca6563b85",
+    "current-wazero-adapt-repeat-2/implementation.patch": "2e021dea4e4bc777cf8492452706143d2778e7acbfe794cec017b9f10cad3b38",
+    "current-wazero-adapt-repeat-2/verifier-summary.json": "31cd2a1d6e8794b401e9dd293c9d6f9cd4b7baa24ac7ddcabd21d3fad75c61dd",
+    "current-wazero-adapt-repeat-3/implementation.patch": "2f6fee08bb3edc7deb6d1a3b0619496dcc8d2c7c1f795a534810187b1b042937",
+    "current-wazero-adapt-repeat-3/verifier-summary.json": "575d7f7ac66c1603ccaa470241aaf9da36afc157acfa410fc5ffc9d056a9398d",
+    "current-wazero-stock-repeat-2/implementation.patch": "9ebaeffbe04f3fb1777e6f36da503a34fb47fe9c11b3b2508801def816f25c7c",
+    "current-wazero-stock-repeat-2/verifier-summary.json": "b89a25f319a2bb90210f270c3ee52de88204aba6c98a109ac803c5b8b4c4d92c",
+    "index.json": "9ca385b599e05388fca7dd49fd211aac93e217b8bda496affa6470ceb46a5de0"
+  }
+}
