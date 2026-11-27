@@ -1,0 +1,62 @@
+{
+  "current_batch_passes": 2,
+  "current_batch_totals": {
+    "adapt": {
+      "passed": 2,
+      "scored": 9
+    },
+    "stock": {
+      "passed": 0,
+      "scored": 9
+    }
+  },
+  "entries": [
+    {
+      "arm": "adapt",
+      "included_in_current_18_draws": true,
+      "label": "current-kcp-adapt-repeat-1",
+      "patch_file": "current-kcp-adapt-repeat-1/implementation.patch",
+      "patch_sha256": "8320f6119212c9980f0f54e66d6563318e2f3a9a8655de95a8c9b18a833a7854",
+      "repeat": 1,
+      "reward": 1,
+      "scope": "current_repeat_batch",
+      "source_experiment": "swe-threecase-repeat-20261124",
+      "task": "deepswe_kcp-go-multiplexed-kcp-streams",
+      "verifier_summary_file": "current-kcp-adapt-repeat-1/verifier-summary.json",
+      "verifier_summary_sha256": "9b699ba346039ca9d58e91f3cef2e63fe2b09b271cc97367d9c3fbc0c11213ae"
+    },
+    {
+      "arm": "adapt",
+      "included_in_current_18_draws": true,
+      "label": "current-wazero-adapt-repeat-3",
+      "patch_file": "current-wazero-adapt-repeat-3/implementation.patch",
+      "patch_sha256": "d64f1e714eaa2b9117ef4758ffb98d870bac368d4a3c41bad1a1d1a4e509c4da",
+      "repeat": 3,
+      "reward": 1,
+      "scope": "current_repeat_batch",
+      "source_experiment": "swe-threecase-repeat-20261124",
+      "task": "deepswe_wazero-multi-module-snapshots",
+      "verifier_summary_file": "current-wazero-adapt-repeat-3/verifier-summary.json",
+      "verifier_summary_sha256": "96dda53d2094ff707622a1583a976cc3558c2ef0faa7e23324b75c3d6b802417"
+    },
+    {
+      "arm": "stock",
+      "included_in_current_18_draws": false,
+      "label": "previous-run-wazero-stock",
+      "patch_file": "previous-run-wazero-stock/implementation.patch",
+      "patch_sha256": "65f408bf556bddbbc48194eac1883b2ae42073192384047b0c458bb17241622e",
+      "repeat": null,
+      "reward": 1,
+      "scope": "previous_25_task_batch",
+      "source_experiment": "swe-adapt-deepswe25-20261120",
+      "task": "deepswe_wazero-multi-module-snapshots",
+      "verifier_summary_file": "previous-run-wazero-stock/verifier-summary.json",
+      "verifier_summary_sha256": "da1421344af5015bafc8ff5aca866453e976096ad36c9ce7aa33b80a92ecaf7d"
+    }
+  ],
+  "exported_utc": "2026-11-27T02:03:35.887986+00:00",
+  "format": "swe-interact-passing-artifacts-v1",
+  "note": "Only the two current entries contribute to the 18-draw batch. The previous-run Wazero stock patch is a separately labeled historical reference.",
+  "previous_run_passes": 1,
+  "total_available_verified_pass_artifacts": 3
+}

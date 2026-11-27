@@ -1,0 +1,52 @@
+{
+  "actor_prompt_sha256": "cbfedb6a72e2463836a0a5a95a803662b75d2e2538416c8cdd0628569d80d116",
+  "agent_exit": "completed",
+  "arm": "adapt",
+  "base_commit": "56b1fffecd743df1e7490235e69b51c44701f34c",
+  "baseline": {
+    "count_note": "Individual test counts are unavailable because this verifier log is not verbose.",
+    "exit_code": 0,
+    "failed_named_tests": [],
+    "named_tests_reported": false,
+    "package_summary": [
+      "ok  \tgithub.com/xtaci/kcp-go/v5\t0.121s"
+    ],
+    "passed_named_test_count": null,
+    "passed_named_tests": []
+  },
+  "effective_settings_passed": true,
+  "feature": {
+    "count_note": "Individual test counts are unavailable because this verifier log is not verbose.",
+    "exit_code": 0,
+    "failed_named_tests": [],
+    "named_tests_reported": false,
+    "package_summary": [
+      "ok  \tgithub.com/xtaci/kcp-go/v5\t5.411s"
+    ],
+    "passed_named_test_count": null,
+    "passed_named_tests": []
+  },
+  "format": "swe-interact-passing-verifier-summary-v1",
+  "frozen_result_record_sha256": "4195d82dfacd523c91d6a7d4e1ed81ca5e0efc2351485d9f3972f70504962f8b",
+  "generation_attempt": "0001",
+  "image_id": "sha256:42eeb7153103d8824d05fea1a5df51adaa6d7c50c363b1cb7ab1b3502d50fe71",
+  "included_in_current_18_draws": true,
+  "label": "current-kcp-adapt-repeat-1",
+  "model": "gpt-6-luna",
+  "note": "Current-batch passing draw.",
+  "original_verifier_exit_code": 0,
+  "patch_file": "implementation.patch",
+  "patch_sha256": "8320f6119212c9980f0f54e66d6563318e2f3a9a8655de95a8c9b18a833a7854",
+  "raw_verifier_log_exported": false,
+  "reasoning_effort": "medium",
+  "repeat": 1,
+  "reward": 1,
+  "scope": "current_repeat_batch",
+  "source_archive_sha256": "424055f9853ee9f638c1308e46ec9799d22d8dcf296070828e09c3306dcc3d04",
+  "source_experiment": "swe-threecase-repeat-20261124",
+  "status": "scored",
+  "task": "deepswe_kcp-go-multiplexed-kcp-streams",
+  "verification": "Previously recorded canonical Linux verifier results. No new generation, edits, tests or regrading were performed for this export.",
+  "verifier_log_sha256": "9b5bf6457b9746cec25e0f3194173e9becfdcaa3fc91f9aafaa81b0c4f38f4a7",
+  "working_context_tokens": 48000
+}

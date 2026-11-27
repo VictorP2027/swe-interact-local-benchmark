@@ -388,6 +388,8 @@
         "native_artifact_path": "attempts/deepswe_kcp-go-multiplexed-kcp-streams/adapt/0001",
         "native_repeat": "repeat-1",
         "patch_sha256": "8320f6119212c9980f0f54e66d6563318e2f3a9a8655de95a8c9b18a833a7854",
+        "published_patch": "passing-artifacts/current-kcp-adapt-repeat-1/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-kcp-adapt-repeat-1/verifier-summary.json",
         "result_sha256": "4195d82dfacd523c91d6a7d4e1ed81ca5e0efc2351485d9f3972f70504962f8b",
         "verifier_logs": [
           {
@@ -1140,6 +1142,8 @@
         "native_artifact_path": "attempts/deepswe_wazero-multi-module-snapshots/adapt/0002",
         "native_repeat": "repeat-3",
         "patch_sha256": "d64f1e714eaa2b9117ef4758ffb98d870bac368d4a3c41bad1a1d1a4e509c4da",
+        "published_patch": "passing-artifacts/current-wazero-adapt-repeat-3/implementation.patch",
+        "published_verifier_summary": "passing-artifacts/current-wazero-adapt-repeat-3/verifier-summary.json",
         "result_sha256": "2cfefbde06412a58d68d627738cc517f35be5895d58f0c1868e20da606b0061c",
         "verifier_logs": [
           {
@@ -1515,6 +1519,13 @@
     "id": "victor-p",
     "name": "Victor Phisitkul"
   },
+  "passing_artifacts": {
+    "current_batch_passes": 2,
+    "index_file": "passing-artifacts/index.json",
+    "index_sha256": "2578c76871bc985745c7f910d5e448589ebfb647e13f1fca1abf0af19ebcc85f",
+    "previous_run_artifacts_excluded_from_current_scores": true,
+    "previous_run_passes": 1
+  },
   "planned_draws": 18,
   "primary_campaign": false,
   "privacy": "Portable export contains metadata, scores and hashes; no auth files, raw request bodies, private binaries or absolute host paths.",
@@ -1715,7 +1726,7 @@
     }
   },
   "temperature": null,
-  "updated_utc": "2026-11-26T03:20:39.330001+00:00",
+  "updated_utc": "2026-11-27T02:03:35.945682+00:00",
   "verifier_controls": {
     "fresh_controls_passed": true,
     "known_good_expected_reward": 1,

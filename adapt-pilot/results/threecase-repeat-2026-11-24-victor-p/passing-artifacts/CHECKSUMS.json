@@ -1,0 +1,13 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "README.md": "4416a763a3ae7b88d0e5267102207f2dd14978ed1b29833312a11bc6221d1cbf",
+    "current-kcp-adapt-repeat-1/implementation.patch": "8320f6119212c9980f0f54e66d6563318e2f3a9a8655de95a8c9b18a833a7854",
+    "current-kcp-adapt-repeat-1/verifier-summary.json": "9b699ba346039ca9d58e91f3cef2e63fe2b09b271cc97367d9c3fbc0c11213ae",
+    "current-wazero-adapt-repeat-3/implementation.patch": "d64f1e714eaa2b9117ef4758ffb98d870bac368d4a3c41bad1a1d1a4e509c4da",
+    "current-wazero-adapt-repeat-3/verifier-summary.json": "96dda53d2094ff707622a1583a976cc3558c2ef0faa7e23324b75c3d6b802417",
+    "index.json": "2578c76871bc985745c7f910d5e448589ebfb647e13f1fca1abf0af19ebcc85f",
+    "previous-run-wazero-stock/implementation.patch": "65f408bf556bddbbc48194eac1883b2ae42073192384047b0c458bb17241622e",
+    "previous-run-wazero-stock/verifier-summary.json": "da1421344af5015bafc8ff5aca866453e976096ad36c9ce7aa33b80a92ecaf7d"
+  }
+}

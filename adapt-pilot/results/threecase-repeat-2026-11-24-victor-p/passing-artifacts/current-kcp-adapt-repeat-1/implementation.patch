@@ -1,0 +1,532 @@
+diff --git a/mux.go b/mux.go
+new file mode 100644
+index 0000000..9a4c3e9
+--- /dev/null
++++ b/mux.go
+@@ -0,0 +1,457 @@
++package kcp
++
++import (
++	"encoding/binary"
++	"errors"
++	"io"
++	"net"
++	"sync"
++	"sync/atomic"
++	"time"
++)
++
++type MuxSide uint8
++
++const (
++	MuxSideClient MuxSide = iota
++	MuxSideServer
++)
++const (
++	MuxPriorityHigh uint8 = iota
++	MuxPriorityNormal
++	MuxPriorityLow
++)
++
++type MuxConfig struct {
++	Side                                 MuxSide
++	MaxFrameSize, SendWindow, RecvWindow int
++}
++
++func DefaultMuxConfig() MuxConfig {
++	return MuxConfig{MaxFrameSize: 16 * 1024, SendWindow: 256 * 1024, RecvWindow: 256 * 1024}
++}
++
++const (
++	muxOpen byte = iota + 1
++	muxData
++	muxClose
++	muxWindow
++)
++const muxHeader = 9
++
++type muxFrame struct {
++	typ      byte
++	id       uint32
++	data     []byte
++	credit   uint32
++	priority uint8
++}
++type MuxSession struct {
++	conn     net.Conn
++	cfg      MuxConfig
++	mu       sync.Mutex
++	streams  map[uint32]*MuxStream
++	next     uint32
++	closed   bool
++	done     chan struct{}
++	accept   chan *MuxStream
++	controls []muxFrame
++	queues   [3][]muxFrame
++	wake     chan struct{}
++}
++type MuxStream struct {
++	s                                  *MuxSession
++	id                                 uint32
++	priority                           uint8
++	mu                                 sync.Mutex
++	cond                               *sync.Cond
++	recv                               []byte
++	sendCredit                         int
++	recvCredit                         int
++	localClosed, remoteClosed, removed bool
++	deadline                           time.Time
++	deadlineWake                       chan struct{}
++}
++
++func NewMuxSession(conn net.Conn, cfg *MuxConfig) (*MuxSession, error) {
++	if conn == nil {
++		return nil, errors.New("nil mux connection")
++	}
++	c := DefaultMuxConfig()
++	if cfg != nil {
++		c = *cfg
++	}
++	if c.Side != MuxSideClient && c.Side != MuxSideServer {
++		return nil, errors.New("invalid mux side")
++	}
++	if c.MaxFrameSize <= 0 || c.SendWindow <= 0 || c.RecvWindow <= 0 {
++		return nil, errors.New("mux sizes must be positive")
++	}
++	first := uint32(1)
++	if c.Side == MuxSideServer {
++		first = 2
++	}
++	m := &MuxSession{conn: conn, cfg: c, streams: make(map[uint32]*MuxStream), next: first, done: make(chan struct{}), accept: make(chan *MuxStream, 128), wake: make(chan struct{}, 1)}
++	go m.readLoop()
++	go m.writeLoop()
++	return m, nil
++}
++func (m *MuxSession) signal() {
++	select {
++	case m.wake <- struct{}{}:
++	default:
++	}
++}
++func (m *MuxSession) NumStreams() int { m.mu.Lock(); defer m.mu.Unlock(); return len(m.streams) }
++func (m *MuxSession) OpenStream(priority uint8) (*MuxStream, error) {
++	m.mu.Lock()
++	defer m.mu.Unlock()
++	if m.closed {
++		return nil, io.ErrClosedPipe
++	}
++	id := m.next
++	m.next += 2
++	st := m.newStream(id, priority)
++	m.streams[id] = st
++	m.controls = append(m.controls, muxFrame{typ: muxOpen, id: id, priority: priority})
++	atomicMuxAdd(&DefaultSnmp.MuxStreamsOpened, 1)
++	m.signal()
++	return st, nil
++}
++func (m *MuxSession) newStream(id uint32, p uint8) *MuxStream {
++	if p > 2 {
++		p = MuxPriorityNormal
++	}
++	st := &MuxStream{s: m, id: id, priority: p, sendCredit: m.cfg.SendWindow, recvCredit: m.cfg.RecvWindow, deadlineWake: make(chan struct{}, 1)}
++	st.cond = sync.NewCond(&st.mu)
++	return st
++}
++func (m *MuxSession) AcceptStream() (*MuxStream, error) {
++	select {
++	case st := <-m.accept:
++		if st == nil {
++			return nil, io.ErrClosedPipe
++		}
++		return st, nil
++	case <-m.done:
++		return nil, io.ErrClosedPipe
++	}
++}
++func (m *MuxSession) Close() error {
++	m.mu.Lock()
++	if !m.closed {
++		m.closed = true
++		close(m.done)
++	}
++	streams := make([]*MuxStream, 0, len(m.streams))
++	for _, st := range m.streams {
++		streams = append(streams, st)
++	}
++	m.mu.Unlock()
++	for _, st := range streams {
++		st.mu.Lock()
++		st.cond.Broadcast()
++		st.mu.Unlock()
++	}
++	go m.conn.Close()
++	return nil
++}
++func (m *MuxSession) queue(f muxFrame) {
++	m.mu.Lock()
++	if !m.closed {
++		if f.typ == muxData {
++			m.queues[f.priority] = append(m.queues[f.priority], f)
++		} else {
++			m.controls = append(m.controls, f)
++		}
++	}
++	m.mu.Unlock()
++	m.signal()
++}
++func (m *MuxSession) writeLoop() {
++	for {
++		select {
++		case <-m.done:
++			return
++		case <-m.wake:
++		}
++		for {
++			f, ok := m.pop()
++			if !ok {
++				break
++			}
++			if err := writeMuxFrame(m.conn, f, m.cfg.MaxFrameSize); err != nil {
++				go m.Close()
++				return
++			}
++			atomicMuxAdd(&DefaultSnmp.MuxFramesSent, 1)
++			if f.typ == muxData {
++				atomicMuxAdd(&DefaultSnmp.MuxBytesSent, uint64(len(f.data)))
++			}
++		}
++	}
++}
++func (m *MuxSession) pop() (muxFrame, bool) {
++	m.mu.Lock()
++	defer m.mu.Unlock()
++	if len(m.controls) > 0 {
++		f := m.controls[0]
++		m.controls = m.controls[1:]
++		return f, true
++	}
++	for i := 0; i < 3; i++ {
++		if len(m.queues[i]) > 0 {
++			f := m.queues[i][0]
++			m.queues[i] = m.queues[i][1:]
++			return f, true
++		}
++	}
++	return muxFrame{}, false
++}
++func writeMuxFrame(w io.Writer, f muxFrame, max int) error {
++	n := len(f.data)
++	if n > max {
++		return errors.New("mux frame too large")
++	}
++	h := make([]byte, muxHeader)
++	h[0] = f.typ
++	binary.BigEndian.PutUint32(h[1:5], f.id)
++	binary.BigEndian.PutUint32(h[5:9], uint32(n))
++	if f.typ == muxWindow {
++		binary.BigEndian.PutUint32(h[5:9], f.credit)
++	}
++	if f.typ == muxOpen {
++		h[5] = f.priority
++	}
++	if e := writeMuxAll(w, h); e != nil {
++		return e
++	}
++	if n > 0 {
++		return writeMuxAll(w, f.data)
++	}
++	return nil
++}
++func writeMuxAll(w io.Writer, p []byte) error {
++	for len(p) > 0 {
++		n, e := w.Write(p)
++		if e != nil {
++			return e
++		}
++		if n == 0 {
++			return io.ErrShortWrite
++		}
++		p = p[n:]
++	}
++	return nil
++}
++func (m *MuxSession) readLoop() {
++	for {
++		h := make([]byte, muxHeader)
++		if _, e := io.ReadFull(m.conn, h); e != nil {
++			go m.Close()
++			return
++		}
++		typ, id := h[0], binary.BigEndian.Uint32(h[1:5])
++		n := binary.BigEndian.Uint32(h[5:9])
++		if typ == muxData && n > uint32(m.cfg.MaxFrameSize) {
++			go m.Close()
++			return
++		}
++		f := muxFrame{typ: typ, id: id, credit: n, priority: h[5]}
++		if typ == muxData {
++			f.data = make([]byte, n)
++			if _, e := io.ReadFull(m.conn, f.data); e != nil {
++				go m.Close()
++				return
++			}
++		}
++		atomicMuxAdd(&DefaultSnmp.MuxFramesReceived, 1)
++		if typ == muxData {
++			atomicMuxAdd(&DefaultSnmp.MuxBytesReceived, uint64(len(f.data)))
++		}
++		m.handle(f)
++	}
++}
++func (m *MuxSession) handle(f muxFrame) {
++	switch f.typ {
++	case muxOpen:
++		m.mu.Lock()
++		st := m.newStream(f.id, f.priority)
++		m.streams[f.id] = st
++		m.mu.Unlock()
++		atomicMuxAdd(&DefaultSnmp.MuxStreamsOpened, 1)
++		select {
++		case m.accept <- st:
++		case <-m.done:
++		}
++	case muxData:
++		if st := m.get(f.id); st != nil {
++			st.mu.Lock()
++			if !st.remoteClosed && len(f.data) <= st.recvCredit {
++				st.recv = append(st.recv, f.data...)
++				st.recvCredit -= len(f.data)
++				st.cond.Broadcast()
++			}
++			st.mu.Unlock()
++		}
++	case muxWindow:
++		if st := m.get(f.id); st != nil {
++			st.mu.Lock()
++			st.sendCredit += int(nOrCredit(f))
++			st.cond.Broadcast()
++			st.mu.Unlock()
++		}
++	case muxClose:
++		if st := m.get(f.id); st != nil {
++			st.mu.Lock()
++			st.remoteClosed = true
++			st.cond.Broadcast()
++			st.mu.Unlock()
++			m.maybeRemove(st)
++		}
++	}
++}
++func nOrCredit(f muxFrame) uint32 { return f.credit }
++func (m *MuxSession) get(id uint32) *MuxStream {
++	m.mu.Lock()
++	defer m.mu.Unlock()
++	return m.streams[id]
++}
++func (s *MuxStream) ID() uint32 { return s.id }
++func (s *MuxStream) Write(p []byte) (int, error) {
++	written := 0
++	for written < len(p) {
++		s.mu.Lock()
++		for s.sendCredit <= 0 && !s.localClosed && !s.remoteClosed && !s.s.isClosed() {
++			s.cond.Wait()
++		}
++		if s.localClosed || s.remoteClosed || s.s.isClosed() {
++			s.mu.Unlock()
++			if written > 0 {
++				return written, io.ErrClosedPipe
++			}
++			return 0, io.ErrClosedPipe
++		}
++		n := len(p) - written
++		if n > s.sendCredit {
++			n = s.sendCredit
++		}
++		if n > s.s.cfg.MaxFrameSize {
++			n = s.s.cfg.MaxFrameSize
++		}
++		data := append([]byte(nil), p[written:written+n]...)
++		s.sendCredit -= n
++		s.mu.Unlock()
++		s.s.queue(muxFrame{typ: muxData, id: s.id, data: data, priority: s.priority})
++		written += n
++	}
++	return written, nil
++}
++func (s *MuxStream) Read(p []byte) (int, error) {
++	if len(p) == 0 {
++		return 0, nil
++	}
++	for {
++		s.mu.Lock()
++		if s.s.isClosed() {
++			s.mu.Unlock()
++			return 0, io.ErrClosedPipe
++		}
++		if len(s.recv) > 0 {
++			n := copy(p, s.recv)
++			s.recv = s.recv[n:]
++			s.recvCredit += n
++			s.mu.Unlock()
++			s.s.queue(muxFrame{typ: muxWindow, id: s.id, credit: uint32(n)})
++			s.s.maybeRemove(s)
++			return n, nil
++		}
++		if s.remoteClosed || s.s.isClosed() {
++			s.mu.Unlock()
++			return 0, io.ErrClosedPipe
++		}
++		deadline := s.deadline
++		s.mu.Unlock()
++		if !deadline.IsZero() && !time.Now().Before(deadline) {
++			return 0, timeoutError{}
++		}
++		if deadline.IsZero() {
++			s.mu.Lock()
++			for len(s.recv) == 0 && !s.remoteClosed && !s.s.isClosed() {
++				s.cond.Wait()
++			}
++			s.mu.Unlock()
++		} else {
++			timer := time.NewTimer(time.Until(deadline))
++			select {
++			case <-s.deadlineWake:
++				if !timer.Stop() {
++					select {
++					case <-timer.C:
++					default:
++					}
++				}
++			case <-s.s.done:
++				if !timer.Stop() {
++					select {
++					case <-timer.C:
++					default:
++					}
++				}
++				return 0, io.ErrClosedPipe
++			case <-timer.C:
++				return 0, timeoutError{}
++			}
++		}
++	}
++}
++func (s *MuxStream) Close() error {
++	s.mu.Lock()
++	if s.localClosed {
++		s.mu.Unlock()
++		return nil
++	}
++	s.localClosed = true
++	s.cond.Broadcast()
++	s.mu.Unlock()
++	s.s.queue(muxFrame{typ: muxClose, id: s.id})
++	s.s.maybeRemove(s)
++	return nil
++}
++func (s *MuxStream) SetReadDeadline(t time.Time) error {
++	s.mu.Lock()
++	s.deadline = t
++	s.mu.Unlock()
++	select {
++	case s.deadlineWake <- struct{}{}:
++	default:
++	}
++	s.mu.Lock()
++	s.cond.Broadcast()
++	s.mu.Unlock()
++	return nil
++}
++func (s *MuxSession) isClosed() bool {
++	select {
++	case <-s.done:
++		return true
++	default:
++		return false
++	}
++}
++func (s *MuxSession) maybeRemove(st *MuxStream) {
++	st.mu.Lock()
++	remove := st.localClosed && st.remoteClosed && len(st.recv) == 0 && !st.removed
++	if remove {
++		st.removed = true
++	}
++	st.mu.Unlock()
++	if remove {
++		m := st.s
++		m.mu.Lock()
++		delete(m.streams, st.id)
++		m.mu.Unlock()
++		atomicMuxAdd(&DefaultSnmp.MuxStreamsClosed, 1)
++	}
++}
++func atomicMuxAdd(p *uint64, n uint64) { atomic.AddUint64(p, n) }
+diff --git a/snmp.go b/snmp.go
+index a09a1db..419c3ca 100644
+--- a/snmp.go
++++ b/snmp.go
+@@ -59,6 +59,12 @@ type Snmp struct {
+ 	RingBufferRcvQueue  uint64 // Len of segments in receive queue ring buffer
+ 	RingBufferSndBuffer uint64 // Len of segments in send buffer ring buffer
+ 	OOBPackets          uint64 // number of OOB packets received
++	MuxStreamsOpened    uint64
++	MuxStreamsClosed    uint64
++	MuxFramesSent       uint64
++	MuxFramesReceived   uint64
++	MuxBytesSent        uint64
++	MuxBytesReceived    uint64
+ }
+ 
+ func newSnmp() *Snmp {
+@@ -98,6 +104,12 @@ func (s *Snmp) Header() []string {
+ 		"RingBufferRcvQueue",
+ 		"RingBufferSndBuffer",
+ 		"OOBPackets",
++		"MuxStreamsOpened",
++		"MuxStreamsClosed",
++		"MuxFramesSent",
++		"MuxFramesReceived",
++		"MuxBytesSent",
++		"MuxBytesReceived",
+ 	}
+ }
+ 
+@@ -135,6 +147,12 @@ func (s *Snmp) ToSlice() []string {
+ 		strconv.FormatUint(snmp.RingBufferRcvQueue, 10),
+ 		strconv.FormatUint(snmp.RingBufferSndBuffer, 10),
+ 		strconv.FormatUint(snmp.OOBPackets, 10),
++		strconv.FormatUint(snmp.MuxStreamsOpened, 10),
++		strconv.FormatUint(snmp.MuxStreamsClosed, 10),
++		strconv.FormatUint(snmp.MuxFramesSent, 10),
++		strconv.FormatUint(snmp.MuxFramesReceived, 10),
++		strconv.FormatUint(snmp.MuxBytesSent, 10),
++		strconv.FormatUint(snmp.MuxBytesReceived, 10),
+ 	}
+ }
+ 
+@@ -171,6 +189,12 @@ func (s *Snmp) Copy() *Snmp {
+ 	d.RingBufferRcvQueue = atomic.LoadUint64(&s.RingBufferRcvQueue)
+ 	d.RingBufferSndBuffer = atomic.LoadUint64(&s.RingBufferSndBuffer)
+ 	d.OOBPackets = atomic.LoadUint64(&s.OOBPackets)
++	d.MuxBytesReceived = atomic.LoadUint64(&s.MuxBytesReceived)
++	d.MuxBytesSent = atomic.LoadUint64(&s.MuxBytesSent)
++	d.MuxFramesReceived = atomic.LoadUint64(&s.MuxFramesReceived)
++	d.MuxFramesSent = atomic.LoadUint64(&s.MuxFramesSent)
++	d.MuxStreamsClosed = atomic.LoadUint64(&s.MuxStreamsClosed)
++	d.MuxStreamsOpened = atomic.LoadUint64(&s.MuxStreamsOpened)
+ 	return d
+ }
+ 
+@@ -206,6 +230,12 @@ func (s *Snmp) Reset() {
+ 	atomic.StoreUint64(&s.RingBufferRcvQueue, 0)
+ 	atomic.StoreUint64(&s.RingBufferSndBuffer, 0)
+ 	atomic.StoreUint64(&s.OOBPackets, 0)
++	atomic.StoreUint64(&s.MuxBytesReceived, 0)
++	atomic.StoreUint64(&s.MuxBytesSent, 0)
++	atomic.StoreUint64(&s.MuxFramesReceived, 0)
++	atomic.StoreUint64(&s.MuxFramesSent, 0)
++	atomic.StoreUint64(&s.MuxStreamsClosed, 0)
++	atomic.StoreUint64(&s.MuxStreamsOpened, 0)
+ }
+ 
+ // DefaultSnmp is the global KCP connection statistics collector

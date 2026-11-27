@@ -19,13 +19,20 @@
   "failed_draws": 16,
   "format": "swe-interact-repeated-subset-status-v1",
   "manifest_file": "manifest.json",
-  "manifest_sha256": "850fbb3a50f54f9763b52eff7fce7c8703c03517d091141dcaf5ff039312b660",
+  "manifest_sha256": "1d5021c57a8325ccf3872e24d76034858fa30356232e97b65eacc763fa760752",
   "model": "gpt-6-luna",
   "owner": {
     "id": "victor-p",
     "name": "Victor Phisitkul"
   },
   "passed_draws": 2,
+  "passing_artifacts": {
+    "current_batch_passes": 2,
+    "index_file": "passing-artifacts/index.json",
+    "index_sha256": "2578c76871bc985745c7f910d5e448589ebfb647e13f1fca1abf0af19ebcc85f",
+    "previous_run_artifacts_excluded_from_current_scores": true,
+    "previous_run_passes": 1
+  },
   "pending_draws": 0,
   "planned_draws": 18,
   "planned_tasks": 3,
@@ -224,5 +231,5 @@
   "split": "singleturn",
   "status": "complete",
   "unscored_draws": 0,
-  "updated_utc": "2026-11-26T03:20:39.330001+00:00"
+  "updated_utc": "2026-11-27T02:03:35.945682+00:00"
 }

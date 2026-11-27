@@ -14,9 +14,10 @@ Both arms use **GPT-6 Luna / medium**, supplied build **166c433f**, **Codex CLI 
 - [status.json](status.json): completion state, per-task and overall counts, and the separately labeled screenshot reference.
 - [manifest.json](manifest.json): all 18 draw records, exact task IDs, settings, source commits, image/prompt hashes and frozen candidate hashes.
 - [comparison-CHECKSUMS.json](comparison-CHECKSUMS.json): SHA-256 checksums for the two comparison files.
+- [Frozen passing patches and verifier summaries](passing-artifacts/README.md): current ADAPT KCP repeat 1, current ADAPT Wazero repeat 3, and **PREVIOUS RUN — Wazero stock**. The historical stock artifact is not included in the current 18-draw totals.
 
 One earlier generation hit account quota and remains separately unscored. After a supported capacity check succeeded, the remaining outcomes finished. No scored failure was rerolled; all 13 pre-interruption scored records are unchanged. Untouched and known-good verifier controls passed. The old Wazero stock patch was used only for the isolated verifier-positive control, never as a new actor's implementation or input.
 
 The user-provided reference screenshot reports stock **1/9** and ADAPT **2/9**. Its original settings, manifest and per-draw records are unavailable here; those totals are reported reference data, not verified matched-run evidence. Compare the other run's exact task IDs, images, prompts, model/effort, context limits and stopping/testing policy before interpreting the score difference. Three draws per task do not establish a general harness advantage or a context-retention mechanism.
 
-This export contains comparison metadata and hashes. Raw requests, credentials, private binaries, candidate source archives and full traces remain local. Native per-repeat input manifests and the earlier 25/75-task ledgers were not rewritten.
+This export contains comparison metadata, exact frozen production patches for the three available verified passes, and summaries of their recorded verifier results. Raw requests, credentials, private binaries, candidate source archives and full traces remain local. Native per-repeat input manifests and the earlier 25/75-task ledgers were not rewritten.
